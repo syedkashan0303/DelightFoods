@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace DelightFoods_Live.CustomAttributes
 {
@@ -14,8 +15,13 @@ namespace DelightFoods_Live.CustomAttributes
                 {
                     return new ValidationResult("Name cannot be empty or whitespace.");
                 }
-            }
 
+                // Check if name contains only alphabetic characters using regular expression
+                if (!Regex.IsMatch(name, @"^[a-zA-Z]+$"))
+                {
+                    return new ValidationResult("Name can only contain alphabetic characters.");
+                }
+            }
             return ValidationResult.Success;
         }
     }

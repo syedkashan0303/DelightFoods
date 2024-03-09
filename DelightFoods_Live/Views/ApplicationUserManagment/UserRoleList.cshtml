@@ -1,0 +1,28 @@
+﻿@model List<DelightFoods_Live.Models.DTO.UserRoleMapping>
+
+@{
+    ViewData["Title"] = "Application Users";
+}
+
+<h1>Application Users</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>Role Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(item.UserId ?? "N/A")</td>
+                <td>@(item.UserName ?? "N/A")</td>
+                <td>@(item.RoleName ?? "N/A")</td>
+            </tr>
+        }
+    </tbody>
+</table>

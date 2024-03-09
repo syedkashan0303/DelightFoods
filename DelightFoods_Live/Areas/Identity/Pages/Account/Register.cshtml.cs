@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using DelightFoods_Live.CustomAttributes;
 using DelightFoods_Live.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -83,15 +84,18 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
             /// 
             [Required]
             [Display(Name = "First Name")]
+            [NonEmptyName(ErrorMessage = "Name cannot be empty or whitespace.")]
             public string FirstName { get; set; }
 
             [Required]
             [Display(Name = "Last Name")]
+            [NonEmptyName(ErrorMessage = "Name cannot be empty or whitespace.")]
             public string LastName { get; set; }
 
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
+            [GmailEmail(ErrorMessage = "Email must be a Gmail address.")]
             public string Email { get; set; }
 
             /// <summary>
@@ -128,7 +132,7 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             Input = new InputModel()
             {
-                RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+                RoleList = _roleManager.Roles.Where(z=>z.Name != "Admin").Select(x => x.Name).Select(i => new SelectListItem
                 {
                     Text = i,
                     Value = i
