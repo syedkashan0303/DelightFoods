@@ -1,15 +1,36 @@
 ﻿@page
 @model RegisterModel
-@{
-    ViewData["Title"] = "Register";
-}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link href="~/css/registration.css" rel="stylesheet">
+    <style>
+        .btn {
+            margin: 0 auto;
+            display: block;
+            font-family: inherit;
+            width: 500px;
+        }
 
-<h1>@ViewData["Title"]</h1>
+        .wrapper {
+            width: 1000px;
+        }
+        h1{
+            text-align:center;
+            margin: 70px auto 10px auto;
+            color: #05bf69;
+        }
+    </style>
+</head>
+<body>
+    <h1>Delight Foods</h1>
 
-<div class="row">
-    <div class="col-md-4">
+    <div class="wrapper">
+        <h2>Registration</h2>
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
@@ -38,45 +59,24 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select"  aria-required="true">
+                <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select" aria-required="true">
                     <option disabled selected>Select Role</option>
                 </select>
                 <span asp-validation-for="Input.Role" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="termsCheckbox" required>
+                <label class="form-check-label" for="termsCheckbox">I accept all terms & condition</label>
+            </div>
+            <button id="registerSubmit" type="submit" class="btn btn-lg btn-success">Register Now</button>
+            <div class="text">
+                <h3>Already have an account? <a id="login" asp-area="Identity" asp-page="/Account/Login">Login now</a></h3>
+            </div>
         </form>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
-    </div>
-</div>
+</body>
+</html>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

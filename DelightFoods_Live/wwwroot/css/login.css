@@ -1,0 +1,85 @@
+﻿/* Common styles */
+a {
+    text-decoration: none;
+    color: #0aac5e;
+}
+
+.btn {
+    margin: 0 auto;
+    display: block;
+    font-family: inherit;
+    width: 100%;
+    max-width: 500px; /* Limit maximum width for larger screens */
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 1000px; /* Limit maximum width for larger screens */
+    margin: 0 auto;
+    padding: 0 20px; /* Add some padding for better readability */
+    border: 1px solid #ddd; /* Add border */
+    border-radius: 6px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Add shadow */
+}
+
+h1 {
+    text-align: center;
+    margin: 70px auto 10px auto;
+    color: #05bf69;
+}
+
+section {
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 6px;
+}
+
+section h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+section hr {
+    margin-bottom: 20px;
+}
+
+section .form-floating {
+    margin-bottom: 15px;
+}
+
+section .checkbox {
+    margin-bottom: 15px;
+}
+
+section .form-check-input {
+    margin-right: 5px;
+}
+
+section .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+section .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+section .text {
+    margin-top: 10px;
+    text-align: center;
+}
+
+section .text a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+section .text a:hover {
+    text-decoration: underline;
+}
+
+@media (min-width: 576px) {
+    .
