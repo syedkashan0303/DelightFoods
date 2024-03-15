@@ -11,7 +11,9 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using DelightFoods_Live.CustomAttributes;
+using DelightFoods_Live.Data;
 using DelightFoods_Live.Models;
+using DelightFoods_Live.Utilites;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +36,7 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _dbContext;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -41,7 +44,8 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,6 +54,7 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -117,12 +122,17 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            [Required]
-            public string? Role { get; set; }
+            //[Required]
+            //public string? Role { get; set; }
 
             [ValidateNever]
             
             public IEnumerable<SelectListItem> RoleList { get; set; }
+
+            public string Mobile { get; set; }
+            public int CityId { get; set; }
+            public IEnumerable<SelectListItem> CityList { get; set; }
+
         }
 
 
@@ -130,14 +140,26 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            //Input = new InputModel()
+            //{
+            //    RoleList = _roleManager.Roles.Where(z=>z.Name != "Admin").Select(x => x.Name).Select(i => new SelectListItem
+            //    {
+            //        Text = i,
+            //        Value = i
+            //    })
+            //};
+
             Input = new InputModel()
             {
-                RoleList = _roleManager.Roles.Where(z=>z.Name != "Admin").Select(x => x.Name).Select(i => new SelectListItem
+                CityList = Enum.GetValues(typeof(CityClass))
+                .Cast<CityClass>()
+                .Select(city => new SelectListItem
                 {
-                    Text = i,
-                    Value = i
-                })
+                    Text = Enum.GetName(typeof(CityClass), city),
+                    Value = ((int)city).ToString()
+                }).ToList(),
             };
+
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -160,7 +182,7 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    await _userManager.AddToRoleAsync(user, Input.Role);
+                    await _userManager.AddToRoleAsync(user, "Customer");
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -173,6 +195,30 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                    var addressmodel = new CustomerAddress();
+
+                    addressmodel.DeliveryAddress = "";
+                    addressmodel.BillingAddress = "";
+                    addressmodel.CityId = Input.CityId;
+                    addressmodel.CreatedByUTC = DateTime.UtcNow;
+
+                    _dbContext.Add(addressmodel);
+                    _dbContext.SaveChanges();   
+
+                    var customer = new CustomerModel();
+
+                    customer.FirstName = Input.FirstName;
+                    customer.LastName = Input.LastName;
+                    customer.UserId = userId;
+                    customer.Email = Input.Email;
+                    customer.Mobile = Input.Mobile;
+                    customer.AddressId = addressmodel.Id;
+                    customer.CreatedByUTC = DateTime.UtcNow;
+
+                    _dbContext.Add(customer);
+                    _dbContext.SaveChanges();
+
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -189,6 +235,17 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
+
+            Input = new InputModel()
+            {
+                CityList = Enum.GetValues(typeof(CityClass))
+                .Cast<CityClass>()
+                .Select(city => new SelectListItem
+                {
+                    Text = Enum.GetName(typeof(CityClass), city),
+                    Value = ((int)city).ToString()
+                }).ToList(),
+            };
 
             // If we got this far, something failed, redisplay form
             return Page();

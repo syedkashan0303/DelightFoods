@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using DelightFoods_Live.Data;
 using DelightFoods_Live.Models;
 using Microsoft.AspNetCore.Authorization;
+using DelightFoods_Live.Utilites;
+using Microsoft.AspNetCore.Identity;
+using DelightFoods_Live.Models.DTO;
 
 namespace DelightFoods_Live.Controllers
 {
@@ -24,7 +27,35 @@ namespace DelightFoods_Live.Controllers
         // GET: Customer
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+
+            var getUsers = await _context.Customers.ToListAsync();
+
+            var usersDTOList = new List<CustomerDTO>();
+
+            if (getUsers != null)
+            {
+                var getCity = Enum.GetValues(typeof(CityClass)).Cast<CityClass>().ToList();
+
+                var getaddress = _context.CustomerAddress.Where(x => getUsers.Select(z => z.AddressId).Contains(x.Id)).ToList();
+
+                var utilities = new MapperClass<CustomerModel, CustomerDTO>();
+                foreach (var item in getUsers)
+                {
+                    var usersDTO = utilities.Map(item);
+
+                    var address = getaddress.FirstOrDefault(x => x.Id == item.AddressId);
+                    usersDTO.CityId = address?.CityId ?? 0;
+                    usersDTO.Mobile = item.Mobile;
+                    usersDTO.CityName = usersDTO.CityId > 0 ? getCity.FirstOrDefault(x => ((int)x) == usersDTO.CityId).ToString() : "";
+                    usersDTO.Email = item.Email;
+                    usersDTOList.Add(usersDTO);
+                }
+                return View(usersDTOList);
+            }
+
+            return View(new List<CustomerDTO>());
+
+            //return View(await _context.Customers.ToListAsync());
         }
 
         // GET: Customer/Details/5
