@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DelightFoods_Live.Data;
 using DelightFoods_Live.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DelightFoods_Live.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -15,12 +18,15 @@ namespace DelightFoods_Live.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
+
         // GET: Product
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Product.Include(p => p.Category);
             return View(await applicationDbContext.ToListAsync());
         }
+        [Authorize(Roles = "Admin")]
 
         // GET: Product/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -40,6 +46,7 @@ namespace DelightFoods_Live.Controllers
 
             return View(productModel);
         }
+        [Authorize(Roles = "Admin")]
 
         // GET: Product/Create
         public IActionResult Create()
@@ -47,6 +54,7 @@ namespace DelightFoods_Live.Controllers
             ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id");
             return View();
         }
+        [Authorize(Roles = "Admin")]
 
         // POST: Product/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -66,6 +74,8 @@ namespace DelightFoods_Live.Controllers
             return View(productModel);
         }
 
+        [Authorize(Roles = "Admin")]
+
         // GET: Product/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -82,6 +92,8 @@ namespace DelightFoods_Live.Controllers
             ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id", productModel.CategoryId);
             return View(productModel);
         }
+
+        [Authorize(Roles = "Admin")]
 
         // POST: Product/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -119,6 +131,8 @@ namespace DelightFoods_Live.Controllers
             return View(productModel);
         }
 
+        [Authorize(Roles = "Admin")]
+
         // GET: Product/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -137,6 +151,7 @@ namespace DelightFoods_Live.Controllers
 
             return View(productModel);
         }
+        [Authorize(Roles = "Admin")]
 
         // POST: Product/Delete/5
         [HttpPost, ActionName("Delete")]

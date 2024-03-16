@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DelightFoods_Live.Data;
 using DelightFoods_Live.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DelightFoods_Live.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,12 +21,13 @@ namespace DelightFoods_Live.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Category
         public async Task<IActionResult> Index()
         {
             return View(await _context.Category.ToListAsync());
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Category/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -42,13 +45,13 @@ namespace DelightFoods_Live.Controllers
 
             return View(categoryModel);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Category/Create
         public IActionResult Create()
         {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: Category/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -64,7 +67,7 @@ namespace DelightFoods_Live.Controllers
             }
             return View(categoryModel);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Category/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -80,7 +83,7 @@ namespace DelightFoods_Live.Controllers
             }
             return View(categoryModel);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: Category/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -115,7 +118,7 @@ namespace DelightFoods_Live.Controllers
             }
             return View(categoryModel);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Category/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -133,7 +136,7 @@ namespace DelightFoods_Live.Controllers
 
             return View(categoryModel);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
