@@ -14,6 +14,8 @@ namespace DelightFoods_Live.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<CustomerModel> Customers { get; set; }
         public DbSet<CustomerAddress> CustomerAddress { get; set; }
+        public DbSet<CategoryModel> Category { get; set; } = default!;
+        public DbSet<ProductModel> Product { get; set; } = default!;
 
 
     }
