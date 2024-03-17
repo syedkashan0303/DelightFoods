@@ -17,10 +17,10 @@ namespace DelightFoods_Live.CustomAttributes
                 }
 
                 // Check if name contains only alphabetic characters using regular expression
-                if (!Regex.IsMatch(name, @"^[a-zA-Z]+$"))
-                {
-                    return new ValidationResult("Name can only contain alphabetic characters.");
-                }
+                //if (!Regex.IsMatch(name, @"^[a-zA-Z]+$"))
+                //{
+                //    return new ValidationResult("Name can only contain alphabetic characters.");
+                //}
             }
             return ValidationResult.Success;
         }

@@ -1,4 +1,4 @@
-﻿@model DelightFoods_Live.Models.ProductModel
+﻿@model DelightFoods_Live.Models.DTO.ProductDTO
 
 @{
     ViewData["Title"] = "Details";
@@ -54,10 +54,10 @@
             @Html.DisplayFor(model => model.CreatedOnUTC)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
+            @Html.DisplayNameFor(model => model.CategoryName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Id)
+            @Html.DisplayFor(model => model.CategoryName)
         </dd>
     </dl>
 </div>

@@ -13,6 +13,7 @@ namespace DelightFoods_Live.Models
         [Required]
         [NonEmptyName(ErrorMessage = "Description cannot be empty or whitespace.")]
         public string Description { get; set; }
+        public int ParentCategoryId { get; set; }
         public DateTime CreatedByUTC { get; set; } = DateTime.UtcNow;
     }
 }
