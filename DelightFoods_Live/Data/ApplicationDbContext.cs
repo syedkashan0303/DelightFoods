@@ -1,6 +1,7 @@
 ﻿using DelightFoods_Live.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using DelightFoods_Live.Models.DTO;
 
 namespace DelightFoods_Live.Data
 {
@@ -16,6 +17,8 @@ namespace DelightFoods_Live.Data
         public DbSet<CustomerAddress> CustomerAddress { get; set; }
         public DbSet<CategoryModel> Category { get; set; } = default!;
         public DbSet<ProductModel> Product { get; set; } = default!;
+        public DbSet<MediaGalleryModel> MediaGallery { get; set; } = default!;
+        public DbSet<DelightFoods_Live.Models.DTO.CustomerDTO> CustomerDTO { get; set; } = default!;
 
 
     }

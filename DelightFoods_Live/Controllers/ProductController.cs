@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DelightFoods_Live.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
 
     public class ProductController : Controller
     {
@@ -20,7 +20,7 @@ namespace DelightFoods_Live.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
 
         // GET: Product
         public async Task<IActionResult> Index()
@@ -29,7 +29,7 @@ namespace DelightFoods_Live.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,14 +42,30 @@ namespace DelightFoods_Live.Controllers
             {
                 return NotFound();
             }
+
             var utilities = new MapperClass<ProductModel, ProductDTO>();
             var model = utilities.Map(productModel);
             var allCategories = _context.Category.FirstOrDefault(x => x.Id == productModel.CategoryId);
             model.CategoryName = allCategories != null ? allCategories.Name : "";
+
+            var mediaFile = _context.MediaGallery.Where(x => x.ProductId == model.Id);
+            if (mediaFile != null && mediaFile.Any())
+            {
+                foreach (var item in mediaFile)
+                {
+                    var newfileList = new ProductDTO.MediaFiles();
+                    var path = item.FilePath;
+                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    newfileList.FileName = item.Name;
+                    newfileList.FileId = item.Id;
+                    model.MediaFileList.Add(newfileList);
+                }
+            }
+
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             //ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id");
@@ -65,7 +81,7 @@ namespace DelightFoods_Live.Controllers
 
             return View(model);
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
 
         // POST: Product/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -74,19 +90,45 @@ namespace DelightFoods_Live.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductDTO productModel)
         {
-            if (ModelState.IsValid)
+            var utilities = new MapperClass<ProductDTO, ProductModel>();
+            var model = utilities.Map(productModel);
+            model.CreatedOnUTC = DateTime.UtcNow;
+            _context.Add(model);
+            await _context.SaveChangesAsync();
+
+            if (productModel.UploadedFiles.Count > 0)
             {
-                var utilities = new MapperClass<ProductDTO, ProductModel>();
-                var model = utilities.Map(productModel);
-                model.CreatedOnUTC = DateTime.UtcNow;
-                _context.Add(model);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var file in productModel.UploadedFiles)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+
+                    //create folder if not exist
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+
+                    string fileNameWithPath = Path.Combine(path, file.FileName);
+
+                    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    var mediaCenter = new MediaGalleryModel();
+
+                    mediaCenter.Name = file.FileName;
+                    mediaCenter.CategoryId = 0;
+                    mediaCenter.ProductId = model.Id;
+                    mediaCenter.FilePath = fileNameWithPath;
+                    mediaCenter.CreatedOnUTC = DateTime.UtcNow;
+                    _context.MediaGallery.Add(mediaCenter);
+                    _context.SaveChanges();
+                }
             }
-            return View(productModel);
+
+            return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -118,10 +160,24 @@ namespace DelightFoods_Live.Controllers
                 Selected = x.Id == model.CategoryId
             }).ToList();
 
+            var mediaFile = _context.MediaGallery.Where(x => x.ProductId == model.Id);
+            if (mediaFile != null && mediaFile.Any())
+            {
+                foreach (var item in mediaFile)
+                {
+                    var newfileList = new ProductDTO.MediaFiles();
+                    var path = item.FilePath;
+                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    newfileList.FileName = item.Name;
+                    newfileList.FileId = item.Id;
+                    model.MediaFileList.Add(newfileList);
+                }
+            }
+
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductDTO productModel)
@@ -133,21 +189,11 @@ namespace DelightFoods_Live.Controllers
           
             try
             {
-
                 var utilities = new MapperClass<ProductDTO, ProductModel>();
                 var model = utilities.Map(productModel);
 
                 _context.Update(model);
                 await _context.SaveChangesAsync();
-
-                //var allCategories = _context.Category.ToList();
-
-                //productModel.categoryList = allCategories.Select(x => new SelectListItem()
-                //{
-                //    Value = x.Id.ToString(),
-                //    Text = x.Name,
-                //    Selected = x.Id == productModel.CategoryId
-                //}).ToList();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -164,7 +210,7 @@ namespace DelightFoods_Live.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -183,7 +229,7 @@ namespace DelightFoods_Live.Controllers
             return View(productModel);
         }
 
-        [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

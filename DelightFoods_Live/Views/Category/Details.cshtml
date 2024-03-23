@@ -1,4 +1,4 @@
-﻿@model DelightFoods_Live.Models.CategoryModel
+﻿@model DelightFoods_Live.Models.DTO.CategoryModelDTO
 
 @{
     ViewData["Title"] = "Details";
@@ -28,6 +28,26 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreatedByUTC)
         </dd>
+
+		<div class="row">
+			<div class="col-sm-4">
+				<strong>Documents</strong>
+			</div>
+			<div class="col-sm-8">
+				@if (Model.MediaFileList != null && Model.MediaFileList.Any())
+				{
+					foreach (var item in Model.MediaFileList)
+					{
+                        <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, CatetoryId = Model.Id })">Download File</a>
+					}
+				}
+				else
+				{
+					<span>No file available for download</span>
+				}
+			</div>
+
+		</div>
     </dl>
 </div>
 <div>

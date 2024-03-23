@@ -59,6 +59,28 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CategoryName)
         </dd>
+
+
+        <div class="row">
+            <div class="col-sm-4">
+                <strong>Documents</strong>
+            </div>
+            <div class="col-sm-8">
+                @if (Model.MediaFileList != null && Model.MediaFileList.Any())
+                {
+                    foreach (var item in Model.MediaFileList)
+                    {
+                        <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, productId = Model.Id })">Download File</a>
+                    }
+                }
+                else
+                {
+                    <span>No file available for download</span>
+                }
+            </div>
+
+        </div>
+
     </dl>
 </div>
 <div>

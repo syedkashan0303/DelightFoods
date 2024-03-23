@@ -1,4 +1,5 @@
 ﻿using DelightFoods_Live.CustomAttributes;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,6 +11,8 @@ namespace DelightFoods_Live.Models.DTO
         {
             categoryList = new List<SelectListItem>();
             ParentcategoryList = new List<SelectListItem>();
+            MediaFileList = new List<MediaFiles>();
+            UploadedFiles = new List<IFormFile>();
         }
 
 
@@ -43,7 +46,17 @@ namespace DelightFoods_Live.Models.DTO
 
         public List<SelectListItem> ParentcategoryList { get; set; }
 
-        //Relationship 
+        [BindProperty]
+        public IList<IFormFile> UploadedFiles { get; set; }
+
+        public List<MediaFiles> MediaFileList { get; set; }
+
+        public class MediaFiles
+        {
+            public byte[] FileBytes { get; set; }
+            public string FileName { get; set; }
+            public int FileId { get; set; }
+        }
 
 
 
