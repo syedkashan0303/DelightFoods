@@ -46,6 +46,13 @@ namespace DelightFoods_Live.Controllers
 
             var utilities = new MapperClass<CategoryModel, CategoryModelDTO>();
             var model = utilities.Map(categoryModel);
+
+            var childCategories = _context.Category.Where(x => x.ParentCategoryId == categoryModel.Id).ToList();
+
+            if (childCategories != null  && childCategories.Any())
+            {
+                model.ChildCategoryList = childCategories.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Name }).ToList();
+            }
             var mediaFile = _context.MediaGallery.Where(x => x.CategoryId == categoryModel.Id);
             if (mediaFile != null && mediaFile.Any())
             {
@@ -127,6 +134,15 @@ namespace DelightFoods_Live.Controllers
 
             var utilities = new MapperClass<CategoryModel, CategoryModelDTO>();
             var model = utilities.Map(categoryModel);
+
+            var childCategories = _context.Category.Where(x => x.ParentCategoryId == categoryModel.Id).ToList();
+
+            if (childCategories != null && childCategories.Any())
+            {
+                model.ChildCategoryList = childCategories.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Name }).ToList();
+            }
+
+
             var mediaFile = _context.MediaGallery.Where(x => x.CategoryId == categoryModel.Id);
             if (mediaFile != null && mediaFile.Any())
             {
@@ -201,6 +217,119 @@ namespace DelightFoods_Live.Controllers
 
         //[Authorize(Roles = "Admin")]
         // GET: Category/Create
+
+
+        public async Task<IActionResult> ChildCategoryList()
+        {
+
+            var categoryModel = await _context.Category.ToListAsync();
+
+            if (categoryModel == null)
+            {
+                return NotFound();
+            }
+
+            var ModelList = new List<CategoryModelDTO>();
+            var utilities = new MapperClass<CategoryModel , CategoryModelDTO>();
+
+            foreach (var item in categoryModel.Where(c => c.ParentCategoryId > 0))
+            {
+                var model = utilities.Map(item);
+
+                model.ParentCategoryName = categoryModel.FirstOrDefault(x => x.Id == item.ParentCategoryId)?.Name ?? "";
+                ModelList.Add(model);
+            }
+            return View(ModelList);
+        }
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ChildCategoryDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var categoryModel = await _context.Category.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (categoryModel == null)
+            {
+                return NotFound();
+            }
+
+            var utilities = new MapperClass<CategoryModel, CategoryModelDTO>();
+            var model = utilities.Map(categoryModel);
+
+            var ParentCategory = await _context.Category.FirstOrDefaultAsync(x => x.Id == categoryModel.ParentCategoryId);
+
+            
+            model.ParentCategoryName = ParentCategory!= null ? ParentCategory.Name : "";
+            var mediaFile = _context.MediaGallery.Where(x => x.CategoryId == categoryModel.Id);
+            if (mediaFile != null && mediaFile.Any())
+            {
+                foreach (var item in mediaFile)
+                {
+                    var newfileList = new CategoryModelDTO.MediaFiles();
+                    var path = item.FilePath;
+                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    newfileList.FileName = item.Name;
+                    newfileList.FileId = item.Id;
+                    model.MediaFileList.Add(newfileList);
+                }
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> ChildCategoryEdit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var categoryModel = await _context.Category.FindAsync(id);
+            if (categoryModel == null)
+            {
+                return NotFound();
+            }
+
+            var utilities = new MapperClass<CategoryModel, CategoryModelDTO>();
+            var model = utilities.Map(categoryModel);
+
+            var parentCategory = _context.Category.Where(x => x.ParentCategoryId == 0);
+
+            model.ParentCategoryList = parentCategory.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Name ,Selected = x.Id == model.ParentCategoryId }).ToList();
+
+            var mediaFile = _context.MediaGallery.Where(x => x.CategoryId == categoryModel.Id);
+            if (mediaFile != null && mediaFile.Any())
+            {
+                foreach (var item in mediaFile)
+                {
+                    var newfileList = new CategoryModelDTO.MediaFiles();
+                    var path = item.FilePath;
+                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    newfileList.FileName = item.Name;
+                    newfileList.FileId = item.Id;
+                    model.MediaFileList.Add(newfileList);
+                }
+            }
+            return View(model);
+        }
+
+        //[Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChildCategoryEdit(int id, CategoryModelDTO categoryModel)
+        {
+            var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
+            var category = utilities.Map(categoryModel);
+            if (category != null)
+            {
+                _context.Update(category);
+                await _context.SaveChangesAsync();
+            }
+            return View(category);
+        }
+
         public IActionResult CreateSubCategory()
         {
             var model = new CategoryModelDTO();
@@ -221,8 +350,38 @@ namespace DelightFoods_Live.Controllers
 
             category.CreatedByUTC = DateTime.UtcNow;
             _context.Category.Add(category);
+            _context.SaveChanges();
 
-            return RedirectToAction("Index");
+
+            if (categoryModel.UploadedFiles.Count > 0)
+            {
+                foreach (var file in categoryModel.UploadedFiles)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+                    //create folder if not exist
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+
+                    string fileNameWithPath = Path.Combine(path, file.FileName);
+
+                    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    var mediaCenter = new MediaGalleryModel();
+
+                    mediaCenter.Name = file.FileName;
+                    mediaCenter.CategoryId = category.Id;
+                    mediaCenter.ProductId = 0;
+                    mediaCenter.FilePath = fileNameWithPath;
+                    mediaCenter.CreatedOnUTC = DateTime.UtcNow;
+                    _context.MediaGallery.Add(mediaCenter);
+                    _context.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("ChildCategoryList");
         }
 
         #endregion

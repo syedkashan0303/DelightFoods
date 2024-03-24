@@ -49,7 +49,7 @@
 				{
 					foreach (var item in Model.MediaFileList)
 					{
-                            <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, productId = Model.Id })">Download File</a>
+                        <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, productId = Model.Id })">Download File</a>
 					}
 				}
 				else
