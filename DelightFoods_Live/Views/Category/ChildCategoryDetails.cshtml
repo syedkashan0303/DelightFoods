@@ -38,7 +38,9 @@
 				{
 					foreach (var item in Model.MediaFileList)
 					{
+                        <img src="@item.FilePath" alt="Image" width="300" height="300">
                         <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, CatetoryId = Model.Id })">Download File</a>
+                        <br />
 					}
 				}
 				else

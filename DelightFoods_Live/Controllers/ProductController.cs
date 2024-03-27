@@ -25,8 +25,35 @@ namespace DelightFoods_Live.Controllers
         // GET: Product
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Product.Include(p => p.Category);
-            return View(await applicationDbContext.ToListAsync());
+            //var applicationDbContext = _context.Product.Include(p => p.Category);
+            //return View(await applicationDbContext.ToListAsync());
+
+            var productModel = await _context.Product.ToListAsync();
+
+            if (productModel == null)
+            {
+                return NotFound();
+            }
+
+            var ModelList = new List<ProductDTO>();
+            var utilities = new MapperClass<ProductModel, ProductDTO>();
+
+            var mediaFiles = _context.MediaGallery.Where(x => productModel.Select(z => z.Id).ToList().Contains(x.CategoryId));
+            var categories = _context.Category.Where(x => productModel.Select(z => z.CategoryId).Contains(x.Id)).ToList();
+            foreach (var item in productModel)
+            {
+                var model = utilities.Map(item);
+                var category = categories != null && categories.Any() ? categories.FirstOrDefault(x => x.Id == item.CategoryId): null;
+                var media = mediaFiles.Where(x => x.CategoryId == item.Id).FirstOrDefault();
+
+                model.CategoryName = category != null ? category.Name : "";
+                //model.MediaFilePath = media?.FilePath.Split("wwwroot/")[1].Replace('\' , '/')?? "";
+                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
+
+                ModelList.Add(model);
+            }
+
+            return View(ModelList);
         }
 
         //[Authorize(Roles = "Admin")]
@@ -55,7 +82,7 @@ namespace DelightFoods_Live.Controllers
                 {
                     var newfileList = new ProductDTO.MediaFiles();
                     var path = item.FilePath;
-                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    newfileList.FilePath = path.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/");
                     newfileList.FileName = item.Name;
                     newfileList.FileId = item.Id;
                     model.MediaFileList.Add(newfileList);
@@ -167,7 +194,7 @@ namespace DelightFoods_Live.Controllers
                 {
                     var newfileList = new ProductDTO.MediaFiles();
                     var path = item.FilePath;
-                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    newfileList.FilePath = path.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/");
                     newfileList.FileName = item.Name;
                     newfileList.FileId = item.Id;
                     model.MediaFileList.Add(newfileList);

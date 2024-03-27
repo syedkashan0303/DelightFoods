@@ -50,10 +50,12 @@ namespace DelightFoods_Live.Models.DTO
         public IList<IFormFile> UploadedFiles { get; set; }
 
         public List<MediaFiles> MediaFileList { get; set; }
+        public string MediaFilePath { get; set; }
+
 
         public class MediaFiles
         {
-            public byte[] FileBytes { get; set; }
+            public string FilePath { get; set; }
             public string FileName { get; set; }
             public int FileId { get; set; }
         }

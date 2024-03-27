@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DelightFoods_Live.Models.ProductModel>
+﻿@model IEnumerable<DelightFoods_Live.Models.DTO.ProductDTO>
 @using Microsoft.AspNetCore.Identity
 
 @inject SignInManager<IdentityUser> SignInManager
@@ -367,7 +367,8 @@
                                             <th data-sortable="true" class="red" style="width: 8.954063604240282%;"><button class="datatable-sorter">Status</button></th>
                                             <th data-sortable="true" class="red" style="width: 10.954063604240282%"><button class="datatable-sorter">Price</button></th>
                                             <th data-sortable="true" class="red" style="width: 10.954063604240282%"><button class="datatable-sorter">Category</button></th>
-                                            <th data-format="YYYY/DD/MM" data-sortable="true" data-type="date" style="width: 10.727915194346288%;"><button class="datatable-sorter">Created At</button></th>
+                                            <th data-sortable="true" style="width: 10.954063604240282%;"><button class="datatable-sorter">Images</button></th>
+
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -405,10 +406,10 @@
                                                     @Html.DisplayFor(modelItem => item.Price)
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(modelItem => item.Category.Name)
+                                                    @Html.DisplayFor(modelItem => item.CategoryName)
                                                 </td>
                                                 <td>
-                                                    @item.CreatedOnUTC.ToString("dd-MMM-yyyy")
+                                                    <img src="@item.MediaFilePath" alt="Image" width="100" height="100">
                                                 </td>
                                                 <td>
                                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |

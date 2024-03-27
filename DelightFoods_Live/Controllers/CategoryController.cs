@@ -27,7 +27,31 @@ namespace DelightFoods_Live.Controllers
         // GET: Category
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Category.ToListAsync());
+            var categoryModel = await _context.Category.ToListAsync();
+
+            if (categoryModel == null)
+            {
+                return NotFound();
+            }
+
+            var ModelList = new List<CategoryModelDTO>();
+            var utilities = new MapperClass<CategoryModel, CategoryModelDTO>();
+
+            var mediaFiles = _context.MediaGallery.Where(x => categoryModel.Select(z => z.Id).ToList().Contains(x.CategoryId));
+
+            foreach (var item in categoryModel.Where(c => c.ParentCategoryId == 0))
+            {
+                var model = utilities.Map(item);
+
+                var media = mediaFiles.Where(x => x.CategoryId == item.Id).FirstOrDefault();
+
+                model.ParentCategoryName = categoryModel.FirstOrDefault(x => x.Id == item.ParentCategoryId)?.Name ?? "";
+                //model.MediaFilePath = media?.FilePath.Split("wwwroot/")[1].Replace('\' , '/')?? "";
+                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
+
+                ModelList.Add(model);
+            }
+            return View(ModelList);
         }
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
@@ -60,7 +84,9 @@ namespace DelightFoods_Live.Controllers
                 {
                     var newfileList = new CategoryModelDTO.MediaFiles();
                     var path = item.FilePath;
-                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    //newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+
+                    newfileList.FilePath = path.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/");
                     newfileList.FileName = item.Name;
                     newfileList.FileId = item.Id;
                     model.MediaFileList.Add(newfileList);
@@ -150,7 +176,7 @@ namespace DelightFoods_Live.Controllers
                 {
                     var newfileList = new CategoryModelDTO.MediaFiles();
                     var path = item.FilePath;
-                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    newfileList.FilePath = path.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/");
                     newfileList.FileName = item.Name;
                     newfileList.FileId = item.Id;
                     model.MediaFileList.Add(newfileList);
@@ -221,7 +247,6 @@ namespace DelightFoods_Live.Controllers
 
         public async Task<IActionResult> ChildCategoryList()
         {
-
             var categoryModel = await _context.Category.ToListAsync();
 
             if (categoryModel == null)
@@ -232,11 +257,18 @@ namespace DelightFoods_Live.Controllers
             var ModelList = new List<CategoryModelDTO>();
             var utilities = new MapperClass<CategoryModel , CategoryModelDTO>();
 
+            var mediaFiles = _context.MediaGallery.Where(x=> categoryModel.Select(z=>z.Id).ToList().Contains(x.CategoryId));
+
             foreach (var item in categoryModel.Where(c => c.ParentCategoryId > 0))
             {
                 var model = utilities.Map(item);
 
+                var media = mediaFiles.Where(x => x.CategoryId == item.Id).FirstOrDefault();
+
                 model.ParentCategoryName = categoryModel.FirstOrDefault(x => x.Id == item.ParentCategoryId)?.Name ?? "";
+                //model.MediaFilePath = media?.FilePath.Split("wwwroot/")[1].Replace('\' , '/')?? "";
+                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
+
                 ModelList.Add(model);
             }
             return View(ModelList);
@@ -270,7 +302,8 @@ namespace DelightFoods_Live.Controllers
                 {
                     var newfileList = new CategoryModelDTO.MediaFiles();
                     var path = item.FilePath;
-                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    newfileList.FilePath = path.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/");
+
                     newfileList.FileName = item.Name;
                     newfileList.FileId = item.Id;
                     model.MediaFileList.Add(newfileList);
@@ -306,7 +339,7 @@ namespace DelightFoods_Live.Controllers
                 {
                     var newfileList = new CategoryModelDTO.MediaFiles();
                     var path = item.FilePath;
-                    newfileList.FileBytes = System.IO.File.ReadAllBytes(path);
+                    newfileList.FilePath = path.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/");
                     newfileList.FileName = item.Name;
                     newfileList.FileId = item.Id;
                     model.MediaFileList.Add(newfileList);
@@ -341,6 +374,7 @@ namespace DelightFoods_Live.Controllers
             return View(model);
         }
         //[Authorize(Roles = "Admin")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubCategory(CategoryModelDTO categoryModel)
@@ -385,6 +419,5 @@ namespace DelightFoods_Live.Controllers
         }
 
         #endregion
-
     }
 }

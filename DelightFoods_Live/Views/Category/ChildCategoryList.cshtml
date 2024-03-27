@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.ParentCategoryName)
             </th>
+            <th>
+                Media
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -28,13 +31,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                    @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                     @Html.DisplayFor(modelItem => item.ParentCategoryName)
+            </td>
+            <td>
+                    <img src="@item.MediaFilePath" alt="Image" width="100" height="100">
             </td>
             <td>
                     <a asp-action="ChildCategoryEdit" asp-route-id="@item.Id">Edit</a> |
