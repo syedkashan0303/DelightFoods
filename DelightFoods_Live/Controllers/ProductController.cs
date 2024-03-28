@@ -21,13 +21,8 @@ namespace DelightFoods_Live.Controllers
         }
 
         //[Authorize(Roles = "Admin")]
-
-        // GET: Product
         public async Task<IActionResult> Index()
         {
-            //var applicationDbContext = _context.Product.Include(p => p.Category);
-            //return View(await applicationDbContext.ToListAsync());
-
             var productModel = await _context.Product.ToListAsync();
 
             if (productModel == null)
@@ -47,12 +42,10 @@ namespace DelightFoods_Live.Controllers
                 var media = mediaFiles.Where(x => x.CategoryId == item.Id).FirstOrDefault();
 
                 model.CategoryName = category != null ? category.Name : "";
-                //model.MediaFilePath = media?.FilePath.Split("wwwroot/")[1].Replace('\' , '/')?? "";
                 model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
 
                 ModelList.Add(model);
             }
-
             return View(ModelList);
         }
 
@@ -95,8 +88,6 @@ namespace DelightFoods_Live.Controllers
         //[Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            //ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id");
-
             var model = new ProductDTO();
 
             var allCategories = _context.Category.ToList();
@@ -108,11 +99,8 @@ namespace DelightFoods_Live.Controllers
 
             return View(model);
         }
-        //[Authorize(Roles = "Admin")]
 
-        // POST: Product/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductDTO productModel)
@@ -256,7 +244,7 @@ namespace DelightFoods_Live.Controllers
             return View(productModel);
         }
 
-      //  [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

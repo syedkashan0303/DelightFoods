@@ -53,6 +53,7 @@ namespace DelightFoods_Live.Controllers
             }
             return View(ModelList);
         }
+
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -244,7 +245,6 @@ namespace DelightFoods_Live.Controllers
         //[Authorize(Roles = "Admin")]
         // GET: Category/Create
 
-
         public async Task<IActionResult> ChildCategoryList()
         {
             var categoryModel = await _context.Category.ToListAsync();
@@ -273,6 +273,7 @@ namespace DelightFoods_Live.Controllers
             }
             return View(ModelList);
         }
+
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> ChildCategoryDetails(int? id)
         {
@@ -373,8 +374,8 @@ namespace DelightFoods_Live.Controllers
 
             return View(model);
         }
-        //[Authorize(Roles = "Admin")]
 
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubCategory(CategoryModelDTO categoryModel)

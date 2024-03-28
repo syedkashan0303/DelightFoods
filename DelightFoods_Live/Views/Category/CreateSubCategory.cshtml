@@ -1,62 +1,95 @@
 ﻿@model DelightFoods_Live.Models.DTO.CategoryModelDTO
 
 @{
-    ViewData["Title"] = "CreateSubCategory";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Create Sub-Category";
 }
 
 <h1>CreateSubCategory</h1>
 
-<h4>CategoryModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="CreateSubCategory" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+<main id="main" class="main">
 
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+    <div class="pagetitle">
+        <h1>Products</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a asp-action="ChildCategoryList">Sub Category</a></li>
+                <li class="breadcrumb-item">Create</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
 
-            <div class="form-group">
-                <label asp-for="ParentCategoryId" class="form-label">Parent Category </label>
-                <select asp-for="ParentCategoryId" asp-items="@Model.ParentCategoryList" class="form-select" aria-required="true" required>
-                    <option disabled selected>Select Parent Category</option>
-                </select>
-                <span asp-validation-for="ParentCategoryId" class="text-danger"></span>
-            </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Datatables</h5>
+
+                        <h4>CategoryModel</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <form asp-action="CreateSubCategory" enctype="multipart/form-data">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                                    <div class="form-group">
+                                        <label asp-for="Name" class="control-label"></label>
+                                        <input asp-for="Name" class="form-control" />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="Description" class="control-label"></label>
+                                        <input asp-for="Description" class="form-control" />
+                                        <span asp-validation-for="Description" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label asp-for="ParentCategoryId" class="form-label">Parent Category </label>
+                                        <select asp-for="ParentCategoryId" asp-items="@Model.ParentCategoryList" class="form-select" aria-required="true" required>
+                                            <option disabled selected>Select Parent Category</option>
+                                        </select>
+                                        <span asp-validation-for="ParentCategoryId" class="text-danger"></span>
+                                    </div>
 
 
-            <div class="form-group">
-                <div class="form-check">
-                    <label class="form-check-label" asp-for="UploadedFiles">Attachments</label>
-                    <input asp-for="UploadedFiles" multiple />
-                    <span asp-validation-for="UploadedFiles" class="text-danger"></span>
-                    <div class="invalid-feedback">
-                        Please upload your attachments.
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <label class="form-check-label" asp-for="UploadedFiles">Attachments</label>
+                                            <input asp-for="UploadedFiles" multiple />
+                                            <span asp-validation-for="UploadedFiles" class="text-danger"></span>
+                                            <div class="invalid-feedback">
+                                                Please upload your attachments.
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <input type="submit" value="CreateSubCategory" class="btn btn-primary" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a asp-action="ChildCategoryList">Back to List</a>
+                        </div>
+
                     </div>
                 </div>
+
             </div>
-
-
-            <div class="form-group">
-                <input type="submit" value="CreateSubCategory" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="ChildCategoryList">Back to List</a>
-</div>
-
+        </div>
+    </section>
+</main>
+@* 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+ *@

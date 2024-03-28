@@ -1,53 +1,98 @@
 ﻿@model IEnumerable<DelightFoods_Live.Models.DTO.CategoryModelDTO>
 
 @{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
     ViewData["Title"] = "Index";
 }
 
 <h1>Food Category</h1>
+<main id="main" class="main">
 
-<p>
-    <a asp-action="CreateSubCategory">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParentCategoryName)
-            </th>
-            <th>
-                Media
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.ParentCategoryName)
-            </td>
-            <td>
-                    <img src="@item.MediaFilePath" alt="Image" width="100" height="100">
-            </td>
-            <td>
-                    <a asp-action="ChildCategoryEdit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="ChildCategoryDetails" asp-route-id="@item.Id">Details</a>
-                @* |<a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="pagetitle">
+        <h1>Sub Category</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item">Sub Category</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <p style="float:right">
+                <a class="btn btn-success" asp-action="CreateSubCategory">Create New</a>
+            </p>
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Datatables</h5>
+                        <!-- Table with stripped rows -->
+                        <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                            <div class="datatable-top">
+                                <div class="datatable-dropdown">
+                                    <label>
+                                        <select class="datatable-selector"><option value="5">5</option><option value="10" selected="">10</option><option value="15">15</option><option value="-1">All</option></select> entries per page
+                                    </label>
+                                </div>
+                                <div class="datatable-search">
+                                    <input class="datatable-input" placeholder="Search..." type="search" title="Search within table">
+                                </div>
+                            </div>
+                            <div class="datatable-container">
+                                <table class="table datatable datatable-table">
+                                    <thead>
+                                        <tr>
+                                            <th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+                                                <button class="datatable-sorter">
+                                                    Name
+                                                </button>
+                                            </th>
+                                            <th data-sortable="true"><button class="datatable-sorter">Description</button></th>
+                                            <th data-sortable="true" class="red"><button class="datatable-sorter">ParentCategoryName</button></th>
+                                            <th data-sortable="true"><button class="datatable-sorter">Images</button></th>
+
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Description)
+                                                </td>
+                                                <td>
+                                                @Html.DisplayFor(modelItem => item.ParentCategoryName)
+                                                </td>
+                                                <td>
+                                                    <img src="@item.MediaFilePath" alt="Image" width="100" height="100">
+                                                </td>
+                                                <td>
+                                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
+                                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Details</a> 
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="datatable-bottom">
+                                <div class="datatable-info">Showing 1 to 10 of 100 entries</div>
+                                <nav class="datatable-pagination"><ul class="datatable-pagination-list"><li class="datatable-pagination-list-item datatable-hidden datatable-disabled"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">‹</button></li><li class="datatable-pagination-list-item datatable-active"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">1</button></li><li class="datatable-pagination-list-item"><button data-page="2" class="datatable-pagination-list-item-link" aria-label="Page 2">2</button></li><li class="datatable-pagination-list-item"><button data-page="3" class="datatable-pagination-list-item-link" aria-label="Page 3">3</button></li><li class="datatable-pagination-list-item"><button data-page="4" class="datatable-pagination-list-item-link" aria-label="Page 4">4</button></li><li class="datatable-pagination-list-item"><button data-page="5" class="datatable-pagination-list-item-link" aria-label="Page 5">5</button></li><li class="datatable-pagination-list-item"><button data-page="6" class="datatable-pagination-list-item-link" aria-label="Page 6">6</button></li><li class="datatable-pagination-list-item"><button data-page="7" class="datatable-pagination-list-item-link" aria-label="Page 7">7</button></li><li class="datatable-pagination-list-item datatable-ellipsis datatable-disabled"><button class="datatable-pagination-list-item-link">…</button></li><li class="datatable-pagination-list-item"><button data-page="10" class="datatable-pagination-list-item-link" aria-label="Page 10">10</button></li><li class="datatable-pagination-list-item"><button data-page="2" class="datatable-pagination-list-item-link" aria-label="Page 2">›</button></li></ul></nav>
+                            </div>
+                        </div>
+                        <!-- End Table with stripped rows -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>

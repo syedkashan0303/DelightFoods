@@ -1,6 +1,7 @@
 ﻿@model DelightFoods_Live.Models.DTO.CategoryModelDTO
 
 @{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Details";
 }
 
@@ -53,6 +54,5 @@
     </dl>
 </div>
 <div>
-    <a asp-action="ChildCategoryEdit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="ChildCategoryList">Back to List</a>
 </div>
