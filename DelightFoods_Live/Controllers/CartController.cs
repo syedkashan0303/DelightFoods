@@ -33,6 +33,10 @@ namespace DelightFoods_Live.Controllers
             return View(cartList);
         }
 
+        public ActionResult Cart()
+        {
+            return View();
+        }
 
         [HttpPost]
         public JsonResult RemoveItemFromCart(int id)
