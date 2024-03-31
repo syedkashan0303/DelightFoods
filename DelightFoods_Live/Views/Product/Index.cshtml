@@ -133,6 +133,26 @@
             // For example, you can send an AJAX request to a server-side endpoint to add the item to the cart
             // Or you can handle it directly in JavaScript if it's just a client-side operation
             console.log('productId =', productId)
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("AddItemCart", "Cart")",
+                data: { ProductId: productId, CustomerId: 0, Quantity : 1 },
+                success: function (result) {
+                    {
+                        if (result == "succes") {
+                            alert("Succesfully add in cart")
+                        }
+                        else {
+                            alert("Error")
+                        }
+                    }
+                },
+                error: function (result) {
+                    Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+                }
+            });
+
             // For demonstration, let's alert a message
             alert("Item with ID " + productId + " added to cart!");
         });

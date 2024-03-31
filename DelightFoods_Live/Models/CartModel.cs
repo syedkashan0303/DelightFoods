@@ -2,7 +2,7 @@
 
 namespace DelightFoods_Live.Models
 {
-    [Table("Cart")]
+
     public class CartModel
     {
         public int Id { get; set; }
