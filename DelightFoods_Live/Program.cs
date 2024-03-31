@@ -14,11 +14,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>().AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-//builder.Services.AddAuthentication().AddFacebook(option =>
-//{
-//    option.AppId = "242300782304885";
-//    option.AppSecret = "69a42cb7a540d0506e72c2064a83521d";
+
+//builder.Services.AddControllersWithViews().AddRazorPagesOptions(options => {
+//    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
 //});
+
+
 
 var app = builder.Build();
 

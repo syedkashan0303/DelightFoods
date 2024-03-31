@@ -17,12 +17,17 @@ namespace DelightFoods_Live.Controllers
             _context = applicationDbContext;
         }
 
-        public IActionResult Index()
-        {
+		public async Task<IActionResult> Index()
+		{
             return View();
         }
 
-        public IActionResult Privacy()
+		public async Task<IActionResult> Dashboard()
+		{
+			return View();
+		}
+
+		public IActionResult Privacy()
         {
             return View();
         }

@@ -114,6 +114,8 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    //return RedirectToAction("Dashboard", "Home");
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
