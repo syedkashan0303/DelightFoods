@@ -12,12 +12,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDefaultIdentity<IdentityUser>().AddDefaultTokenProviders()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+//builder.Services.AddControllersWithViews();
 
 
-//builder.Services.AddControllersWithViews().AddRazorPagesOptions(options => {
-//    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
-//});
+builder.Services.AddControllersWithViews().AddRazorPagesOptions(options =>
+{
+    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
+});
 
 
 

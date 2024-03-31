@@ -39,7 +39,7 @@ namespace DelightFoods_Live.Controllers
             {
                 var model = utilities.Map(item);
                 var category = categories != null && categories.Any() ? categories.FirstOrDefault(x => x.Id == item.CategoryId): null;
-                var media = mediaFiles.Where(x => x.CategoryId == item.Id).FirstOrDefault();
+                var media = mediaFiles.Where(x => x.ProductId == item.Id).FirstOrDefault();
 
                 model.CategoryName = category != null ? category.Name : "";
                 model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
