@@ -1,5 +1,7 @@
 using DelightFoods_Live.Data;
 using DelightFoods_Live.Models;
+using DelightFoods_Live.Models.DTO;
+using DelightFoods_Live.Utilites;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -24,8 +26,32 @@ namespace DelightFoods_Live.Controllers
 
 		public async Task<IActionResult> Dashboard()
 		{
-			return View();
-		}
+            var productModel = await _context.Product.ToListAsync();
+
+            if (productModel == null)
+            {
+                return NotFound();
+            }
+
+            var ModelList = new List<ProductDTO>();
+            var utilities = new MapperClass<ProductModel, ProductDTO>();
+
+            var mediaFiles = _context.MediaGallery.Where(x => productModel.Select(z => z.Id).ToList().Contains(x.CategoryId));
+            var categories = _context.Category.Where(x => productModel.Select(z => z.CategoryId).Contains(x.Id)).ToList();
+
+            foreach (var item in productModel)
+            {
+                var model = utilities.Map(item);
+                var category = categories != null && categories.Any() ? categories.FirstOrDefault(x => x.Id == item.CategoryId) : null;
+                var media = mediaFiles.Where(x => x.ProductId == item.Id).FirstOrDefault();
+
+                model.CategoryName = category != null ? category.Name : "";
+                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
+
+                ModelList.Add(model);
+            }
+            return View(ModelList);
+        }
 
 		public IActionResult Privacy()
         {

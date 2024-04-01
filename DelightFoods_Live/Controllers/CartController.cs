@@ -167,8 +167,6 @@ namespace DelightFoods_Live.Controllers
             return Json("error");
         }
 
-
-
         [HttpPost]
         public JsonResult RemoveAllItemFromCart(int id)
         {
@@ -190,23 +188,21 @@ namespace DelightFoods_Live.Controllers
 
 
         [HttpGet]
-        public JsonResult CartItem(int id)
+        public JsonResult CartItemCount()
         {
-            if (id > 0)
+            ClaimsPrincipal currentUser = _httpContextAccessor.HttpContext.User;
+            string userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var customer = _context.Customers.Where(x => x.UserId == userId).FirstOrDefault();
+
+            if (customer.Id > 0)
             {
-                var cart = _context.Cart.FirstOrDefault(m => m.Id == id);
+                var cart = _context.Cart.Where(m => m.CustomerId == customer.Id);
 
                 if (cart == null)
                 {
-                    return Json("error");
+                    return Json("0");
                 }
-
-                cart.Quantity = cart.Quantity > 0 ? cart.Quantity - 1 : 0;
-
-                _context.Update(cart);
-                _context.SaveChangesAsync();
-
-                return Json("succes");
+                return Json(cart.Count().ToString());
             }
             return Json("error");
         }
