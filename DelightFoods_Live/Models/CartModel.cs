@@ -9,6 +9,7 @@ namespace DelightFoods_Live.Models
         public int ProductId { get; set; }
         public int CustomerId { get; set; }
         public int Quantity { get; set; }
+        public bool IsOrderCreated { get; set; }
         public DateTime CreatedOnUTC { get; set; }
     }
 }

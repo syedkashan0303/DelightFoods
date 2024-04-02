@@ -31,6 +31,7 @@ namespace DelightFoods_Live.Controllers
             foreach (var item in CartProducts)
             {
                 var pro = product.Where(x => x.Id == item.ProductId).FirstOrDefault();
+
                 cartList.Add(new CartDTO
                 {
                     Id = item.Id,
@@ -46,7 +47,7 @@ namespace DelightFoods_Live.Controllers
         [HttpGet]
         public ActionResult Cart()
         {
-            var cartList = new List<CartDTO>();
+            var cartList = new CartDTO();
             ClaimsPrincipal currentUser = _httpContextAccessor.HttpContext.User;
             string userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -58,7 +59,6 @@ namespace DelightFoods_Live.Controllers
                 var cart = _context.Cart.Where(m => m.CustomerId == CustomerId).ToList();
                 var product = cart != null ? _context.Product.Where(x => cart.Select(z => z.ProductId).Contains(x.Id)).ToList() : null;
                 var mediaFiles = product != null ? _context.MediaGallery.Where(x => product.Select(z => z.Id).ToList().Contains(x.ProductId)).ToList() : null;
-
                 if (cart == null)
                 {
                     return View(cartList);
@@ -75,7 +75,8 @@ namespace DelightFoods_Live.Controllers
                     model.ProductPrice = pro != null ? pro.Price : 0;
                     model.TotalPrice = model.ProductPrice * model.Quantity;
                     model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
-                    cartList.Add(model);
+                    model.IsOrderCreated = item.IsOrderCreated;
+                    cartList.CartDTOlist.Add(model);
                 }
 
 

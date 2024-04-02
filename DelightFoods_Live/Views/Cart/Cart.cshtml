@@ -1,8 +1,9 @@
-﻿@model IEnumerable<DelightFoods_Live.Models.DTO.CartDTO>
+﻿@model DelightFoods_Live.Models.DTO.CartDTO
 @{
     Layout = "~/Views/Shared/_CustomerLayout.cshtml";
 }
 
+@Html.HiddenFor(model => model.IsOrderCreated , new { id = "isOrderCreated" })
 
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5">
@@ -30,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.CartDTOlist)
                     {
                         <tr>
                             <th scope="row">
@@ -73,14 +74,14 @@
             </table>
         </div>
         <div class="row g-4 justify-content-end">
-            <div class="col-8"></div>
+
             <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
                 <div class="bg-light rounded">
                     <div class="p-4">
                         <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
                         <div class="d-flex justify-content-between mb-4">
                             <h5 class="mb-0 me-4">Subtotal:</h5>
-                            <p class="mb-0">$ @Model.Sum(x => x.TotalPrice)</p>
+                            <p class="mb-0">$ @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <h5 class="mb-0 me-4">Shipping</h5>
@@ -92,7 +93,34 @@
                     </div>
                     <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                         <h5 class="mb-0 ps-4 me-4">Total</h5>
-                        <p class="mb-0 pe-4">$ @Model.Sum(x => x.TotalPrice)</p>
+                        <p class="mb-0 pe-4">$ @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
+                    </div>
+                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="checkoutbtn" type="button">Proceed Checkout</button>
+                </div>
+            </div>
+
+            <div class="col-4"></div>
+
+
+            <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4 paymentdiv">
+                <div class="bg-light rounded">
+                    <div class="p-4">
+                        <h1 class="display-6 mb-4">Payment method <span class="fw-normal">Total</span></h1>
+                        <div class="d-flex justify-content-between mb-4">
+                            <h5 class="mb-0 me-4">Subtotal:</h5>
+                            <p class="mb-0">$ @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="mb-0 me-4">Shipping</h5>
+                            <div class="">
+                                <p class="mb-0">Flat rate: $3.00</p>
+                            </div>
+                        </div>
+                        <p class="mb-0 text-end">Shipping to Ukraine.</p>
+                    </div>
+                    <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                        <h5 class="mb-0 ps-4 me-4">Total</h5>
+                        <p class="mb-0 pe-4">$ @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
                     </div>
                     <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="checkoutbtn" type="button">Proceed Checkout</button>
                 </div>
@@ -101,6 +129,19 @@
     </div>
 
     <script>
+
+        $(document).ready(function () {
+            // Access the value of the hidden field
+            var isOrderCreated = $("#isOrderCreated").val();
+
+            // Example condition
+            if (isOrderCreated === "true") {
+                $(".paymentdiv").show();
+            } else {
+                $(".paymentdiv").hide();
+            }
+        });
+
         $(".clearAllItem").on("click", function () {
             var Id = $(this).data("id"); // Get the product ID from data attribute
             console.log('productId =', Id)
@@ -177,7 +218,7 @@
         });
 
         $("#checkoutbtn").on("click", function () {
-            var Records = @Html.Raw(Json.Serialize(@Model)); // Get the first record directly
+            var Records = @Html.Raw(Json.Serialize(@Model.CartDTOlist)); // Get the first record directly
 
 
             console.log("Records", Records)
@@ -188,7 +229,7 @@
                 success: function (result) {
                     if (result === "success") {
                         alert("Successfully added to cart");
-                        location.reload();
+                        $(".paymentdiv").show();
                     } else {
                         alert("Error");
                     }

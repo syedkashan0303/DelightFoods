@@ -153,29 +153,33 @@ namespace DelightFoods_Live.Controllers
             return _context.SaleOrder.Any(e => e.Id == id);
         }
 
-
-
-
         [HttpPost]
         public JsonResult CreateOrderByCart(IEnumerable<CartDTO> model)
         {
-
             if (model != null && model.Any())
             {
+
+                var saleOrder = new SaleOrderModel();
+
+                saleOrder.PaymentId = 0;
+                saleOrder.TotalPrice = model.Sum(x=>x.TotalPrice);
+                saleOrder.Status = "Pending";
+                saleOrder.ShippingId = 0;
+                saleOrder.CustomerId = model.FirstOrDefault().CustomerId;
+                saleOrder.CreatedOnUTC = DateTime.UtcNow;
+                _context.SaleOrder.Add(saleOrder);
+                _context.SaveChangesAsync();
+
                 foreach (var item in model)
                 {
-                    var saleOrder = new SaleOrderModel();
-
-                    saleOrder.ProductId = item.ProductId;
-                    saleOrder.TotalPrice = item.TotalPrice;
-                    saleOrder.Quantity = item.Quantity;
-                    saleOrder.Status = 0;
-                    saleOrder.ShippingId = 0;
-                    saleOrder.CustomerId = item.CustomerId;
-                    saleOrder.CreatedOnUTC = DateTime.UtcNow;
-                    _context.SaleOrder.Add(saleOrder);
+                    var mapping = new SaleOrderProductMappingModel();
+                    mapping.SaleOrderId = saleOrder.Id;
+                    mapping.ProductID = item.ProductId;
+                    mapping.Quantity = item.Quantity;
+                    mapping.Price = item.ProductPrice;
+                    _context.SaleOrderProductMapping.Add(mapping);
+                    _context.SaveChangesAsync();
                 }
-                _context.SaveChangesAsync();
 
                 return Json("succes");
             }
