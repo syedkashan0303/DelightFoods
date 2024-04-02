@@ -94,7 +94,7 @@
                         <h5 class="mb-0 ps-4 me-4">Total</h5>
                         <p class="mb-0 pe-4">$ @Model.Sum(x => x.TotalPrice)</p>
                     </div>
-                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="checkoutbtn" type="button">Proceed Checkout</button>
                 </div>
             </div>
         </div>
@@ -175,6 +175,56 @@
                 }
             });
         });
+
+        $("#checkoutbtn").on("click", function () {
+            var Records = @Html.Raw(Json.Serialize(@Model)); // Get the first record directly
+
+
+            console.log("Records", Records)
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CreateOrderByCart", "SaleOrder")',
+                data: { model: Records }, // No need to stringify
+                success: function (result) {
+                    if (result === "success") {
+                        alert("Successfully added to cart");
+                        location.reload();
+                    } else {
+                        alert("Error");
+                    }
+                },
+                error: function (result) {
+                    Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+                }
+            });
+        });
+
+
+
+
+        // $("#checkoutbtn").on("click", function () {
+        //     var firstRecord = JSON.parse(JSON.stringify(@Html.Raw(Json.Serialize(Model))))[0];
+
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '@Url.Action("CreateOrderByCart", "SaleOrder")',
+        //         data: JSON.stringify(firstRecord),
+        //         contentType: "application/json",
+        //         success: function (result) {
+        //             if (result === "success") {
+        //                 alert("Successfully added to cart");
+        //                 location.reload();
+        //             } else {
+        //                 alert("Error");
+        //             }
+        //         },
+        //         error: function (result) {
+        //             Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+        //         }
+        //     });
+        // });
+
+
     </script>
 
 </div>

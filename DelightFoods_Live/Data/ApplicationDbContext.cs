@@ -20,8 +20,8 @@ namespace DelightFoods_Live.Data
         public DbSet<MediaGalleryModel> MediaGallery { get; set; } = default!;
         public DbSet<DelightFoods_Live.Models.DTO.CustomerDTO> CustomerDTO { get; set; } = default!;
         public DbSet<CartModel> Cart { get; set; } = default!;
-        public DbSet<DelightFoods_Live.Models.DTO.CartDTO> CartDTO { get; set; } = default!;
-        public DbSet<DelightFoods_Live.Models.SaleOrderModel> SaleOrderModel { get; set; } = default!;
+        public DbSet<CartDTO> CartDTO { get; set; } = default!;
+        public DbSet<SaleOrderModel> SaleOrder { get; set; } = default!;
 
     }
 }

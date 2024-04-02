@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DelightFoods_Live.Data;
 using DelightFoods_Live.Models;
+using System.Security.Claims;
+using DelightFoods_Live.Models.DTO;
 
 namespace DelightFoods_Live.Controllers
 {
@@ -22,7 +24,7 @@ namespace DelightFoods_Live.Controllers
         // GET: SaleOrder
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SaleOrderModel.ToListAsync());
+            return View(await _context.SaleOrder.ToListAsync());
         }
 
         // GET: SaleOrder/Details/5
@@ -33,7 +35,7 @@ namespace DelightFoods_Live.Controllers
                 return NotFound();
             }
 
-            var saleOrderModel = await _context.SaleOrderModel
+            var saleOrderModel = await _context.SaleOrder
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (saleOrderModel == null)
             {
@@ -49,12 +51,9 @@ namespace DelightFoods_Live.Controllers
             return View();
         }
 
-        // POST: SaleOrder/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductIds,CustomerId,Quantity,TotalPrice,Status,ShippingId,CreatedOnUTC")] SaleOrderModel saleOrderModel)
+        public async Task<IActionResult> Create(SaleOrderModel saleOrderModel)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +72,7 @@ namespace DelightFoods_Live.Controllers
                 return NotFound();
             }
 
-            var saleOrderModel = await _context.SaleOrderModel.FindAsync(id);
+            var saleOrderModel = await _context.SaleOrder.FindAsync(id);
             if (saleOrderModel == null)
             {
                 return NotFound();
@@ -86,7 +85,7 @@ namespace DelightFoods_Live.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductIds,CustomerId,Quantity,TotalPrice,Status,ShippingId,CreatedOnUTC")] SaleOrderModel saleOrderModel)
+        public async Task<IActionResult> Edit(int id, SaleOrderModel saleOrderModel)
         {
             if (id != saleOrderModel.Id)
             {
@@ -124,7 +123,7 @@ namespace DelightFoods_Live.Controllers
                 return NotFound();
             }
 
-            var saleOrderModel = await _context.SaleOrderModel
+            var saleOrderModel = await _context.SaleOrder
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (saleOrderModel == null)
             {
@@ -139,10 +138,10 @@ namespace DelightFoods_Live.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var saleOrderModel = await _context.SaleOrderModel.FindAsync(id);
+            var saleOrderModel = await _context.SaleOrder.FindAsync(id);
             if (saleOrderModel != null)
             {
-                _context.SaleOrderModel.Remove(saleOrderModel);
+                _context.SaleOrder.Remove(saleOrderModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +150,38 @@ namespace DelightFoods_Live.Controllers
 
         private bool SaleOrderModelExists(int id)
         {
-            return _context.SaleOrderModel.Any(e => e.Id == id);
+            return _context.SaleOrder.Any(e => e.Id == id);
         }
+
+
+
+
+        [HttpPost]
+        public JsonResult CreateOrderByCart(IEnumerable<CartDTO> model)
+        {
+
+            if (model != null && model.Any())
+            {
+                foreach (var item in model)
+                {
+                    var saleOrder = new SaleOrderModel();
+
+                    saleOrder.ProductId = item.ProductId;
+                    saleOrder.TotalPrice = item.TotalPrice;
+                    saleOrder.Quantity = item.Quantity;
+                    saleOrder.Status = 0;
+                    saleOrder.ShippingId = 0;
+                    saleOrder.CustomerId = item.CustomerId;
+                    saleOrder.CreatedOnUTC = DateTime.UtcNow;
+                    _context.SaleOrder.Add(saleOrder);
+                }
+                _context.SaveChangesAsync();
+
+                return Json("succes");
+            }
+            return Json("error");
+        }
+
+
     }
 }
