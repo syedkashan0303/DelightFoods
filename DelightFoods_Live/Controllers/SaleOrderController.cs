@@ -9,6 +9,7 @@ using DelightFoods_Live.Data;
 using DelightFoods_Live.Models;
 using System.Security.Claims;
 using DelightFoods_Live.Models.DTO;
+using DelightFoods_Live.Utilites;
 
 namespace DelightFoods_Live.Controllers
 {
@@ -34,15 +35,36 @@ namespace DelightFoods_Live.Controllers
             {
                 return NotFound();
             }
+            var saleOrderModel = await _context.SaleOrder.FirstOrDefaultAsync(m => m.Id == id);
 
-            var saleOrderModel = await _context.SaleOrder
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (saleOrderModel == null)
             {
                 return NotFound();
             }
 
-            return View(saleOrderModel);
+            var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
+            var model = utilities.Map(saleOrderModel);
+            var saleOrderProductMapping = _context.SaleOrderProductMapping.Where(z=>z.SaleOrderId == saleOrderModel.Id).ToList();
+            var products = saleOrderProductMapping!= null && saleOrderProductMapping.Any() ? _context.Product.Where(x => saleOrderProductMapping.Select(z => z.ProductID).Contains(x.Id)).ToList(): null;
+
+            foreach (var item in saleOrderProductMapping)
+            {
+                var product = products != null && products.Any() ? products.Where(x => x.Id == item.ProductID).FirstOrDefault(): null;
+
+                model.saleOrderProductMappings.Add(new SaleOrderProductMappingDTO
+                {
+
+                    ProductID = item.ProductID,
+                    ProductName = product != null ? product.Name : "" ,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    Id = item.Id,
+                    SaleOrderId = item.SaleOrderId
+                });
+            }
+
+
+            return View(model);
         }
 
         // GET: SaleOrder/Create
@@ -181,10 +203,22 @@ namespace DelightFoods_Live.Controllers
                     _context.SaveChangesAsync();
                 }
 
-                return Json("succes");
+                return Json("success");
             }
             return Json("error");
         }
+
+
+        [HttpPost]
+        public JsonResult CartProductPayment(CartDTO model)
+        {
+            if (model != null )
+            {
+                return Json("success");
+            }
+            return Json("error");
+        }
+
 
 
     }

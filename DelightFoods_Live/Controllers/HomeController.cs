@@ -36,7 +36,7 @@ namespace DelightFoods_Live.Controllers
             var ModelList = new List<ProductDTO>();
             var utilities = new MapperClass<ProductModel, ProductDTO>();
 
-            var mediaFiles = _context.MediaGallery.Where(x => productModel.Select(z => z.Id).ToList().Contains(x.CategoryId));
+            var mediaFiles = _context.MediaGallery.Where(x => productModel.Select(z => z.Id).ToList().Contains(x.ProductId));
             var categories = _context.Category.Where(x => productModel.Select(z => z.CategoryId).Contains(x.Id)).ToList();
 
             foreach (var item in productModel)

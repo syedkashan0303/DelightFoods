@@ -63,7 +63,7 @@ namespace DelightFoods_Live.Controllers
                 {
                     return View(cartList);
                 }
-
+                var iscreatedAlready = false;
                 foreach (var item in cart)
                 {
                     var pro = product.Where(x => x.Id == item.ProductId).FirstOrDefault();
@@ -75,11 +75,11 @@ namespace DelightFoods_Live.Controllers
                     model.ProductPrice = pro != null ? pro.Price : 0;
                     model.TotalPrice = model.ProductPrice * model.Quantity;
                     model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
-                    model.IsOrderCreated = item.IsOrderCreated;
+                    iscreatedAlready = !iscreatedAlready ? item.IsOrderCreated :true;
                     cartList.CartDTOlist.Add(model);
                 }
 
-
+                cartList.IsOrderCreated = iscreatedAlready;
                 return View(cartList);
 
             }
@@ -186,7 +186,6 @@ namespace DelightFoods_Live.Controllers
             }
             return Json("error");
         }
-
 
         [HttpGet]
         public JsonResult CartItemCount()

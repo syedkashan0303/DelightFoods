@@ -95,9 +95,10 @@
                         <h5 class="mb-0 ps-4 me-4">Total</h5>
                         <p class="mb-0 pe-4">$ @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
                     </div>
-                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="checkoutbtn" type="button">Proceed Checkout</button>
+                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="paymentbtn" type="button">Proceed Checkout</button>
                 </div>
             </div>
+
 
             <div class="col-4"></div>
 
@@ -125,25 +126,25 @@
                     <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="checkoutbtn" type="button">Proceed Checkout</button>
                 </div>
             </div>
+
         </div>
     </div>
 
     <script>
 
         $(document).ready(function () {
-            // Access the value of the hidden field
             var isOrderCreated = $("#isOrderCreated").val();
 
-            // Example condition
-            if (isOrderCreated === "true") {
+            if (isOrderCreated === "True") {
                 $(".paymentdiv").show();
+                $("#checkoutbtn").hide();
             } else {
                 $(".paymentdiv").hide();
             }
         });
 
         $(".clearAllItem").on("click", function () {
-            var Id = $(this).data("id"); // Get the product ID from data attribute
+            var Id = $(this).data("id");
             console.log('productId =', Id)
 
             $.ajax({
@@ -168,7 +169,7 @@
         });
 
         $(".btn-minus").on("click", function () {
-            var Id = $(this).data("id"); // Get the product ID from data attribute
+            var Id = $(this).data("id");
             console.log('productId =', Id)
 
             $.ajax({
@@ -193,7 +194,7 @@
         });
 
         $(".btn-plus").on("click", function () {
-            var Id = $(this).data("id"); // Get the product ID from data attribute
+            var Id = $(this).data("id");
             console.log('productId =', Id)
 
             $.ajax({
@@ -218,10 +219,9 @@
         });
 
         $("#checkoutbtn").on("click", function () {
-            var Records = @Html.Raw(Json.Serialize(@Model.CartDTOlist)); // Get the first record directly
-
-
+            var Records = @Html.Raw(Json.Serialize(@Model.CartDTOlist));
             console.log("Records", Records)
+
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("CreateOrderByCart", "SaleOrder")',
@@ -229,7 +229,30 @@
                 success: function (result) {
                     if (result === "success") {
                         alert("Successfully added to cart");
-                        $(".paymentdiv").show();
+                        location.reload();
+                    } else {
+                        alert("Error");
+                    }
+                },
+                error: function (result) {
+                    Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+                }
+            });
+        });     
+        
+        
+        $("#paymentbtn").on("click", function () {
+            var Records = @Html.Raw(Json.Serialize(@Model));
+            console.log("Records", Records)
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CartProductPayment", "SaleOrder")',
+                data: { model: Records }, // No need to stringify
+                success: function (result) {
+                    if (result === "success") {
+                        alert("Successfully added to cart");
+                        location.reload();
                     } else {
                         alert("Error");
                     }
@@ -239,32 +262,6 @@
                 }
             });
         });
-
-
-
-
-        // $("#checkoutbtn").on("click", function () {
-        //     var firstRecord = JSON.parse(JSON.stringify(@Html.Raw(Json.Serialize(Model))))[0];
-
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: '@Url.Action("CreateOrderByCart", "SaleOrder")',
-        //         data: JSON.stringify(firstRecord),
-        //         contentType: "application/json",
-        //         success: function (result) {
-        //             if (result === "success") {
-        //                 alert("Successfully added to cart");
-        //                 location.reload();
-        //             } else {
-        //                 alert("Error");
-        //             }
-        //         },
-        //         error: function (result) {
-        //             Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
-        //         }
-        //     });
-        // });
-
 
     </script>
 

@@ -1,4 +1,4 @@
-﻿@model DelightFoods_Live.Models.SaleOrderModel
+﻿@model DelightFoods_Live.Models.DTO.SaleOrderDTO
 
 @{
     ViewData["Title"] = "Details";
@@ -47,8 +47,41 @@
             @Html.DisplayFor(model => model.CreatedOnUTC)
         </dd>
     </dl>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <p>ProductName</p>
+                </th>
+                <th>
+                    <p>Price</p>
+                </th>
+                <th>
+                    <p>Quantity</p>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.saleOrderProductMappings)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
