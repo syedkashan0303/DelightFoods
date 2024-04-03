@@ -21,6 +21,7 @@ namespace DelightFoods_Live.Data
         public DbSet<DelightFoods_Live.Models.DTO.CustomerDTO> CustomerDTO { get; set; } = default!;
         public DbSet<CartModel> Cart { get; set; } = default!;
         public DbSet<CartDTO> CartDTO { get; set; } = default!;
+        public DbSet<PaymentModel> Payment { get; set; } = default!;
         public DbSet<SaleOrderModel> SaleOrder { get; set; } = default!;
         public DbSet<SaleOrderProductMappingModel> SaleOrderProductMapping { get; set; } = default!;
 

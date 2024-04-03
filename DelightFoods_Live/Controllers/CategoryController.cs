@@ -47,7 +47,7 @@ namespace DelightFoods_Live.Controllers
 
                 model.ParentCategoryName = categoryModel.FirstOrDefault(x => x.Id == item.ParentCategoryId)?.Name ?? "";
                 //model.MediaFilePath = media?.FilePath.Split("wwwroot/")[1].Replace('\' , '/')?? "";
-                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
+                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
 
                 ModelList.Add(model);
             }
@@ -267,7 +267,7 @@ namespace DelightFoods_Live.Controllers
 
                 model.ParentCategoryName = categoryModel.FirstOrDefault(x => x.Id == item.ParentCategoryId)?.Name ?? "";
                 //model.MediaFilePath = media?.FilePath.Split("wwwroot/")[1].Replace('\' , '/')?? "";
-                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
+                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
 
                 ModelList.Add(model);
             }

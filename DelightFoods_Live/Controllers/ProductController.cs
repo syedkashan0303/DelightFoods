@@ -33,7 +33,7 @@ namespace DelightFoods_Live.Controllers
             var ModelList = new List<ProductDTO>();
             var utilities = new MapperClass<ProductModel, ProductDTO>();
 
-            var mediaFiles = _context.MediaGallery.Where(x => productModel.Select(z => z.Id).ToList().Contains(x.CategoryId));
+            var mediaFiles = _context.MediaGallery.Where(x => productModel.Select(z => z.Id).ToList().Contains(x.ProductId));
             var categories = _context.Category.Where(x => productModel.Select(z => z.CategoryId).Contains(x.Id)).ToList();
             foreach (var item in productModel)
             {
@@ -42,7 +42,7 @@ namespace DelightFoods_Live.Controllers
                 var media = mediaFiles.Where(x => x.ProductId == item.Id).FirstOrDefault();
 
                 model.CategoryName = category != null ? category.Name : "";
-                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
+                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
 
                 ModelList.Add(model);
             }

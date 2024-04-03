@@ -203,6 +203,14 @@ namespace DelightFoods_Live.Controllers
                     _context.SaveChangesAsync();
                 }
 
+                var carts = _context.Cart.Where(x => model.Select(z => z.Id).Contains(x.Id)).ToList();
+                foreach (var item in carts)
+                {
+                    item.IsOrderCreated = true;
+                    _context.Update(item);
+                    _context.SaveChanges();
+                }
+
                 return Json("success");
             }
             return Json("error");
@@ -214,6 +222,34 @@ namespace DelightFoods_Live.Controllers
         {
             if (model != null )
             {
+                var payment = new PaymentModel();
+                payment.CardNumber = "123456789";
+                payment.Expiry = "23/22";
+                payment.CVC = 123;
+                _context.Payment.Add(payment);
+                _context.SaveChanges();
+
+                var carts = _context.Cart.Where(x => model.CartDTOlist.Select(z => z.Id).Contains(x.Id)).ToList();
+
+                var saleOrder = carts != null && carts.Any() ? _context.SaleOrder.Where(x => x.CustomerId == (carts.FirstOrDefault().CustomerId)) : null ;
+                foreach (var item in saleOrder)
+                {
+                    item.PaymentId = payment.Id;
+                    _context.SaleOrder.Update(item);
+                    _context.SaveChanges();
+
+                }
+
+                    _context.Remove(carts);
+                    _context.SaveChanges();
+
+                //foreach (var item in carts)
+                //{
+                //    _context.Cart.Remove(item);
+                //    _context.SaveChanges();
+                //}
+
+
                 return Json("success");
             }
             return Json("error");

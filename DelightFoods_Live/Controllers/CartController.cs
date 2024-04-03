@@ -74,7 +74,7 @@ namespace DelightFoods_Live.Controllers
                     model.ProductName = pro != null ? pro.Name : "";
                     model.ProductPrice = pro != null ? pro.Price : 0;
                     model.TotalPrice = model.ProductPrice * model.Quantity;
-                    model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
+                    model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
                     iscreatedAlready = !iscreatedAlready ? item.IsOrderCreated :true;
                     cartList.CartDTOlist.Add(model);
                 }

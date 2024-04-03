@@ -46,7 +46,7 @@ namespace DelightFoods_Live.Controllers
                 var media = mediaFiles.Where(x => x.ProductId == item.Id).FirstOrDefault();
 
                 model.CategoryName = category != null ? category.Name : "";
-                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "";
+                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
 
                 ModelList.Add(model);
             }
