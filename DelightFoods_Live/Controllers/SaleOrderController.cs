@@ -236,18 +236,12 @@ namespace DelightFoods_Live.Controllers
                 {
                     item.PaymentId = payment.Id;
                     _context.SaleOrder.Update(item);
-                    _context.SaveChanges();
-
                 }
-
-                    _context.Remove(carts);
+                foreach (var item in carts)
+                {
+                    _context.Cart.Remove(item);
+                }
                     _context.SaveChanges();
-
-                //foreach (var item in carts)
-                //{
-                //    _context.Cart.Remove(item);
-                //    _context.SaveChanges();
-                //}
 
 
                 return Json("success");

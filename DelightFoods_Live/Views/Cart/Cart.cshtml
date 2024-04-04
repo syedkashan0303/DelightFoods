@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_CustomerLayout.cshtml";
 }
 
-@Html.HiddenFor(model => model.IsOrderCreated , new { id = "isOrderCreated" })
+@Html.HiddenFor(model => model.IsOrderCreated, new { id = "isOrderCreated" })
 
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5">
@@ -75,38 +75,62 @@
         </div>
         <div class="row g-4 justify-content-end">
 
-            <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4 paymentdiv">
+            <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5  paymentdiv">
                 <div class="bg-light rounded">
                     <div class="p-4">
                         <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
                         <div class="d-flex justify-content-between mb-4">
-                            <h5 class="mb-0 me-4">Subtotal:</h5>
-                            <p class="mb-0">$ @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <h5 class="mb-0 me-4">Shipping</h5>
-                            <div class="">
-                                <p class="mb-0">Flat rate: $3.00</p>
+
+                            <div class="col-md-4">
+                                <h5 class="mb-0 me-4">Card Number:</h5>
                             </div>
+                            <div class="col-md-8">
+                                @* @Html.TextBoxFor(model => model.CardNumber,  new { @class = "form-control" }) *@
+                                <input type="text" id="txtCardNumber" class="form-control" />
+
+                            </div>
+
                         </div>
-                        <p class="mb-0 text-end">Shipping to Ukraine.</p>
+                        <div class="d-flex justify-content-between  mb-4">
+
+                            <div class="col-md-4">
+                                <h5 class="mb-0 me-4">Expiry</h5>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" id="txtExpiry" class="form-control" />
+
+                            </div>
+
+                        </div>
+                        <div class="d-flex justify-content-between  mb-4">
+
+                            <div class="col-md-4">
+                                <h5 class="mb-0 me-4">CVC</h5>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" id="txtCVC" class="form-control" />
+
+                            </div>
+
+                        </div>
                     </div>
                     <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                         <h5 class="mb-0 ps-4 me-4">Total</h5>
                         <p class="mb-0 pe-4">$ @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
                     </div>
-                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="paymentbtn" type="button">Proceed Checkout</button>
+                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="paymentbtn" type="button">Payment Proceed</button>
                 </div>
             </div>
 
 
-            <div class="col-4"></div>
+            <div class="col-2"></div>
+
 
 
             <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4 ">
                 <div class="bg-light rounded">
                     <div class="p-4">
-                        <h1 class="display-6 mb-4">Payment method <span class="fw-normal">Total</span></h1>
+                        <h1 class="display-6 mb-4"> Cart <span class="fw-normal">Total</span></h1>
                         <div class="d-flex justify-content-between mb-4">
                             <h5 class="mb-0 me-4">Subtotal:</h5>
                             <p class="mb-0">$ @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
@@ -238,17 +262,27 @@
                     // Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
                 }
             });
-        });     
-        
-        
+        });
+
+
         $("#paymentbtn").on("click", function () {
-            var Records = @Html.Raw(Json.Serialize(@Model));
-            console.log("Records", Records)
+            // Get the value of the textbox
+            var cardNumber = $("#txtCardNumber").val();
+            var expiry = $("#txtExpiry").val();
+            var cvc = $("#txtCVC").val();
+
+            // Update the model with the textbox value
+            var model = @Html.Raw(Json.Serialize(Model));
+            model.cardNumber = cardNumber;
+            model.expiry = expiry;
+            model.cvc = cvc;
+
+            console.log("Model", model);
 
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("CartProductPayment", "SaleOrder")',
-                data: { model: Records }, // No need to stringify
+                data: { model: model },
                 success: function (result) {
                     if (result === "success") {
                         alert("Successfully added to cart");
@@ -258,10 +292,34 @@
                     }
                 },
                 error: function (result) {
-                    //Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+                    // Handle error
                 }
             });
         });
+
+
+
+        // $("#paymentbtn").on("click", function () {
+        //     var Records = @Html.Raw(Json.Serialize(@Model));
+        //     console.log("Records", Records)
+
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '@Url.Action("CartProductPayment", "SaleOrder")',
+        //         data: { model: Records }, // No need to stringify
+        //         success: function (result) {
+        //             if (result === "success") {
+        //                 alert("Successfully added to cart");
+        //                 location.reload();
+        //             } else {
+        //                 alert("Error");
+        //             }
+        //         },
+        //         error: function (result) {
+        //             //Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+        //         }
+        //     });
+        // });
 
     </script>
 
