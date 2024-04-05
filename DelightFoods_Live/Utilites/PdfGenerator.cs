@@ -1,8 +1,8 @@
 ﻿using DelightFoods_Live.Models.DTO;
-using PdfSharp.Drawing;
-using PdfSharp.Drawing.Layout;
-using PdfSharp.Fonts;
-using PdfSharp.Pdf;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Drawing.Layout;
+using PdfSharpCore.Fonts;
+using PdfSharpCore.Pdf;
 
 
 namespace DelightFoods_Live.Utilites
@@ -48,7 +48,7 @@ namespace DelightFoods_Live.Utilites
 			XGraphics gfx = XGraphics.FromPdfPage(page);
 
 			// Create a font for rendering text
-
+			XFont font = new XFont("Arial", 12);
 			// Create a rectangle for the PDF page
 			XRect layoutRectangle = new XRect(10, 10, page.Width - 20, page.Height - 20);
 
@@ -56,41 +56,11 @@ namespace DelightFoods_Live.Utilites
 			XTextFormatter tf = new XTextFormatter(gfx);
 
 			// Render the HTML content onto the PDF page
-			tf.DrawString(htmlContent,new XFont("Arial", 10), XBrushes.Black, layoutRectangle, XStringFormats.TopLeft);
+			tf.DrawString(htmlContent, font, XBrushes.Black, layoutRectangle, XStringFormats.TopLeft);
 
 			// Save the PDF document to the output path
 			document.Save(pdfOutputPath);
 		}
 
 	}
-
-	public class ArialFontResolver : IFontResolver
-	{
-		public byte[] GetFont(string faceName)
-		{
-			if (faceName.Equals("Arial", StringComparison.OrdinalIgnoreCase))
-			{
-				string fontFilePath = "path/to/arial.ttf"; // Replace with the actual path to Arial font file
-				if (File.Exists(fontFilePath))
-				{
-					return File.ReadAllBytes(fontFilePath);
-				}
-				else
-				{
-					throw new FileNotFoundException($"Arial font file not found at: {fontFilePath}");
-				}
-			}
-			return null;
-		}
-
-		public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
-		{
-			if (familyName.Equals("Arial", StringComparison.OrdinalIgnoreCase))
-			{
-				return new FontResolverInfo("Arial");
-			}
-			return null;
-		}
-	}
-
 }
