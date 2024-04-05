@@ -10,6 +10,8 @@ using DelightFoods_Live.Models;
 using System.Security.Claims;
 using DelightFoods_Live.Models.DTO;
 using DelightFoods_Live.Utilites;
+using System.IO;
+using PdfSharp.Fonts;
 
 namespace DelightFoods_Live.Controllers
 {
@@ -185,12 +187,12 @@ namespace DelightFoods_Live.Controllers
 
                 saleOrder.PaymentId = 0;
                 saleOrder.TotalPrice = model.Sum(x=>x.TotalPrice);
-                saleOrder.Status = "Pending";
+                saleOrder.Status = OrderStatusEnum.Pending.ToString();
                 saleOrder.ShippingId = 0;
                 saleOrder.CustomerId = model.FirstOrDefault().CustomerId;
                 saleOrder.CreatedOnUTC = DateTime.UtcNow;
-                _context.SaleOrder.Add(saleOrder);
-                _context.SaveChangesAsync();
+                _context.Add(saleOrder);
+                _context.SaveChanges();
 
                 foreach (var item in model)
                 {
@@ -200,7 +202,7 @@ namespace DelightFoods_Live.Controllers
                     mapping.Quantity = item.Quantity;
                     mapping.Price = item.ProductPrice;
                     _context.SaleOrderProductMapping.Add(mapping);
-                    _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
 
                 var carts = _context.Cart.Where(x => model.Select(z => z.Id).Contains(x.Id)).ToList();
@@ -223,18 +225,34 @@ namespace DelightFoods_Live.Controllers
             if (model != null )
             {
                 var payment = new PaymentModel();
-                payment.CardNumber = "123456789";
-                payment.Expiry = "23/22";
-                payment.CVC = 123;
+                payment.CardNumber = model.CardNumber;
+                payment.Expiry = model.Expiry;
+                payment.CVC = model.CVC;
                 _context.Payment.Add(payment);
                 _context.SaveChanges();
 
                 var carts = _context.Cart.Where(x => model.CartDTOlist.Select(z => z.Id).Contains(x.Id)).ToList();
 
-                var saleOrder = carts != null && carts.Any() ? _context.SaleOrder.Where(x => x.CustomerId == (carts.FirstOrDefault().CustomerId)) : null ;
+
+                var query = from order in _context.SaleOrder
+                            join orderProductMapping in _context.SaleOrderProductMapping on order.Id equals orderProductMapping.SaleOrderId
+                            join cartMapping in _context.Cart on order.CustomerId equals cartMapping.CustomerId 
+                            where orderProductMapping.ProductID == cartMapping.ProductId && 
+                            cartMapping.Quantity == orderProductMapping.Quantity && 
+                            order.Status == "Pending" & 
+                            order.PaymentId == 0
+                            select new
+                            {
+                                OrderId = order.Id
+                            };
+
+                var saleOrder = query != null && query.Any() ? _context.SaleOrder.Where(x => query.Select(z=>z.OrderId).Contains(x.Id)  ) : null;
+
+
                 foreach (var item in saleOrder)
                 {
                     item.PaymentId = payment.Id;
+                    item.Status = OrderStatusEnum.ReadytoShip.ToString();
                     _context.SaleOrder.Update(item);
                 }
                 foreach (var item in carts)
@@ -249,7 +267,77 @@ namespace DelightFoods_Live.Controllers
             return Json("error");
         }
 
+        public IActionResult GetSaleOrderDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var saleOrderModel = _context.SaleOrder.FirstOrDefault(m => m.Id == id);
+
+            if (saleOrderModel == null)
+            {
+                return NotFound();
+            }
+
+            var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
+            var model = utilities.Map(saleOrderModel);
+            var saleOrderProductMapping = _context.SaleOrderProductMapping.Where(z => z.SaleOrderId == saleOrderModel.Id).ToList();
+            var products = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? _context.Product.Where(x => saleOrderProductMapping.Select(z => z.ProductID).Contains(x.Id)).ToList() : null;
+
+            foreach (var item in saleOrderProductMapping)
+            {
+                var product = products != null && products.Any() ? products.FirstOrDefault(x => x.Id == item.ProductID) : null;
+
+                model.saleOrderProductMappings.Add(new SaleOrderProductMappingDTO
+                {
+                    ProductID = item.ProductID,
+                    ProductName = product != null ? product.Name : "",
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    Id = item.Id,
+                    SaleOrderId = item.SaleOrderId
+                });
+            }
+
+            return Json(model);
+        }
+
+		public IActionResult GeneratePdf(int id)
+		{
+			var saleOrderModel = _context.SaleOrder.FirstOrDefault(m => m.Id == id);
+
+			if (saleOrderModel == null)
+			{
+				return NotFound();
+			}
+
+			var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
+			var model = utilities.Map(saleOrderModel);
+			var _pdfGenerator = new PdfGenerator();
+
+			var htmlContent = _pdfGenerator.GenerateHtmlContent(model);
+
+			var htmlFilePath = "SaleOrderPDF.html"; // Change the file extension to .html
+			var pdfOutputPath = "SaleOrderDetails.pdf";
+
+			// Save the generated HTML content to a file
+			System.IO.File.WriteAllText(htmlFilePath, htmlContent);
+
+			// Register the font resolver
+			GlobalFontSettings.FontResolver = new ArialFontResolver();
+
+			// Convert the HTML file to PDF
+			_pdfGenerator.ConvertHtmlToPdf(htmlFilePath, pdfOutputPath);
+
+			// Delete the temporary HTML file
+			System.IO.File.Delete(htmlFilePath);
+
+			// Return a file response with the generated PDF
+			return File(System.IO.File.ReadAllBytes(pdfOutputPath), "application/pdf", pdfOutputPath);
+		}
 
 
-    }
+	}
 }

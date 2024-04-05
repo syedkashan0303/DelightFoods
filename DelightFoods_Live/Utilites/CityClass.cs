@@ -11,4 +11,12 @@
         SIALKOT = 7,
         LAHORE = 8
     }
+
+    public enum OrderStatusEnum
+    {
+        Pending = 0,
+        ReadytoShip = 1,
+        Shipped = 2,
+        Delivered = 3
+    }
 }

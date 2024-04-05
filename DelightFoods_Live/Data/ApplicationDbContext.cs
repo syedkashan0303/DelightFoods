@@ -18,12 +18,12 @@ namespace DelightFoods_Live.Data
         public DbSet<CategoryModel> Category { get; set; } = default!;
         public DbSet<ProductModel> Product { get; set; } = default!;
         public DbSet<MediaGalleryModel> MediaGallery { get; set; } = default!;
-        public DbSet<DelightFoods_Live.Models.DTO.CustomerDTO> CustomerDTO { get; set; } = default!;
-        public DbSet<CartModel> Cart { get; set; } = default!;
-        public DbSet<CartDTO> CartDTO { get; set; } = default!;
-        public DbSet<PaymentModel> Payment { get; set; } = default!;
-        public DbSet<SaleOrderModel> SaleOrder { get; set; } = default!;
-        public DbSet<SaleOrderProductMappingModel> SaleOrderProductMapping { get; set; } = default!;
+        public DbSet<DelightFoods_Live.Models.DTO.CustomerDTO> CustomerDTO { get; set; }
+        public DbSet<CartModel> Cart { get; set; }
+        public DbSet<CartDTO> CartDTO { get; set; } 
+        public DbSet<PaymentModel> Payment { get; set; } 
+        public DbSet<SaleOrderModel> SaleOrder { get; set; }
+        public DbSet<SaleOrderProductMappingModel> SaleOrderProductMapping { get; set; }
 
     }
 }

@@ -263,5 +263,34 @@ namespace DelightFoods_Live.Controllers
         {
             return _context.Product.Any(e => e.Id == id);
         }
+
+
+        public async Task<IActionResult> Shop()
+        {
+            var productModel = await _context.Product.ToListAsync();
+
+            if (productModel == null)
+            {
+                return NotFound();
+            }
+
+            var ModelList = new List<ProductDTO>();
+            var utilities = new MapperClass<ProductModel, ProductDTO>();
+
+            var mediaFiles = _context.MediaGallery.Where(x => productModel.Select(z => z.Id).ToList().Contains(x.ProductId));
+            var categories = _context.Category.Where(x => productModel.Select(z => z.CategoryId).Contains(x.Id)).ToList();
+            foreach (var item in productModel)
+            {
+                var model = utilities.Map(item);
+                var category = categories != null && categories.Any() ? categories.FirstOrDefault(x => x.Id == item.CategoryId) : null;
+                var media = mediaFiles.Where(x => x.ProductId == item.Id).FirstOrDefault();
+
+                model.CategoryName = category != null ? category.Name : "";
+                model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
+
+                ModelList.Add(model);
+            }
+            return View(ModelList);
+        }
     }
 }

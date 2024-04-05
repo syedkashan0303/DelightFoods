@@ -1,7 +1,14 @@
-﻿namespace DelightFoods_Live.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DelightFoods_Live.Models
 {
+
+    [Table("SaleOrder")]
     public class SaleOrderModel
     {
+
+        [Key]
         public int Id { get; set; }
         public int PaymentId { get; set; }
         public int CustomerId { get; set; }
