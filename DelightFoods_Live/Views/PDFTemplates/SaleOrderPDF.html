@@ -1,0 +1,85 @@
+﻿@* <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sale Order PDF</title>
+    <style>
+        /* Define your CSS styles here */
+    </style>
+</head>
+<body>
+    <h4>SaleOrderModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Total Price:</dt>
+        <dd class="col-sm-10">[TotalPrice]</dd>
+        <dt class="col-sm-2">Status:</dt>
+        <dd class="col-sm-10">[Status]</dd>
+        <dt class="col-sm-2">Created On UTC:</dt>
+        <dd class="col-sm-10">[CreatedOnUTC]</dd>
+    </dl>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            [ProductRows]
+        </tbody>
+    </table>
+</body>
+</html> *@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sale Order PDF</title>
+    <style>
+        /* Define your CSS styles here */
+    </style>
+</head>
+<body>
+    <h4>SaleOrderModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Customer Name:</dt>
+        <dd class="col-sm-10">@Model.CustomerName</dd>
+        
+        <dt class="col-sm-2">Status:</dt>
+        <dd class="col-sm-10">@Model.Status</dd>
+        <dt class="col-sm-2">Total Price:</dt>
+        <dd class="col-sm-10">@Model.TotalPrice</dd>
+
+        <dt class="col-sm-2">Created On UTC:</dt>
+        <dd class="col-sm-10">@Model.CreatedOnUTC</dd>
+    </dl>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.saleOrderProductMappings)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Price</td>
+                    <td>@item.Quantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
+

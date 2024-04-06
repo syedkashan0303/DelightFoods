@@ -6,31 +6,33 @@
 
 <h1>Details</h1>
 
-<div>
-	<h4>SaleOrderModel</h4>
-	<hr />
-	<dl class="row">
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.TotalPrice)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.TotalPrice)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Status)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Status)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.CreatedOnUTC)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.CreatedOnUTC)
-		</dd>
-	</dl>
+<div class="form-control">
+	<div>
 
-	<table class="table">
+		<h4>SaleOrderModel</h4>
+		<hr />
+		<dl class="row">
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.TotalPrice)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.TotalPrice)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Status)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Status)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.CreatedOnUTC)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.CreatedOnUTC)
+			</dd>
+		</dl>
+
+		<table class="table">
 		<thead>
 			<tr>
 				<th>
@@ -62,73 +64,12 @@
 			}
 		</tbody>
 	</table>
-</div>
+	</div>
 
 <div>
-	<a asp-action="Index">Back to List</a>
-</div>
-
-<div>
-	<!-- Link to call the GeneratePdf action -->
+	<a asp-action="Index">Back to List</a> 
 	<a asp-controller="SaleOrder" asp-action="GeneratePdf" asp-route-id="@Model.Id" class="btn btn-primary">Generate PDF</a>
 </div>
 
-@* 
-<script>
-	$(document).ready(function () {
-		// Function to fetch sale order details via AJAX
-		function getSaleOrderDetails(id) {
-			$.ajax({
-				url: '/SaleOrder/GetSaleOrderDetails',
-				type: 'GET',
-				data: { id: id },
-				success: function (response) {
-					displaySaleOrderDetails(response);
-				},
-				error: function (xhr, status, error) {
-					console.error(xhr.responseText);
-				}
-			});
-		}
-
-		// Function to display sale order details on the page
-		function displaySaleOrderDetails(data) {
-			var saleOrder = data;
-			var html = '<h4>SaleOrderModel</h4>';
-			html += '<hr />';
-			html += '<dl class="row">';
-			html += '<dt class="col-sm-2">Total Price</dt>';
-			html += '<dd class="col-sm-10">' + saleOrder.totalPrice + '</dd>';
-			html += '<dt class="col-sm-2">Status</dt>';
-			html += '<dd class="col-sm-10">' + saleOrder.status + '</dd>';
-			html += '<dt class="col-sm-2">Created On UTC</dt>';
-			html += '<dd class="col-sm-10">' + saleOrder.createdOnUTC + '</dd>';
-			html += '</dl>';
-
-			html += '<table class="table">';
-			html += '<thead>';
-			html += '<tr>';
-			html += '<th>Product Name</th>';
-			html += '<th>Price</th>';
-			html += '<th>Quantity</th>';
-			html += '</tr>';
-			html += '</thead>';
-			html += '<tbody>';
-			saleOrder.saleOrderProductMappings.forEach(function (item) {
-				html += '<tr>';
-				html += '<td>' + item.productName + '</td>';
-				html += '<td>' + item.price + '</td>';
-				html += '<td>' + item.quantity + '</td>';
-				html += '</tr>';
-			});
-			html += '</tbody>';
-			html += '</table>';
-
-			$('#saleOrderDetails').html(html);
-		}
-
-		// Call the function to fetch sale order details when the page loads
-		var saleOrderId = @Model.Id; // Assuming the model contains the sale order ID
-		getSaleOrderDetails(saleOrderId);
-	});
-</script> *@
+	
+</div>

@@ -14,6 +14,13 @@ using System.IO;
 using PdfSharpCore.Fonts;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Drawing;
+using System.IO;
+using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 
 namespace DelightFoods_Live.Controllers
@@ -320,10 +327,30 @@ namespace DelightFoods_Live.Controllers
 			var model = utilities.Map(saleOrderModel);
 			var _pdfGenerator = new PdfGenerator();
 
-			var htmlContent = _pdfGenerator.GenerateHtmlContent(model);
+			var saleOrderProductMapping = _context.SaleOrderProductMapping.Where(z => z.SaleOrderId == saleOrderModel.Id).ToList();
+			var products = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? _context.Product.Where(x => saleOrderProductMapping.Select(z => z.ProductID).Contains(x.Id)).ToList() : null;
+
+			var customer = _context.Customers.Where(x => x.Id == model.CustomerId).FirstOrDefault();
+
+			foreach (var item in saleOrderProductMapping)
+			{
+				var product = products != null && products.Any() ? products.Where(x => x.Id == item.ProductID).FirstOrDefault() : null;
+
+				model.saleOrderProductMappings.Add(new SaleOrderProductMappingDTO
+				{
+					ProductID = item.ProductID,
+					ProductName = product != null ? product.Name : "",
+					Price = item.Price,
+					Quantity = item.Quantity,
+					Id = item.Id,
+					SaleOrderId = item.SaleOrderId
+				});
+			}
+			model.CustomerName = customer != null ? customer.FirstName + " " + customer.LastName : "";
+			var htmlContent = _pdfGenerator.GeneratePlainTextContent(model);
 
 			var htmlFilePath = "SaleOrderPDF.html"; // Change the file extension to .html
-			var pdfOutputPath = "SaleOrderDetails.pdf";
+			var pdfOutputPath = "PDF/pdf.pdf";
 
 			// Save the generated HTML content to a file
 			System.IO.File.WriteAllText(htmlFilePath, htmlContent);
@@ -338,20 +365,31 @@ namespace DelightFoods_Live.Controllers
 			return File(System.IO.File.ReadAllBytes(pdfOutputPath), "application/pdf", pdfOutputPath);
 		}
 
-		public IActionResult PDF()
-		{
+		//public IActionResult PDF(int id)
+		//{
 
-			var document = new PdfDocument();
-			var page = document.AddPage();
-			var gfx = XGraphics.FromPdfPage(page);
-			var font = new XFont("Arial", 12);
+  //          var model = new SaleOrderDTO
+  //          {
+  //              TotalPrice = 100,
+  //              Status = "Pending",
+  //              CreatedOnUTC = DateTime.UtcNow,
+  //              saleOrderProductMappings = new List<SaleOrderProductMappingDTO>
+  //          {
+  //              new SaleOrderProductMappingDTO { ProductName = "Product 1", Price = 10, Quantity = 2 },
+  //              new SaleOrderProductMappingDTO { ProductName = "Product 2", Price = 20, Quantity = 1 }
+  //          }
+  //          };
 
-			gfx.DrawString("Hello, PdfSharp!", font, XBrushes.Black, new XRect(10, 10, page.Width, page.Height), XStringFormats.TopLeft);
+  //          // Read the HTML template content
+  //          string htmlTemplateFilePath = "Views\\PDFTemplates/template.html";
+  //          string htmlContent = System.IO.File.ReadAllText(htmlTemplateFilePath);
 
-			document.Save("example.pdf");
+  //          // Generate PDF
+  //          string pdfFilePath = "PDF/pdf.pdf"; // Replace with your desired path
+  //          var pdfGenerator = new PdfGenerator();
+  //          pdfGenerator.GeneratePdf(htmlContent, pdfFilePath, model);
 
-			return null;
-
-		}
-	}
+  //          return Ok("PDF generated successfully!");
+  //      }
+    }
 }

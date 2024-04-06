@@ -8,6 +8,8 @@
         public int Quantity { get; set; }
         public int SaleOrderId { get; set; }
         public string ProductName { get; set; }
-        
-    }
+
+		public string MediaFilePath { get; set; }
+
+	}
 }
