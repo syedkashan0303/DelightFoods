@@ -194,7 +194,7 @@ namespace DelightFoods_Live.Controllers
             string userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var customer = _context.Customers.Where(x => x.UserId == userId).FirstOrDefault();
 
-            if (customer.Id > 0)
+            if (customer != null && customer.Id > 0)
             {
                 var cart = _context.Cart.Where(m => m.CustomerId == customer.Id);
 
@@ -204,7 +204,7 @@ namespace DelightFoods_Live.Controllers
                 }
                 return Json(cart.Count().ToString());
             }
-            return Json("error");
+            return Json("0");
         }
 
 
