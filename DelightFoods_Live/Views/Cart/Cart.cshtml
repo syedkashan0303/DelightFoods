@@ -78,7 +78,7 @@
             <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5  paymentdiv">
                 <div class="bg-light rounded">
                     <div class="p-4">
-                        <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
+                        <h1 class="display-6 mb-4"> Payment </h1>
                         <div class="d-flex justify-content-between mb-4">
 
                             <div class="col-md-4">
@@ -86,8 +86,7 @@
                             </div>
                             <div class="col-md-8">
                                 @* @Html.TextBoxFor(model => model.CardNumber,  new { @class = "form-control" }) *@
-                                <input type="text" id="txtCardNumber" class="form-control" />
-
+                                <input type="number" id="txtCardNumber" class="form-control" />
                             </div>
 
                         </div>
@@ -108,7 +107,7 @@
                                 <h5 class="mb-0 me-4">CVC</h5>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" id="txtCVC" class="form-control" />
+                                <input type="number" id="txtCVC" class="form-control" />
 
                             </div>
 
