@@ -79,8 +79,26 @@
                 <div class="bg-light rounded">
                     <div class="p-4">
                         <h1 class="display-6 mb-4"> Payment </h1>
-                        <div class="d-flex justify-content-between mb-4">
 
+                        <div class="d-flex justify-content-between mb-4">
+                            <div class="col-md-4">
+                                <h5 class="mb-0 me-4">Cash On Delivery:</h5>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="checkbox" id="isCOD">
+                            </div>
+                        </div>
+                       
+                        <div class="d-flex justify-content-between mb-4">
+                            <div class="col-md-4">
+                                <h5 class="mb-0 me-4">Card Holder Name:</h5>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" id="cardholdername" class="form-control" />
+                            </div>
+                         </div>
+                        
+                         <div class="d-flex justify-content-between mb-4">
                             <div class="col-md-4">
                                 <h5 class="mb-0 me-4">Card Number:</h5>
                             </div>
@@ -88,7 +106,6 @@
                                 @* @Html.TextBoxFor(model => model.CardNumber,  new { @class = "form-control" }) *@
                                 <input type="number" id="txtCardNumber" class="form-control" />
                             </div>
-
                         </div>
                         <div class="d-flex justify-content-between  mb-4">
 
@@ -266,15 +283,19 @@
 
         $("#paymentbtn").on("click", function () {
             // Get the value of the textbox
+            var cardholder = $("#cardholdername").val();
             var cardNumber = $("#txtCardNumber").val();
             var expiry = $("#txtExpiry").val();
             var cvc = $("#txtCVC").val();
+            var cod = $("#isCOD").val();
 
             // Update the model with the textbox value
             var model = @Html.Raw(Json.Serialize(Model));
+            model.cardholderName = cardholder;
             model.cardNumber = cardNumber;
             model.expiry = expiry;
             model.cvc = cvc;
+            model.IsCOD = cod;
 
             console.log("Model", model);
 

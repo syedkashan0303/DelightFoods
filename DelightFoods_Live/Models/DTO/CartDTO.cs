@@ -12,6 +12,7 @@
         public int ProductId { get; set; }
         public int CustomerId { get; set; }
         public int Quantity { get; set; }
+        public int OrderId { get; set; }
         public string ProductName { get; set; }
         public string MediaFilePath { get; set; }
         public decimal ProductPrice { get; set; }
@@ -22,8 +23,12 @@
 
         public List<CartDTO> CartDTOlist {  get; set; }
 
+        public bool IsCOD { get; set; }
+        public string CardholderName { get; set; }
         public string CardNumber { get; set; }
         public string Expiry { get; set; }
         public int CVC { get; set; }
+        public int PaymentId { get; set; }
+        public bool IsSave { get; set; }
     }
 }

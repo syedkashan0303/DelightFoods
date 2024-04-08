@@ -10,7 +10,6 @@ namespace DelightFoods_Live.Models
 
         [Key]
         public int Id { get; set; }
-        public int PaymentId { get; set; }
         public int CustomerId { get; set; }
         public decimal TotalPrice { get; set; }
         public string Status { get; set; }
