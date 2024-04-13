@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DelightFoods_Live.Models.SaleOrderModel>
+﻿@model IEnumerable<DelightFoods_Live.Models.DTO.SaleOrderDTO>
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -16,8 +16,9 @@
 <table class="table">
     <thead>
         <tr>
+
             <th>
-                @Html.DisplayNameFor(model => model.CustomerId)
+                @Html.DisplayNameFor(model => model.AdvancePayment)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.TotalPrice)
@@ -38,8 +39,8 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CustomerId)
-            </td>
+                @Html.DisplayFor(modelItem => item.AdvancePayment)
+            </td>           
             <td>
                 @Html.DisplayFor(modelItem => item.TotalPrice)
             </td>
@@ -47,10 +48,10 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                        <p>Not Available</p>
+                    <p>Not Available</p>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedOnUTC)
+                    @Html.DisplayFor(modelItem => item.CreatedOnUTC.ToUniversalTime().ToString("dd/MM/yyyy"))
             </td>
             <td>
                 @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@

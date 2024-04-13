@@ -1,7 +1,7 @@
 ﻿@model DelightFoods_Live.Models.DTO.ProductDTO
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit";
 }
 
 <h1>Edit</h1>
@@ -9,67 +9,86 @@
 <h4>ProductModel</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label">Category</label>
-                <select asp-for="CategoryId" class="form-control" asp-items="@Model.categoryList"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
-                <span asp-validation-for="Stock" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-
-            
-		<div class="row">
-			<div class="col-sm-4">
-				<strong>Documents</strong>
+	<div class="col-md-4">
+		<form asp-action="Edit" enctype="multipart/form-data">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
 			</div>
-			<div class="col-sm-8">
-				@if (Model.MediaFileList != null && Model.MediaFileList.Any())
-				{
-					foreach (var item in Model.MediaFileList)
+			<div class="form-group">
+				<label asp-for="Description" class="control-label"></label>
+				<input asp-for="Description" class="form-control" />
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="CategoryId" class="control-label">Category</label>
+				<select asp-for="CategoryId" class="form-control" asp-items="@Model.categoryList"></select>
+				<span asp-validation-for="CategoryId" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Stock" class="control-label"></label>
+				<input asp-for="Stock" class="form-control" />
+				<span asp-validation-for="Stock" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Price" class="control-label"></label>
+				<input asp-for="Price" class="form-control" />
+				<span asp-validation-for="Price" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group">
+				<div class="form-check">
+					<label class="form-check-label" asp-for="UploadedFiles">Attachments</label>
+					<input asp-for="UploadedFiles" />
+					<span asp-validation-for="UploadedFiles" class="text-danger"></span>
+					<div class="invalid-feedback">
+						Please upload your attachments.
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-4">
+					<strong>Documents</strong>
+				</div>
+				<div class="col-sm-4">
+					@if (Model.MediaFileList != null && Model.MediaFileList.Any())
 					{
-                        <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, productId = Model.Id })">Download File</a>
+						<img src="@Model.MediaFilePath" class="img-fluid w-100 rounded-top" style="height: 150px;" alt="">
 					}
-				}
-				else
-				{
-					<span>No file available for download</span>
-				}
+				</div>
+				<div class="col-sm-4">
+					@if (Model.MediaFileList != null && Model.MediaFileList.Any())
+					{
+						foreach (var item in Model.MediaFileList)
+						{
+							<a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, productId = Model.Id })">Download File</a>
+						}
+					}
+					else
+					{
+						<span>No file available for download</span>
+					}
+				</div>
 			</div>
-		</div>
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+			<div class="form-group">
+				<input type="submit" value="Save" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

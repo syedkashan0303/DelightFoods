@@ -28,16 +28,34 @@ namespace DelightFoods_Live.Controllers
     public class SaleOrderController : Controller
     {
         private readonly ApplicationDbContext _context;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SaleOrderController(ApplicationDbContext context)
+		public SaleOrderController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: SaleOrder
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SaleOrder.ToListAsync());
+			ClaimsPrincipal currentUser = _httpContextAccessor.HttpContext.User;
+			string userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var customer = _context.Customers.Where(x => x.UserId == userId).FirstOrDefault();
+
+			var order = await _context.SaleOrder.Where(x=>x.CustomerId == customer.Id).ToListAsync();
+
+            var orderlist = new List<SaleOrderDTO>();
+			var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
+			foreach (var item in order)
+            {
+                var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x=>x.Amount);
+				var model = utilities.Map(item);
+                model.AdvancePayment = payment;
+                orderlist.Add(model);
+			}
+
+			return View();
         }
 
         // GET: SaleOrder/Details/5
@@ -195,7 +213,7 @@ namespace DelightFoods_Live.Controllers
 
                 var saleOrder = new SaleOrderModel();
 
-                saleOrder.TotalPrice = model.Sum(x => x.TotalPrice);
+                saleOrder.TotalPrice = Convert.ToInt32(model.Sum(x => x.TotalPrice) * 0.18m);
                 saleOrder.Status = OrderStatusEnum.Pending.ToString();
                 saleOrder.ShippingId = 0;
                 saleOrder.CustomerId = model.FirstOrDefault().CustomerId;
@@ -218,6 +236,7 @@ namespace DelightFoods_Live.Controllers
                 foreach (var item in carts)
                 {
                     item.IsOrderCreated = true;
+                    item.OrderId = saleOrder.Id;
                     _context.Update(item);
                     _context.SaveChanges();
                 }
@@ -227,43 +246,42 @@ namespace DelightFoods_Live.Controllers
             return Json("error");
         }
 
-
         [HttpPost]
         public JsonResult CartProductPayment(CartDTO model)
         {
             if (model != null)
             {
-
                 try
                 {
                     var carts = _context.Cart.Where(x => model.CartDTOlist.Select(z => z.Id).Contains(x.Id)).ToList();
                     var saleOrder = carts != null && carts.Any() ? _context.SaleOrder.Where(x => x.Id == carts.FirstOrDefault().OrderId)?.FirstOrDefault() ?? null : null;
+                    saleOrder.Status = saleOrder != null  ? OrderStatusEnum.Processing.ToString() : OrderStatusEnum.Pending.ToString();
 
-                    saleOrder.Status = OrderStatusEnum.ReadytoShip.ToString();
+                    if (saleOrder == null)
+                    {
+						return Json("error");
+					}
+                    
                     _context.SaleOrder.Update(saleOrder);
 
                     var payment = new PaymentTransaction();
                     payment.IsCOD = model.IsCOD;
                     payment.OrderId = saleOrder.Id;
-                    payment.CreatedOnUTC = DateTime.Now;
+                    payment.Amount = model.TotalPriceWithTax * 0.30m;
+					payment.CreatedOnUTC = DateTime.Now;
                     _context.PaymentTransaction.Add(payment);
                     _context.SaveChanges();
-                    if (!payment.IsCOD)
-                    {
 
-                        var cardDetail = new CardDetailsModel();
-                        cardDetail.CardholderName = "model.CardholderName";
-                        cardDetail.PaymentId = payment.Id;
-                        cardDetail.CardNumber = model.CardNumber;
-                        cardDetail.Expiry = model.Expiry;
-                        cardDetail.IsSave = false;
-                        cardDetail.CVC = model.CVC;
-                        cardDetail.CreatedOnUTC = DateTime.Now;
-                        _context.CardDetails.Add(cardDetail);
-                        _context.SaveChanges();
-
-                    }
-
+                    var cardDetail = new CardDetailsModel();
+                    cardDetail.CardholderName = model.CardholderName;
+                    cardDetail.PaymentId = payment.Id;
+                    cardDetail.CardNumber = model.CardNumber;
+                    cardDetail.Expiry = model.Expiry;
+                    cardDetail.IsSave = false;
+                    cardDetail.CVC = model.CVC;
+                    cardDetail.CreatedOnUTC = DateTime.Now;
+                    _context.CardDetails.Add(cardDetail);
+                    _context.SaveChanges();
 
                     foreach (var item in carts)
                     {
@@ -273,7 +291,6 @@ namespace DelightFoods_Live.Controllers
                 }
                 catch (Exception ex)
                 {
-
                     var abc = ex.Message;
                     throw;
                 }
@@ -373,5 +390,43 @@ namespace DelightFoods_Live.Controllers
             return File(System.IO.File.ReadAllBytes(pdfOutputPath), "application/pdf", pdfOutputPath);
         }
 
-    }
+        
+		[HttpPost]
+		public JsonResult DeleteOrderFromCart(IEnumerable<CartDTO> model)
+		{
+			if (model != null && model.Any())
+			{
+				var carts = _context.Cart.Where(x => model.Select(z => z.Id).Contains(x.Id)).ToList();
+
+                var saleOrder = carts!= null && carts.Any() ? _context.SaleOrder.Where(x => x.Id == carts.FirstOrDefault().OrderId) : null;
+
+                var saleOrderMapping = carts != null && carts.Any() ? _context.SaleOrderProductMapping.Where(x=>x.SaleOrderId == carts.FirstOrDefault().OrderId) : null;
+			
+
+				foreach (var item in saleOrder)
+				{
+					_context.SaleOrder.Remove(item);
+				}
+					_context.SaveChanges();
+
+				foreach (var item in saleOrderMapping)
+				{
+					_context.SaleOrderProductMapping.Remove(item);
+				}
+				_context.SaveChanges();
+
+				foreach (var item in carts)
+				{
+                    item.IsOrderCreated = false;
+                    item.OrderId = 0;
+					_context.Cart.Update(item);
+				}
+				_context.SaveChanges();
+
+				return Json("success");
+			}
+			return Json("error");
+		}
+
+	}
 }

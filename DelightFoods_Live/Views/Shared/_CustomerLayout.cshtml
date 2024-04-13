@@ -54,6 +54,12 @@
 					<a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
 					<a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
 					<a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
+					<form class="text-white" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+						<button type="submit" style="background: transparent; border: none;" class="text-white ms-2">
+							Logout
+						</button>
+					</form>
+
 				</div>
 			</div>
 		</div>

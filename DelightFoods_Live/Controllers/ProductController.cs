@@ -20,7 +20,7 @@ namespace DelightFoods_Live.Controllers
             _context = context;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var productModel = await _context.Product.ToListAsync();
@@ -49,7 +49,7 @@ namespace DelightFoods_Live.Controllers
             return View(ModelList);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -85,13 +85,13 @@ namespace DelightFoods_Live.Controllers
             return View(model);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             var model = new ProductDTO();
 
             var allCategories = _context.Category.ToList();
-            model.categoryList = allCategories.Select(x => new SelectListItem()
+            model.categoryList = allCategories.Where(x=>x.ParentCategoryId > 0).Select(x => new SelectListItem()
             {
                 Value = x.Id.ToString(),
                 Text = x.Name
@@ -100,7 +100,7 @@ namespace DelightFoods_Live.Controllers
             return View(model);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductDTO productModel)
@@ -139,11 +139,10 @@ namespace DelightFoods_Live.Controllers
                     _context.SaveChanges();
                 }
             }
-
             return RedirectToAction(nameof(Index));
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -178,6 +177,7 @@ namespace DelightFoods_Live.Controllers
             var mediaFile = _context.MediaGallery.Where(x => x.ProductId == model.Id);
             if (mediaFile != null && mediaFile.Any())
             {
+
                 foreach (var item in mediaFile)
                 {
                     var newfileList = new ProductDTO.MediaFiles();
@@ -186,13 +186,14 @@ namespace DelightFoods_Live.Controllers
                     newfileList.FileName = item.Name;
                     newfileList.FileId = item.Id;
                     model.MediaFileList.Add(newfileList);
+                    model.MediaFilePath = path.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
                 }
             }
 
             return View(model);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductDTO productModel)
@@ -206,11 +207,49 @@ namespace DelightFoods_Live.Controllers
             {
                 var utilities = new MapperClass<ProductDTO, ProductModel>();
                 var model = utilities.Map(productModel);
-
+                model.CreatedOnUTC = DateTime.Now;
                 _context.Update(model);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
 
-                return RedirectToAction(nameof(Index));
+				if (productModel.UploadedFiles.Count > 0)
+				{
+                    var media = _context.MediaGallery.Where(x => x.ProductId == id);
+                    if (media != null && media.Any())
+                    {
+                        foreach (var item in media)
+                        {
+                            _context.MediaGallery.Remove(item);
+                        }
+						_context.SaveChanges();
+					}
+					foreach (var file in productModel.UploadedFiles)
+					{
+						string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+
+						//create folder if not exist
+						if (!Directory.Exists(path))
+							Directory.CreateDirectory(path);
+
+						string fileNameWithPath = Path.Combine(path, file.FileName);
+
+						using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+						{
+							file.CopyTo(stream);
+						}
+
+						var mediaCenter = new MediaGalleryModel();
+
+						mediaCenter.Name = file.FileName;
+						mediaCenter.CategoryId = 0;
+						mediaCenter.ProductId = model.Id;
+						mediaCenter.FilePath = fileNameWithPath;
+						mediaCenter.CreatedOnUTC = DateTime.UtcNow;
+						_context.MediaGallery.Add(mediaCenter);
+						_context.SaveChanges();
+					}
+				}
+
+				return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -225,7 +264,7 @@ namespace DelightFoods_Live.Controllers
             }
         }
 
-       // [Authorize(Roles = "Admin")]
+       [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -244,7 +283,7 @@ namespace DelightFoods_Live.Controllers
             return View(productModel);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -263,7 +302,6 @@ namespace DelightFoods_Live.Controllers
         {
             return _context.Product.Any(e => e.Id == id);
         }
-
 
         public async Task<IActionResult> Shop()
         {

@@ -13,6 +13,7 @@
         public string CustomerName { get; set; }
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
+        public decimal AdvancePayment { get; set; }
         public string Status { get; set; }
         public int ShippingId { get; set; }
         public DateTime CreatedOnUTC { get; set; }

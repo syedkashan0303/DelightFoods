@@ -15,8 +15,10 @@
     public enum OrderStatusEnum
     {
         Pending = 0,
-        ReadytoShip = 1,
-        Shipped = 2,
-        Delivered = 3
-    }
+		Processing = 1,
+        ReadytoShip = 2,
+        Shipped = 3,
+        Delivered = 4,
+		Cancelled = 5
+	}
 }

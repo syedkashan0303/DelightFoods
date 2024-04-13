@@ -14,9 +14,11 @@
         public int Quantity { get; set; }
         public int OrderId { get; set; }
         public string ProductName { get; set; }
+        public string CustomerAddress { get; set; }
         public string MediaFilePath { get; set; }
-        public decimal ProductPrice { get; set; }
-        public decimal TotalPrice { get; set; }
+        public int ProductPrice { get; set; }
+        public int TotalPrice { get; set; }
+        public int TotalPriceWithTax { get; set; }
         public DateTime CreatedOnUTC { get; set; }
         public bool IsOrderCreated { get; set; }
         //public PaymentModel paymentModel { get; set; }

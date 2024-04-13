@@ -11,6 +11,8 @@ namespace DelightFoods_Live.Models
 
         public int OrderId { get; set; }
 
+        public decimal Amount { get; set; }
+
         public DateTime CreatedOnUTC { get; set; }
 
     }

@@ -37,7 +37,7 @@ namespace DelightFoods_Live.Controllers
                     Id = item.Id,
                     ProductId = item.ProductId,
                     ProductName = pro != null ? pro.Name : "",
-                    ProductPrice = pro != null ? pro.Price : 0,
+                    ProductPrice = pro != null ? Convert.ToInt32(pro.Price ): 0,
                     Quantity = item.Quantity
                 });
             }
@@ -56,6 +56,7 @@ namespace DelightFoods_Live.Controllers
             var CustomerId = customer != null ? customer.Id : 0;
             if (CustomerId > 0)
             {
+                var customerAddress = _context.CustomerAddress.Where(x => x.Id == customer.AddressId).FirstOrDefault();
                 var cart = _context.Cart.Where(m => m.CustomerId == CustomerId).ToList();
                 var product = cart != null ? _context.Product.Where(x => cart.Select(z => z.ProductId).Contains(x.Id)).ToList() : null;
                 var mediaFiles = product != null ? _context.MediaGallery.Where(x => product.Select(z => z.Id).ToList().Contains(x.ProductId)).ToList() : null;
@@ -72,16 +73,20 @@ namespace DelightFoods_Live.Controllers
 
                     var model = utilities.Map(item);
                     model.ProductName = pro != null ? pro.Name : "";
-                    model.ProductPrice = pro != null ? pro.Price : 0;
+                    model.ProductPrice = pro != null ? Convert.ToInt32(pro.Price) : 0;
                     model.TotalPrice = model.ProductPrice * model.Quantity;
                     model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
                     iscreatedAlready = !iscreatedAlready ? item.IsOrderCreated :true;
                     cartList.CartDTOlist.Add(model);
                 }
 
+                var totalTex = cartList.CartDTOlist.Sum(x => x.TotalPrice) * 0.18m;
+
+				cartList.TotalPriceWithTax = Convert.ToInt32(cartList.CartDTOlist.Sum(x => x.TotalPrice) + totalTex);
+
+				cartList.CustomerAddress = customerAddress.DeliveryAddress;
                 cartList.IsOrderCreated = iscreatedAlready;
                 return View(cartList);
-
             }
             return View(cartList);
         }
@@ -97,17 +102,34 @@ namespace DelightFoods_Live.Controllers
 
             if (model.ProductId > 0 && customer != null )
             {
-                var cart = _context.Cart.Where(x => x.ProductId == model.ProductId && x.CustomerId == customer.Id).FirstOrDefault();
+                //var cart = _context.Cart.Where(x => x.ProductId == model.ProductId && x.CustomerId == customer.Id).FirstOrDefault();
+                var cart = _context.Cart.Where(x => x.CustomerId == customer.Id);
 
-                if (cart != null)
+                if (cart != null && cart.Any())
                 {
-                    cart.Quantity = cart.Quantity + 1;
-                    cart.CreatedOnUTC = DateTime.UtcNow;
-                    _context.Update(cart);
+                    if (cart.Where(x => x.ProductId == model.ProductId) != null && cart.Where(x => x.ProductId == model.ProductId).Any())
+                    {
+                        foreach (var item in cart.Where(x => x.ProductId == model.ProductId))
+                        {
+                            item.Quantity = item.Quantity + 1;
+                            item.CreatedOnUTC = DateTime.UtcNow;
+                            _context.Update(cart);
+                        }
+                    }
+                    var abc = cart.Where(x => x.ProductId == model.ProductId);
+                    if (abc == null || abc.Count() == 0)
+                    {
+					    model.Quantity = model.Quantity;
+                        model.OrderId = cart.FirstOrDefault().OrderId;
+                        model.IsOrderCreated = cart.FirstOrDefault().IsOrderCreated;
+						model.CustomerId = customer != null ? customer.Id : 0;
+					    model.CreatedOnUTC = DateTime.UtcNow;
+						_context.Add(model);
+					}
                 }
                 else
                 {
-                    model.CustomerId = customer != null ? customer.Id : 0;
+					model.CustomerId = customer != null ? customer.Id : 0;
                     model.CreatedOnUTC = DateTime.UtcNow;
                     _context.Add(model);
                 }
