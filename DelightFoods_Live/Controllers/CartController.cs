@@ -113,7 +113,7 @@ namespace DelightFoods_Live.Controllers
                         {
                             item.Quantity = item.Quantity + 1;
                             item.CreatedOnUTC = DateTime.UtcNow;
-                            _context.Update(cart);
+                            _context.Update(item);
                         }
                     }
                     var abc = cart.Where(x => x.ProductId == model.ProductId);

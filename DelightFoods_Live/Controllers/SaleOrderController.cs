@@ -55,7 +55,7 @@ namespace DelightFoods_Live.Controllers
                 orderlist.Add(model);
 			}
 
-			return View();
+			return View(orderlist);
         }
 
         // GET: SaleOrder/Details/5
@@ -213,7 +213,7 @@ namespace DelightFoods_Live.Controllers
 
                 var saleOrder = new SaleOrderModel();
 
-                saleOrder.TotalPrice = Convert.ToInt32(model.Sum(x => x.TotalPrice) * 0.18m);
+                saleOrder.TotalPrice = Convert.ToInt32(model.Sum(x => x.TotalPrice));
                 saleOrder.Status = OrderStatusEnum.Pending.ToString();
                 saleOrder.ShippingId = 0;
                 saleOrder.CustomerId = model.FirstOrDefault().CustomerId;
