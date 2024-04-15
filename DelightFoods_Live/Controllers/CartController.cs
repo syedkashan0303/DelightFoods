@@ -99,7 +99,6 @@ namespace DelightFoods_Live.Controllers
             string userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var customer = _context.Customers.Where(x => x.UserId == userId).FirstOrDefault();
 
-
             if (model.ProductId > 0 && customer != null )
             {
                 //var cart = _context.Cart.Where(x => x.ProductId == model.ProductId && x.CustomerId == customer.Id).FirstOrDefault();
@@ -107,7 +106,9 @@ namespace DelightFoods_Live.Controllers
 
                 if (cart != null && cart.Any())
                 {
-                    if (cart.Where(x => x.ProductId == model.ProductId) != null && cart.Where(x => x.ProductId == model.ProductId).Any())
+                    var existingProduct = cart.Where(x => x.ProductId == model.ProductId).ToList();
+
+                    if (existingProduct != null && existingProduct.Any())
                     {
                         foreach (var item in cart.Where(x => x.ProductId == model.ProductId))
                         {
@@ -116,8 +117,8 @@ namespace DelightFoods_Live.Controllers
                             _context.Update(item);
                         }
                     }
-                    var abc = cart.Where(x => x.ProductId == model.ProductId);
-                    if (abc == null || abc.Count() == 0)
+
+                    if (existingProduct == null || existingProduct.Count() == 0)
                     {
 					    model.Quantity = model.Quantity;
                         model.OrderId = cart.FirstOrDefault().OrderId;

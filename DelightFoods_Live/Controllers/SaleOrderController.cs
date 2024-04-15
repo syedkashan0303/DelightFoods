@@ -116,7 +116,6 @@ namespace DelightFoods_Live.Controllers
             return View(saleOrderModel);
         }
 
-        // GET: SaleOrder/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -132,9 +131,6 @@ namespace DelightFoods_Live.Controllers
             return View(saleOrderModel);
         }
 
-        // POST: SaleOrder/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, SaleOrderModel saleOrderModel)
@@ -167,7 +163,6 @@ namespace DelightFoods_Live.Controllers
             return View(saleOrderModel);
         }
 
-        // GET: SaleOrder/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -185,7 +180,6 @@ namespace DelightFoods_Live.Controllers
             return View(saleOrderModel);
         }
 
-        // POST: SaleOrder/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -210,10 +204,11 @@ namespace DelightFoods_Live.Controllers
         {
             if (model != null && model.Any())
             {
-
                 var saleOrder = new SaleOrderModel();
 
-                saleOrder.TotalPrice = Convert.ToInt32(model.Sum(x => x.TotalPrice));
+                var taxAmmount = model.Sum(x => x.TotalPrice) * 0.18;
+
+                saleOrder.TotalPrice = Convert.ToInt32(model.Sum(x => x.TotalPrice) + taxAmmount);
                 saleOrder.Status = OrderStatusEnum.Pending.ToString();
                 saleOrder.ShippingId = 0;
                 saleOrder.CustomerId = model.FirstOrDefault().CustomerId;
@@ -255,13 +250,12 @@ namespace DelightFoods_Live.Controllers
                 {
                     var carts = _context.Cart.Where(x => model.CartDTOlist.Select(z => z.Id).Contains(x.Id)).ToList();
                     var saleOrder = carts != null && carts.Any() ? _context.SaleOrder.Where(x => x.Id == carts.FirstOrDefault().OrderId)?.FirstOrDefault() ?? null : null;
-                    saleOrder.Status = saleOrder != null  ? OrderStatusEnum.Processing.ToString() : OrderStatusEnum.Pending.ToString();
-
                     if (saleOrder == null)
                     {
 						return Json("error");
 					}
                     
+                    saleOrder.Status = saleOrder != null  ? OrderStatusEnum.Processing.ToString() : OrderStatusEnum.Pending.ToString();
                     _context.SaleOrder.Update(saleOrder);
 
                     var payment = new PaymentTransaction();
@@ -389,7 +383,6 @@ namespace DelightFoods_Live.Controllers
             // Return a file response with the generated PDF
             return File(System.IO.File.ReadAllBytes(pdfOutputPath), "application/pdf", pdfOutputPath);
         }
-
         
 		[HttpPost]
 		public JsonResult DeleteOrderFromCart(IEnumerable<CartDTO> model)
@@ -428,5 +421,43 @@ namespace DelightFoods_Live.Controllers
 			return Json("error");
 		}
 
-	}
+        public async Task<IActionResult> AdminOrderList()
+        {
+            var order = await _context.SaleOrder.ToListAsync();
+            var customers = _context.Customers.Where(x=> order.Select(z=>z.CustomerId).Contains(x.Id)).ToList();
+
+            var orderlist = new List<SaleOrderDTO>();
+            var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
+
+            foreach (var item in order)
+            {
+                var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x => x.Amount);
+                var customer = customers != null ? customers.Where(x => x.Id == item.CustomerId).FirstOrDefault() : null;
+                var model = utilities.Map(item);
+                model.AdvancePayment = payment;
+                model.CustomerName = customer != null ? customer.FirstName + " " + customer.LastName : "";
+                orderlist.Add(model);
+            }
+
+            return View(orderlist);
+        }
+
+
+
+        [HttpPost]
+        public JsonResult ReadyToShip(int id)
+        {
+            var order = _context.SaleOrder.FirstOrDefault(c=>c.Id == id);
+
+            if (order != null )
+            {
+                order.Status = OrderStatusEnum.ReadytoShip.ToString();
+                _context.Update(order);
+            }
+
+
+            return Json("error");
+        }
+
+    }
 }
