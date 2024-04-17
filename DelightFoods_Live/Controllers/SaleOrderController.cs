@@ -451,11 +451,21 @@ namespace DelightFoods_Live.Controllers
 
             if (order != null )
             {
+                var shipping = new ShippingModel();
+
+                shipping.CreatedOnUTC = DateTime.UtcNow;
+                shipping.Address = "";
+                _context.Add(shipping);
+                _context.SaveChanges();
+
                 order.Status = OrderStatusEnum.ReadytoShip.ToString();
+                order.ShippingId = shipping.Id;
                 _context.Update(order);
+                _context.SaveChanges();
+
+                return Json("success");
             }
-
-
+            
             return Json("error");
         }
 
