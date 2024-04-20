@@ -84,7 +84,7 @@ namespace DelightFoods_Live.Controllers
 
 				cartList.TotalPriceWithTax = Convert.ToInt32(cartList.CartDTOlist.Sum(x => x.TotalPrice) + totalTex);
 
-				cartList.CustomerAddress = customerAddress.DeliveryAddress;
+				//cartList.CustomerAddress = customerAddress.DeliveryAddress;
                 cartList.IsOrderCreated = iscreatedAlready;
                 return View(cartList);
             }

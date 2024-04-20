@@ -54,7 +54,7 @@ namespace DelightFoods_Live.Controllers
                 var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x=>x.Amount);
 				var model = utilities.Map(item);
                 model.ShippingAddress = shipping != null ? shipping.Address : "Not Available";
-
+                model.RemainingPayment = item.TotalPrice - payment;
 				model.AdvancePayment = payment;
                 orderlist.Add(model);
 			}
@@ -281,6 +281,7 @@ namespace DelightFoods_Live.Controllers
                 saleOrder.TotalPrice = Convert.ToInt32(model.Sum(x => x.TotalPrice) + taxAmmount);
                 saleOrder.Status = OrderStatusEnum.Pending.ToString();
                 saleOrder.ShippingId = 0;
+                saleOrder.address = "";
                 saleOrder.CustomerId = model.FirstOrDefault().CustomerId;
                 saleOrder.CreatedOnUTC = DateTime.UtcNow;
                 _context.Add(saleOrder);
@@ -326,7 +327,8 @@ namespace DelightFoods_Live.Controllers
 					}
                     
                     saleOrder.Status = saleOrder != null  ? OrderStatusEnum.Processing.ToString() : OrderStatusEnum.Pending.ToString();
-                    _context.SaleOrder.Update(saleOrder);
+					saleOrder.address = model.CustomerAddress;
+					_context.SaleOrder.Update(saleOrder);
 
                     var payment = new PaymentTransaction();
                     payment.IsCOD = model.IsCOD;
@@ -550,7 +552,7 @@ namespace DelightFoods_Live.Controllers
             var orderlist = new List<SaleOrderDTO>();
             var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
 
-            foreach (var item in order.Where(x=>x.Status == "Processing"))
+            foreach (var item in order.Where(x=>x.Status == "Processing" || x.Status == "ReadytoShip" || x.Status == "Shipped"))
             {
                 var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x => x.Amount);
                 var customer = customers != null ? customers.Where(x => x.Id == item.CustomerId).FirstOrDefault() : null;
@@ -576,7 +578,7 @@ namespace DelightFoods_Live.Controllers
 
                 var shipping = new ShippingModel();
                 shipping.CreatedOnUTC = DateTime.UtcNow;
-                shipping.Address = address != null ? address.DeliveryAddress : "";
+                shipping.Address = order.address;
                 _context.Add(shipping);
                 _context.SaveChanges();
 

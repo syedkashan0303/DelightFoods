@@ -67,7 +67,14 @@
 	</div>
 
 <div>
-	<a asp-action="Index">Back to List</a> 
+	@if (User.IsInRole("Admin"))
+		{
+			<a asp-action="AdminOrderList">Back to List</a>
+		}
+		else
+		{
+			<a asp-action="Index">Back to List</a>
+		}
 	<a asp-controller="SaleOrder" asp-action="GeneratePdf" asp-route-id="@Model.Id" class="btn btn-primary">Print Receipt</a>
 </div>
 
