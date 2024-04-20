@@ -24,6 +24,7 @@ namespace DelightFoods_Live.Data
         public DbSet<PaymentTransaction> PaymentTransaction { get; set; } = default!;
         public DbSet<CardDetailsModel> CardDetails { get; set; } = default!;
         public DbSet<SaleOrderModel> SaleOrder { get; set; } = default!;
+        public DbSet<ShippingModel> Shipping { get; set; } = default!;
         public DbSet<SaleOrderProductMappingModel> SaleOrderProductMapping { get; set; } = default!;
 
     }

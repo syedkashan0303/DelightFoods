@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<DelightFoods_Live.Models.DTO.SaleOrderDTO>
 
 @{
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
@@ -10,53 +10,57 @@
 
 <main id="main" class="main">
 
-    <p>
-        @* <a asp-action="Create">Create New</a> *@
-    </p>
-    <table class="table">
-        <thead>
-            <tr>
+	<p>
+		@* <a asp-action="Create">Create New</a> *@
+	</p>
+	<table class="table">
+		<thead>
+			<tr>
 
-                <th>
-                    @Html.DisplayNameFor(model => model.AdvancePayment)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TotalPrice)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreatedOnUTC)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AdvancePayment)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TotalPrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
+				<th>
+					@Html.DisplayNameFor(model => model.AdvancePayment)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.TotalPrice)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Status)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.CreatedOnUTC)
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.AdvancePayment)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.TotalPrice)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Status)
+					</td>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedOnUTC)
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <button class="readyforship" data-id="@item.Id">Ready to ship</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+					<td>
+						@Html.DisplayFor(modelItem => item.CreatedOnUTC)
+					</td>
+					<td>
+						<a asp-action="Details" asp-route-id="@item.Id">Details</a>
+						|
+						@if (item.Status == "Processing")
+						{
+							<button button class="readyforship" data-id="@item.Id">Ready to ship</button>
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 
 </main>
 
@@ -64,31 +68,31 @@
 
 <script>
 
-    $(document).ready(function () {
-        $(".readyforship").click(function () {
-            var id = $(this).data("id"); // Get the product ID from data attribute
-            console.log('abc', id);
+	$(document).ready(function () {
+		$(".readyforship").click(function () {
+			var id = $(this).data("id"); // Get the product ID from data attribute
+			console.log('abc', id);
 
-            $.ajax({
-                type: 'POST',
-                url: "@Url.Action("ReadyToShip", "SaleOrder")",
-                data: { id: id },
-                success: function (result) {
-                    {
-                        if (result == "succes") {
-                            alert("Succesfully add in cart")
-                            location.reload();
-                        }
-                        else {
-                            alert("Error")
-                        }
-                    }
-                },
-                error: function (result) {
-                }
-            });
-        });
-    });
+			$.ajax({
+				type: 'POST',
+				url: "@Url.Action("ReadyToShip", "SaleOrder")",
+				data: { id: id },
+				success: function (result) {
+					{
+						if (result == "success") {
+							alert("Succesfully add in cart")
+							location.reload();
+						}
+						else {
+							alert("Error")
+						}
+					}
+				},
+				error: function (result) {
+				}
+			});
+		});
+	});
 
 
 </script>

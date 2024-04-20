@@ -1,0 +1,63 @@
+﻿
+@model IEnumerable<DelightFoods_Live.Models.DTO.SaleOrderDTO>
+
+@{
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "Ready For Ship Orders";
+}
+
+<h1>Index</h1>
+
+
+<main id="main" class="main">
+
+	<table class="table">
+		<thead>
+			<tr>
+
+				<th>
+					@Html.DisplayNameFor(model => model.AdvancePayment)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.TotalPrice)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Status)
+				</th>
+				<th>
+					<p>Shipping</p>
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.CreatedOnUTC)
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.AdvancePayment)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.TotalPrice)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Status)
+					</td>
+					<td>
+						<p>Not Available</p>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.CreatedOnUTC)
+					</td>
+					<td>
+						<a asp-action="ReadyForShipOrderDetail" asp-route-id="@item.Id">Details</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+</main>

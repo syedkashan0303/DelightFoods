@@ -47,9 +47,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
-            <td>
-                    <p>Not Available</p>
-            </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShippingAddress)
+                    </td>
             <td>
                     @Html.DisplayFor(modelItem => item.CreatedOnUTC)
             </td>

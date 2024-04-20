@@ -14,13 +14,21 @@
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal AdvancePayment { get; set; }
+        public decimal RemainingPayment { get; set; }
         public string Status { get; set; }
         public int ShippingId { get; set; }
         public DateTime CreatedOnUTC { get; set; }
         public string ProductName { get; set; }
+        public string ShippingAddress { get; set; }
         public int PaymentId { get; set; }
         public List<CartDTO> cartDTOs { get; set; }
         public List<SaleOrderProductMappingDTO> saleOrderProductMappings { get; set; }
 
-    }
+
+		public string CardholderName { get; set; }
+		public string CardNumber { get; set; }
+		public string Expiry { get; set; }
+		public int CVC { get; set; }
+
+	}
 }

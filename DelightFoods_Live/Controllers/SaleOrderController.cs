@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 
 namespace DelightFoods_Live.Controllers
@@ -43,23 +44,91 @@ namespace DelightFoods_Live.Controllers
 			string userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			var customer = _context.Customers.Where(x => x.UserId == userId).FirstOrDefault();
 
-			var order = await _context.SaleOrder.Where(x=>x.CustomerId == customer.Id).ToListAsync();
+			var order = await _context.SaleOrder.Where(x=>x.CustomerId == customer.Id && (x.Status == "Pending" || x.Status == "Processing" || x.Status == "Shipped")).ToListAsync();
 
             var orderlist = new List<SaleOrderDTO>();
 			var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
 			foreach (var item in order)
             {
+                var shipping = _context.Shipping.Where(x => x.Id == item.ShippingId).FirstOrDefault();
                 var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x=>x.Amount);
 				var model = utilities.Map(item);
-                model.AdvancePayment = payment;
+                model.ShippingAddress = shipping != null ? shipping.Address : "Not Available";
+
+				model.AdvancePayment = payment;
                 orderlist.Add(model);
 			}
 
 			return View(orderlist);
         }
 
-        // GET: SaleOrder/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: SaleOrder
+        public async Task<IActionResult> ReadyForShipOrders()
+        {
+            ClaimsPrincipal currentUser = _httpContextAccessor.HttpContext.User;
+            string userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var customer = _context.Customers.Where(x => x.UserId == userId).FirstOrDefault();
+
+            var order = await _context.SaleOrder.Where(x => x.CustomerId == customer.Id && x.Status == "ReadytoShip" ).ToListAsync();
+
+            var orderlist = new List<SaleOrderDTO>();
+            var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
+            foreach (var item in order)
+            {
+                var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x => x.Amount);
+                var model = utilities.Map(item);
+                model.AdvancePayment = payment;
+                orderlist.Add(model);
+            }
+
+            return View(orderlist);
+        }
+
+		// GET: SaleOrder/Details/5
+		public async Task<IActionResult> ReadyForShipOrderDetail(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+			var saleOrderModel = await _context.SaleOrder.FirstOrDefaultAsync(m => m.Id == id);
+
+			if (saleOrderModel == null)
+			{
+				return NotFound();
+			}
+
+			var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
+			var model = utilities.Map(saleOrderModel);
+			var saleOrderProductMapping = _context.SaleOrderProductMapping.Where(z => z.SaleOrderId == saleOrderModel.Id).ToList();
+			var products = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? _context.Product.Where(x => saleOrderProductMapping.Select(z => z.ProductID).Contains(x.Id)).ToList() : null;
+
+            var payment = _context.PaymentTransaction.Where(x => x.OrderId == model.Id).FirstOrDefault();
+
+			foreach (var item in saleOrderProductMapping)
+			{
+				var product = products != null && products.Any() ? products.Where(x => x.Id == item.ProductID).FirstOrDefault() : null;
+                model.AdvancePayment = payment != null? payment.Amount: 0;
+                model.RemainingPayment = payment != null? model.TotalPrice - payment.Amount : 0;
+
+				model.saleOrderProductMappings.Add(new SaleOrderProductMappingDTO
+				{
+
+					ProductID = item.ProductID,
+					ProductName = product != null ? product.Name : "",
+					Price = item.Price,
+					Quantity = item.Quantity,
+					Id = item.Id,
+					SaleOrderId = item.SaleOrderId
+				});
+			}
+
+
+			return View(model);
+		}
+
+		// GET: SaleOrder/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -199,6 +268,7 @@ namespace DelightFoods_Live.Controllers
             return _context.SaleOrder.Any(e => e.Id == id);
         }
 
+
         [HttpPost]
         public JsonResult CreateOrderByCart(IEnumerable<CartDTO> model)
         {
@@ -296,7 +366,58 @@ namespace DelightFoods_Live.Controllers
             return Json("error");
         }
 
-        public IActionResult GetSaleOrderDetails(int? id)
+
+		[HttpPost]
+		public JsonResult RemainingProductPayment(SaleOrderDTO model)
+		{
+			if (model != null)
+			{
+				try
+				{
+					var saleOrder = _context.SaleOrder.Where(x => x.Id == model.Id)?.FirstOrDefault() ?? null;
+					if (saleOrder == null)
+					{
+						return Json("error");
+					}
+
+					saleOrder.Status = saleOrder != null ? OrderStatusEnum.Shipped.ToString() : OrderStatusEnum.ReadytoShip.ToString();
+					_context.SaleOrder.Update(saleOrder);
+
+					var payment = new PaymentTransaction();
+					payment.IsCOD = false;
+					payment.OrderId = saleOrder.Id;
+					payment.Amount = model.RemainingPayment;
+					payment.CreatedOnUTC = DateTime.Now;
+					_context.PaymentTransaction.Add(payment);
+					_context.SaveChanges();
+
+					var cardDetail = new CardDetailsModel();
+					cardDetail.CardholderName = model.CardholderName;
+					cardDetail.PaymentId = payment.Id;
+					cardDetail.CardNumber = model.CardNumber;
+					cardDetail.Expiry = model.Expiry;
+					cardDetail.IsSave = false;
+					cardDetail.CVC = model.CVC;
+					cardDetail.CreatedOnUTC = DateTime.Now;
+					_context.CardDetails.Add(cardDetail);
+					_context.SaveChanges();
+
+				}
+				catch (Exception ex)
+				{
+					var abc = ex.Message;
+					throw;
+				}
+
+
+
+				return Json("success");
+			}
+			return Json("error");
+		}
+
+
+		public IActionResult GetSaleOrderDetails(int? id)
         {
             if (id == null)
             {
@@ -429,7 +550,7 @@ namespace DelightFoods_Live.Controllers
             var orderlist = new List<SaleOrderDTO>();
             var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
 
-            foreach (var item in order)
+            foreach (var item in order.Where(x=>x.Status == "Processing"))
             {
                 var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x => x.Amount);
                 var customer = customers != null ? customers.Where(x => x.Id == item.CustomerId).FirstOrDefault() : null;
@@ -442,8 +563,6 @@ namespace DelightFoods_Live.Controllers
             return View(orderlist);
         }
 
-
-
         [HttpPost]
         public JsonResult ReadyToShip(int id)
         {
@@ -451,10 +570,13 @@ namespace DelightFoods_Live.Controllers
 
             if (order != null )
             {
-                var shipping = new ShippingModel();
+                var customer = _context.Customers.Where(z=>z.Id == order.CustomerId).FirstOrDefault();
 
+                var address = customer != null ? _context.CustomerAddress.Where(z=>z.Id == customer.AddressId).FirstOrDefault() : null;
+
+                var shipping = new ShippingModel();
                 shipping.CreatedOnUTC = DateTime.UtcNow;
-                shipping.Address = "";
+                shipping.Address = address != null ? address.DeliveryAddress : "";
                 _context.Add(shipping);
                 _context.SaveChanges();
 

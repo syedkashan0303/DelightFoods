@@ -97,7 +97,16 @@
 						<div class="nav-item dropdown">
 							<a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Sale Orders</a>
 							<div class="dropdown-menu m-0 bg-secondary rounded-0">
-								<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="Index">Order List</a>
+								@if (User.IsInRole("Admin"))
+								{
+									<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="AdminOrderList">Order Request List</a>
+								}
+								else
+								{
+
+									<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="Index">Order List</a>
+									<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="ReadyForShipOrders">Ready For Ship Order List</a>
+								}
 							</div>
 						</div>
 
