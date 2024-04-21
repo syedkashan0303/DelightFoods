@@ -210,7 +210,7 @@
 				success: function (result) {
 					{
 						if (result == "succes") {
-							alert("Succesfully add in cart")
+							alert("Succesfully Clear all items")
 							location.reload();
 						}
 						else {
@@ -235,7 +235,7 @@
 				success: function (result) {
 					{
 						if (result == "succes") {
-							alert("Succesfully add in cart")
+							alert("Success")
 							location.reload();
 						}
 						else {
@@ -260,7 +260,7 @@
 				success: function (result) {
 					{
 						if (result == "succes") {
-							alert("Succesfully add in cart")
+							alert("Success")
 							location.reload();
 						}
 						else {
@@ -284,7 +284,7 @@
 				data: { model: Records }, // No need to stringify
 				success: function (result) {
 					if (result === "success") {
-						alert("Successfully added to cart");
+						alert("Success");
 						location.reload();
 					} else {
 						alert("Error");
@@ -296,14 +296,6 @@
 			});
 		});
 
-		// $("#isCOD").on("change", function () {
-
-		// 	if ($(this).is(":checked")) {
-		// 		$(".").hide();
-		// 	} else {
-		// 		$(".").show();
-		// 	}
-		// });
 
 		$("#paymentbtn").on("click", function () {
 			// Get the value of the textbox
@@ -329,7 +321,7 @@
 				data: { model: model },
 				success: function (result) {
 					if (result === "success") {
-						alert("Successfully added to cart");
+						alert("Success");
 						location.reload();
 					} else {
 						alert("Error");
@@ -352,7 +344,7 @@
 				data: { model: Records }, // No need to stringify
 				success: function (result) {
 					if (result === "success") {
-						alert("Successfully added to cart");
+						alert("Success");
 						location.reload();
 					} else {
 						alert("Error");
