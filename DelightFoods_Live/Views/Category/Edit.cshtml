@@ -4,6 +4,7 @@
 @{
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 	ViewData["Title"] = "Edit";
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 
 <main id="main" class="main">
