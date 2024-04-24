@@ -1,92 +1,135 @@
 ﻿@model DelightFoods_Live.Models.DTO.ProductDTO
 
 @{
+    
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Create Product";
+}
 
-<div>
-    <h4>ProductModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Stock)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Stock)
-        </dd>
-        <dt class = "col-sm-2">
-           Status
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.IsActive)
-            {
-                <span>Active</span>
-            }
-            else
-            {
-                <span>Inactive</span>
-            }
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedOnUTC)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedOnUTC)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CategoryName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CategoryName)
-        </dd>
+<h1>Add Product</h1>
 
 
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Products</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index">Product List</a></li>
+                <li class="breadcrumb-item">Details</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
         <div class="row">
-            <div class="col-sm-4">
-                <strong>Documents</strong>
-            </div>
-            <div class="col-sm-8">
-                @if (Model.MediaFileList != null && Model.MediaFileList.Any())
-                {
-                    foreach (var item in Model.MediaFileList)
-                    {
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"> Product Information</h5>
 
-                        <img src="@item.FilePath" alt="Image" width="300" height="300">
-                        <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, productId = Model.Id })">Download File</a>
-                        <br />
-                    }
-                }
-                else
-                {
-                    <span>No file available for download</span>
-                }
-            </div>
+                        <h4>ProductModel</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
 
+                                <dl class="row">
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.Name)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.Name)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.Description)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.Description)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.Stock)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.Stock)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        Status
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @if (Model.IsActive)
+                                        {
+                                            <span>Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Inactive</span>
+                                        }
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.Price)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.Price)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.CreatedOnUTC)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.CreatedOnUTC)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.CategoryName)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.CategoryName)
+                                    </dd>
+
+
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <strong>Documents</strong>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            @if (Model.MediaFileList != null && Model.MediaFileList.Any())
+                                            {
+                                                foreach (var item in Model.MediaFileList)
+                                                {
+
+                                                    <img src="@item.FilePath" alt="Image" width="300" height="300">
+                                                    <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, productId = Model.Id })">Download File</a>
+                                                    <br />
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span>No file available for download</span>
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                </dl>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
-
-    </dl>
-</div>
+    </section>
+</main>
+@*
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@
