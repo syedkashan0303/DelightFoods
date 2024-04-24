@@ -1,58 +1,103 @@
 ﻿@model DelightFoods_Live.Models.DTO.CategoryModelDTO
 
 @{
-    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Create Category";
 }
 
-<h1>Details</h1>
+<h1>CreateSubCategory</h1>
 
-<div>
-    <h4>CategoryModel</h4>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Category</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a asp-action="ChildCategoryList">Category</a></li>
+                <li class="breadcrumb-item">Create</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Enter Category Information</h5>
 
-        <div class="form-group">
-            <label asp-for="ParentCategoryId" class="form-label">Child Categories </label>
-            <select asp-for="ParentCategoryId" asp-items="@Model.ChildCategoryList" class="form-select" aria-required="true" required>
-                <option disabled selected>Select Parent Category</option>
-            </select>
+                        <h4>CategoryModel</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+
+
+                                <dl class="row">
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.Name)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.Name)
+                                    </dd>
+                                    <dt class="col-sm-4">
+                                        @Html.DisplayNameFor(model => model.Description)
+                                    </dt>
+                                    <dd class="col-sm-8">
+                                        @Html.DisplayFor(model => model.Description)
+                                    </dd>
+
+                                    <div class="form-group">
+                                        <label asp-for="ParentCategoryId" class="form-label">Child Categories </label>
+                                        <select asp-for="ParentCategoryId" asp-items="@Model.ChildCategoryList" class="form-select" aria-required="true" required>
+                                            <option disabled selected>Select Parent Category</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <strong>Documents</strong>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            @if (Model.MediaFileList != null && Model.MediaFileList.Any())
+                                            {
+                                                foreach (var item in Model.MediaFileList)
+                                                {
+                                                    <img src="@item.FilePath" alt="Image" width="300" height="300">
+                                                    <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, CatetoryId = Model.Id })">Download File</a>
+                                                    <br />
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span>No file available for download</span>
+                                            }
+                                        </div>
+
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
-
-		<div class="row">
-			<div class="col-sm-4">
-				<strong>Documents</strong>
-			</div>
-			<div class="col-sm-8">
-				@if (Model.MediaFileList != null && Model.MediaFileList.Any())
-				{
-					foreach (var item in Model.MediaFileList)
-					{
-                        <img src="@item.FilePath" alt="Image" width="300" height="300">
-                        <a href="@Url.Action("DownloadFile", "Home", new { fileName = item.FileName, FileId = item.FileId, CatetoryId = Model.Id })">Download File</a>
-                        <br />
-					}
-				}
-				else
-				{
-					<span>No file available for download</span>
-				}
-			</div>
-
-		</div>
-    </dl>
-</div>
+    </section>
+</main>
+@*
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+ *@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

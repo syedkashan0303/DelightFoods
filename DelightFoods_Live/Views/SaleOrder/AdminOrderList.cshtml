@@ -29,7 +29,7 @@
 				<th>
 					@Html.DisplayNameFor(model => model.CreatedOnUTC)
 				</th>
-				<th></th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -50,11 +50,11 @@
 						@Html.DisplayFor(modelItem => item.CreatedOnUTC)
 					</td>
 					<td>
-						<a asp-action="Details" asp-route-id="@item.Id">Details</a>
+						<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">Details</a>
 						|
 						@if (item.Status == "Processing")
 						{
-							<button button class="readyforship" data-id="@item.Id">Ready to ship</button>
+							<button button class="readyforship btn btn-secondary" data-id="@item.Id">Ready to ship</button>
 						}
 					</td>
 				</tr>
