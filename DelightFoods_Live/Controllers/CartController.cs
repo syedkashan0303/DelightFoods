@@ -130,6 +130,9 @@ namespace DelightFoods_Live.Controllers
                 }
                 else
                 {
+					model.Quantity = model.Quantity;
+					model.OrderId = model.OrderId;
+					model.IsOrderCreated = model.IsOrderCreated;
 					model.CustomerId = customer != null ? customer.Id : 0;
                     model.CreatedOnUTC = DateTime.UtcNow;
                     _context.Add(model);
