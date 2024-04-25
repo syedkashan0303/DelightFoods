@@ -44,7 +44,7 @@ namespace DelightFoods_Live.Controllers
 			string userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			var customer = _context.Customers.Where(x => x.UserId == userId).FirstOrDefault();
 
-			var order = await _context.SaleOrder.Where(x=>x.CustomerId == customer.Id && (x.Status == "Pending" || x.Status == "Processing" || x.Status == "Shipped")).ToListAsync();
+			var order = await _context.SaleOrder.Where(x=>x.CustomerId == customer.Id && x.Status != "ReadytoShip").ToListAsync();
 
             var orderlist = new List<SaleOrderDTO>();
 			var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
@@ -418,7 +418,6 @@ namespace DelightFoods_Live.Controllers
 			return Json("error");
 		}
 
-
 		public IActionResult GetSaleOrderDetails(int? id)
         {
             if (id == null)
@@ -593,5 +592,23 @@ namespace DelightFoods_Live.Controllers
             return Json("error");
         }
 
-    }
+
+		[HttpPost]
+		public JsonResult ConfirmDelivery(int id)
+		{
+			var order = _context.SaleOrder.FirstOrDefault(c => c.Id == id);
+
+			if (order != null)
+			{
+				order.Status = OrderStatusEnum.Delivered.ToString();
+				_context.Update(order);
+				_context.SaveChanges();
+
+				return Json("success");
+			}
+
+			return Json("error");
+		}
+
+	}
 }

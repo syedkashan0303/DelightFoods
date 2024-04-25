@@ -71,11 +71,48 @@
 					<td>
 						@* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
 						<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+						@if (item.Status == "Shipped")
+						{
+							<button button class="delivered btn btn-secondary" data-id="@item.Id">Confirm to delivered</button>
+						}
 						@* <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
 					</td>
 				</tr>
 			}
 		</tbody>
 	</table>
+
+	<script>
+
+		$(document).ready(function () {
+			$(".delivered").click(function () {
+				var id = $(this).data("id"); // Get the product ID from data attribute
+				console.log('abc', id);
+
+				$.ajax({
+					type: 'POST',
+					url: "@Url.Action("ConfirmDelivery", "SaleOrder")",
+					data: { id: id },
+					success: function (result) {
+						{
+							if (result == "success") {
+								alert("Delivered Succesfully ")
+								location.reload();
+							}
+							else {
+								alert("Error")
+							}
+						}
+					},
+					error: function (result) {
+					}
+				});
+			});
+		});
+
+
+	</script>
+
+
 
 </main>

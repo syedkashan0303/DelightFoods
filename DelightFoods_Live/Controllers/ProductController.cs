@@ -305,7 +305,7 @@ namespace DelightFoods_Live.Controllers
 
         public async Task<IActionResult> Shop()
         {
-            var productModel = await _context.Product.ToListAsync();
+            var productModel = await _context.Product.Where(x=>x.Stock > 0).ToListAsync();
 
             if (productModel == null)
             {

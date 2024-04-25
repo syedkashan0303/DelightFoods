@@ -8,6 +8,7 @@ using System.Security.Claims;
 
 namespace DelightFoods_Live.Controllers
 {
+
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -98,9 +99,9 @@ namespace DelightFoods_Live.Controllers
             ClaimsPrincipal currentUser = _httpContextAccessor.HttpContext.User;
             string userId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var customer = _context.Customers.Where(x => x.UserId == userId).FirstOrDefault();
-
             if (model.ProductId > 0 && customer != null )
             {
+                var product = _context.Product.Where(x => x.Id == model.ProductId).FirstOrDefault();
                 //var cart = _context.Cart.Where(x => x.ProductId == model.ProductId && x.CustomerId == customer.Id).FirstOrDefault();
                 var cart = _context.Cart.Where(x => x.CustomerId == customer.Id);
 
@@ -110,12 +111,26 @@ namespace DelightFoods_Live.Controllers
 
                     if (existingProduct != null && existingProduct.Any())
                     {
-                        foreach (var item in cart.Where(x => x.ProductId == model.ProductId))
+                        if (product.Stock >= cart.Where(x => x.ProductId == model.ProductId).FirstOrDefault().Quantity + 1)
                         {
-                            item.Quantity = item.Quantity + 1;
-                            item.CreatedOnUTC = DateTime.UtcNow;
-                            _context.Update(item);
-                        }
+							foreach (var item in cart.Where(x => x.ProductId == model.ProductId))
+							{
+								item.Quantity = item.Quantity + 1;
+								item.CreatedOnUTC = DateTime.UtcNow;
+								_context.Update(item);
+								_context.SaveChangesAsync();
+
+							}
+							product.Stock = -1;
+                            _context.Update(product);
+							_context.SaveChangesAsync();
+
+						}
+						else
+                        {
+							return Json("stockerror");
+						}
+                       
                     }
 
                     if (existingProduct == null || existingProduct.Count() == 0)
@@ -126,8 +141,14 @@ namespace DelightFoods_Live.Controllers
 						model.CustomerId = customer != null ? customer.Id : 0;
 					    model.CreatedOnUTC = DateTime.UtcNow;
 						_context.Add(model);
+						_context.SaveChangesAsync();
+
+						product.Stock = -1;
+						_context.Update(product);
+						_context.SaveChangesAsync();
+
 					}
-                }
+				}
                 else
                 {
 					model.Quantity = model.Quantity;
