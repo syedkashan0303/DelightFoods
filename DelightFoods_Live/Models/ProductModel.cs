@@ -10,11 +10,13 @@ namespace DelightFoods_Live.Models
         [Required]
         [Display(Name = "Name")]
         [NonEmptyName(ErrorMessage = "Name cannot be empty or whitespace.")]
-        public string Name { get; set; }
+		[EmptySpace(ErrorMessage = "empty space found")]
+		public string Name { get; set; }
 
         [Required]
-        [Display(Name = "Description")]
+        [Display(Name = "DescriptionHEre")]
         [NonEmptyName(ErrorMessage = "Description cannot be empty or whitespace.")]
+        [EmptySpace(ErrorMessage = "empty space found")]
         public string Description { get; set; }
 
         [Required]

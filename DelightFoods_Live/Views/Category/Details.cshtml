@@ -2,7 +2,7 @@
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Create Category";
+    ViewData["Title"] = "Details Category";
 }
 
 <h1>CreateSubCategory</h1>
@@ -11,11 +11,14 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
+        <div>
+            <a asp-action="Index" class="btn btn-primary"><i class="bi bi-arrow-left"></i></a>
+        </div>
         <h1>Category</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item"><a asp-action="ChildCategoryList">Category</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index">Category</a></li>
                 <li class="breadcrumb-item">Create</li>
             </ol>
         </nav>
@@ -27,8 +30,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Enter Category Information</h5>
-
-                        <h4>CategoryModel</h4>
                         <hr />
                         <div class="row">
                             <div class="col-md-4">
@@ -48,7 +49,7 @@
                                         @Html.DisplayFor(model => model.Description)
                                     </dd>
 
-                                    <div class="form-group">
+                                   @*  <div class="form-group">
                                         <label asp-for="ParentCategoryId" class="form-label">Child Categories </label>
                                         <select asp-for="ParentCategoryId" asp-items="@Model.ChildCategoryList" class="form-select" aria-required="true" required>
                                             <option disabled selected>Select Parent Category</option>
@@ -75,15 +76,10 @@
                                             }
                                         </div>
 
-                                    </div>
+                                    </div> *@
                                 </dl>
                             </div>
                         </div>
-
-                        <div>
-                            <a asp-action="Index" class="btn btn-primary">Back to List</a>
-                        </div>
-
                     </div>
                 </div>
 
@@ -91,13 +87,3 @@
         </div>
     </section>
 </main>
-@*
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
- *@
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>

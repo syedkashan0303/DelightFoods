@@ -12,7 +12,7 @@
 <!-- Google Fonts -->
 <link href="https://fonts.gstatic.com" rel="preconnect">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"   />
 <!-- Vendor CSS Files -->
 <link href="/admin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="/admin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -199,7 +199,11 @@
                     <img src="~/img/avatar.jpg" alt="Profile" class="rounded-circle">
                     <span class="d-none d-md-block dropdown-toggle ps-2">@UserManager.GetUserName(User)!</span>
                 </a>
-                
+                <div class="dropdown-menu m-0 bg-secondary rounded-0">
+                    <a class="nav-item nav-link" asp-controller="Product" asp-action="Index">Profile</a>
+                    <a class="nav-item nav-link" asp-controller="Category" asp-action="Index">Logout</a>
+
+                </div>
                 <!-- End Profile Iamge Icon -->
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -382,5 +386,8 @@
 <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="assets/vendor/php-email-form/validate.js"></script>
+
 <!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
+<script src="~/Admin/assets/js/main.js"></script>
+
+@await RenderSectionAsync("Scripts", required: false)

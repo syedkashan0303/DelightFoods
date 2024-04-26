@@ -107,6 +107,11 @@ namespace DelightFoods_Live.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create( CategoryModelDTO categoryModel)
         {
+            if (string.IsNullOrWhiteSpace(categoryModel.Name) || string.IsNullOrWhiteSpace(categoryModel.Description))
+            {
+                var Model = new CategoryModelDTO();
+                return View(Model);
+            }
             var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
             var category = utilities.Map(categoryModel);
 
@@ -191,6 +196,12 @@ namespace DelightFoods_Live.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CategoryModelDTO categoryModel)
         {
+            if (string.IsNullOrWhiteSpace(categoryModel.Name) || string.IsNullOrWhiteSpace(categoryModel.Description))
+            {
+                var Model = new CategoryModelDTO();
+                return View(Model);
+            }
+
             var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
             var category = utilities.Map(categoryModel);
             if (category != null)
@@ -198,7 +209,7 @@ namespace DelightFoods_Live.Controllers
                 _context.Update(category);
                 await _context.SaveChangesAsync();
             }
-            return View(category);
+            return RedirectToAction("Index");
         }
 
         //[Authorize(Roles = "Admin")]
@@ -354,14 +365,24 @@ namespace DelightFoods_Live.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChildCategoryEdit(int id, CategoryModelDTO categoryModel)
         {
-            var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
+			if (string.IsNullOrWhiteSpace(categoryModel.Name) || string.IsNullOrWhiteSpace(categoryModel.Description))
+			{
+				var model = new CategoryModelDTO();
+
+				var parentCategory = _context.Category.Where(x => x.ParentCategoryId == 0);
+
+				model.ParentCategoryList = parentCategory.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Name }).ToList();
+
+				return View(model);
+			}
+			var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
             var category = utilities.Map(categoryModel);
             if (category != null)
             {
                 _context.Update(category);
                 await _context.SaveChangesAsync();
             }
-            return View(category);
+            return RedirectToAction("ChildCategoryList");
         }
 
         public IActionResult CreateSubCategory()
@@ -380,6 +401,16 @@ namespace DelightFoods_Live.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubCategory(CategoryModelDTO categoryModel)
         {
+            if (string.IsNullOrWhiteSpace(categoryModel.Name) || string.IsNullOrWhiteSpace(categoryModel.Description))
+            {
+                var model = new CategoryModelDTO();
+
+                var parentCategory = _context.Category.Where(x => x.ParentCategoryId == 0);
+
+                model.ParentCategoryList = parentCategory.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Name }).ToList();
+
+                return View(model);
+            }
             var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
             var category = utilities.Map(categoryModel);
 
