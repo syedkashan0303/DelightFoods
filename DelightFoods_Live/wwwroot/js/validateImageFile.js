@@ -15,28 +15,7 @@
 
         } else {
             saveButton.disabled = false;
-            invalidMessage.style.color = 'green';
-            invalidMessage.textContent = 'Image uploaded Successfully.';
+            invalidMessage.textContent = '';
         }
     });
 }
-
-//paste in input tags  and button tags
-//id = "saveButton"
-//id = "fileInput"
-
-//paste at end
-//@section Scripts {
-//    @{
-//        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-//    }
-//    <script src="/js/validateImageFile.js"></script>
-//    <script>
-//        document.addEventListener('DOMContentLoaded', function () {
-//            debugger;
-//            validateImageFile('fileInput', 'saveButton');
-//        });
-//    </script>
-//}
-
-            //copy and paste these in the requierd forms

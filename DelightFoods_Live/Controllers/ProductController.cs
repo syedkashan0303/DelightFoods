@@ -105,7 +105,20 @@ namespace DelightFoods_Live.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductDTO productModel)
         {
-            var utilities = new MapperClass<ProductDTO, ProductModel>();
+			if (string.IsNullOrWhiteSpace(productModel.Name) || string.IsNullOrWhiteSpace(productModel.Description))
+			{
+				var Model = new ProductDTO();
+
+				var allCategories = _context.Category.ToList();
+				Model.categoryList = allCategories.Where(x => x.ParentCategoryId > 0).Select(x => new SelectListItem()
+				{
+					Value = x.Id.ToString(),
+					Text = x.Name
+				}).ToList();
+				return View(Model);
+			}
+
+			var utilities = new MapperClass<ProductDTO, ProductModel>();
             var model = utilities.Map(productModel);
             model.CreatedOnUTC = DateTime.UtcNow;
             _context.Add(model);
@@ -205,7 +218,37 @@ namespace DelightFoods_Live.Controllers
           
             try
             {
-                var utilities = new MapperClass<ProductDTO, ProductModel>();
+				if (string.IsNullOrWhiteSpace(productModel.Name) || string.IsNullOrWhiteSpace(productModel.Description))
+				{
+					var Model = new ProductDTO();
+
+					var allCategories = _context.Category.ToList();
+					Model.categoryList = allCategories.Where(x => x.ParentCategoryId > 0).Select(x => new SelectListItem()
+					{
+						Value = x.Id.ToString(),
+						Text = x.Name
+					}).ToList();
+
+					var mediaFile = _context.MediaGallery.Where(x => x.ProductId == id);
+					if (mediaFile != null && mediaFile.Any())
+					{
+
+						foreach (var item in mediaFile)
+						{
+							var newfileList = new ProductDTO.MediaFiles();
+							var path = item.FilePath;
+							newfileList.FilePath = path.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/");
+							newfileList.FileName = item.Name;
+							newfileList.FileId = item.Id;
+							Model.MediaFileList.Add(newfileList);
+							Model.MediaFilePath = path.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
+						}
+					}
+
+					return View(Model);
+				}
+
+				var utilities = new MapperClass<ProductDTO, ProductModel>();
                 var model = utilities.Map(productModel);
                 model.CreatedOnUTC = DateTime.Now;
                 _context.Update(model);

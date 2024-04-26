@@ -7,16 +7,14 @@
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Create Product";
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    ViewData["Title"] = "Detail Product";
 }
-
-<h1>Add Product</h1>
-
-
 <main id="main" class="main">
 
     <div class="pagetitle">
+        <div>
+            <a asp-action="Index" class="btn btn-primary"><i class="bi bi-arrow-left "></i></a>
+        </div>
         <h1>Products</h1>
         <nav>
             <ol class="breadcrumb">
@@ -34,7 +32,7 @@
                     <div class="card-body">
                         <h5 class="card-title"> Product Information</h5>
 
-                        <h4>ProductModel</h4>
+                        
                         <hr />
                         <div class="row">
                             <div class="col-md-4">
@@ -118,9 +116,7 @@
                             </div>
                         </div>
 
-                        <div>
-                            <a asp-action="Index" class="btn btn-primary">Back to List</a>
-                        </div>
+                       
 
                     </div>
                 </div>
