@@ -1,0 +1,93 @@
+﻿@model IEnumerable<DelightFoods_Live.Models.DTO.SaleOrderDTO>
+
+@{
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+
+<main id="main" class="main">
+
+	<p>
+	</p>
+	<table class="table">
+		<thead>
+			<tr>
+
+				<th>
+					@Html.DisplayNameFor(model => model.CustomerName)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.TotalPrice)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Status)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Reason)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.ReturnDate)
+				</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.CustomerName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.TotalPrice)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Status)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Reason)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ReturnDate)
+					</td>
+					<td>
+						<button button class="returnConfirmbtn btn btn-secondary" data-id="@item.Id">Return Confirm</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</main>
+
+
+
+<script>
+
+	$(document).ready(function () {
+		$(".returnConfirmbtn").click(function () {
+			var id = $(this).data("id");
+			$.ajax({
+				type: "POST",
+				url: "@Url.Action("ReturnApprove", "SaleOrder")",
+				data: { id: id },
+				success: function (result) {
+					{
+						if (result == "success") {
+							alert("Success")
+							location.reload();
+						}
+						else {
+							alert("Error")
+						}
+					}
+				},
+				error: function (result) {
+				}
+			});
+		});
+	});
+</script>
+

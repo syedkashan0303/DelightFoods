@@ -16,6 +16,8 @@
         public decimal AdvancePayment { get; set; }
         public decimal RemainingPayment { get; set; }
         public string Status { get; set; }
+        public string Reason { get; set; }
+        public string ReturnDate { get; set; }
         public int ShippingId { get; set; }
         public DateTime CreatedOnUTC { get; set; }
         public string ProductName { get; set; }

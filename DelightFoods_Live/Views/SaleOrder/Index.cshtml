@@ -75,6 +75,10 @@
 						{
 							<button button class="delivered btn btn-secondary" data-id="@item.Id">Confirm to delivered</button>
 						}
+						@if (item.Status == "Delivered")
+						{
+							<a asp-action="ReturnForm" asp-route-id="@item.Id"> Return Form </a>
+						}
 						@* <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
 					</td>
 				</tr>

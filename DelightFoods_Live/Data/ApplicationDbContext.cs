@@ -26,6 +26,7 @@ namespace DelightFoods_Live.Data
         public DbSet<SaleOrderModel> SaleOrder { get; set; } = default!;
         public DbSet<ShippingModel> Shipping { get; set; } = default!;
         public DbSet<SaleOrderProductMappingModel> SaleOrderProductMapping { get; set; } = default!;
+        public DbSet<ReturnOrderModel> ReturnOrder { get; set; } = default!;
 
     }
 }

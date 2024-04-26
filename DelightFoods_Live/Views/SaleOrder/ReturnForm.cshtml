@@ -1,0 +1,52 @@
+﻿@model DelightFoods_Live.Models.DTO.ReturnModelDTO
+
+@{
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "Return Form";
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+<h1>Return Form</h1>
+
+
+<main id="main" class="main">
+
+	<hr />
+	<div class="row">
+		<div class="col-md-4">
+			<form asp-action="ReturnForm">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="hidden" asp-for="CustomerID" />
+				<input type="hidden" asp-for="OrderId" />
+
+				<div class="form-group">
+					<label asp-for="TotalPrice" class="control-label"></label>
+					<input asp-for="TotalPrice" class="form-control" readonly="readonly" />
+					<span asp-validation-for="TotalPrice" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="Status" class="control-label"></label>
+					<input asp-for="Status" class="form-control" readonly="readonly"/>
+					<span asp-validation-for="Status" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="Reason" class="control-label"></label>
+					<input asp-for="Reason" class="form-control"  />
+					<span asp-validation-for="Reason" class="text-danger"></span>
+				</div>
+
+				
+				<div class="form-group">
+					<input type="submit" value="Save" class="btn btn-primary" />
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+	<div>
+		<a asp-action="Index">Back to List</a>
+	</div>
+
+</main>
