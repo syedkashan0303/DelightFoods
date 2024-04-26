@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /DelightFoods_Live/appsettings.json
+/DelightFoods_Live/appsettings.json
+/DelightFoods_Live/appsettings.json
+/.gitignore
