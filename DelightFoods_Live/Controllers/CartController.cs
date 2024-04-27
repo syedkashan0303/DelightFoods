@@ -118,19 +118,16 @@ namespace DelightFoods_Live.Controllers
 								item.Quantity = item.Quantity + 1;
 								item.CreatedOnUTC = DateTime.UtcNow;
 								_context.Update(item);
-								_context.SaveChangesAsync();
-
 							}
-							product.Stock = -1;
+							_context.SaveChanges();
+							product.Stock = product.Stock -1;
                             _context.Update(product);
-							_context.SaveChangesAsync();
-
+							_context.SaveChanges();
 						}
 						else
                         {
 							return Json("stockerror");
 						}
-                       
                     }
 
                     if (existingProduct == null || existingProduct.Count() == 0)
@@ -141,11 +138,11 @@ namespace DelightFoods_Live.Controllers
 						model.CustomerId = customer != null ? customer.Id : 0;
 					    model.CreatedOnUTC = DateTime.UtcNow;
 						_context.Add(model);
-						_context.SaveChangesAsync();
+						_context.SaveChanges();
 
-						product.Stock = -1;
+						product.Stock = product.Stock  - 1;
 						_context.Update(product);
-						_context.SaveChangesAsync();
+						_context.SaveChanges();
 
 					}
 				}
@@ -158,7 +155,7 @@ namespace DelightFoods_Live.Controllers
                     model.CreatedOnUTC = DateTime.UtcNow;
                     _context.Add(model);
                 }
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
 
                 return Json("succes");
             }
@@ -186,7 +183,7 @@ namespace DelightFoods_Live.Controllers
                 {
                     _context.Update(cart);
                 }
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
 
                 return Json("succes");
             }
@@ -208,7 +205,7 @@ namespace DelightFoods_Live.Controllers
                 cart.Quantity = cart.Quantity + 1; 
                
                 _context.Update(cart);
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
 
                 return Json("succes");
             }
@@ -227,7 +224,7 @@ namespace DelightFoods_Live.Controllers
                     return Json("error");
                 }
                 _context.Remove(cart);
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
 
                 return Json("succes");
             }
