@@ -103,12 +103,15 @@
 								@if (User.IsInRole("Admin"))
 								{
 									<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="AdminOrderList">Order Request List</a>
+									<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="AdminReturnOrderList">Return Request Order List</a>
+									<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="AdminCODOrderList">Cash On-Delivery Confirmation List</a>
 								}
 								else
 								{
 
 									<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="Index">Order List</a>
 									<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="ReadyForShipOrders">Ready For Ship Order List</a>
+									<a class="nav-item nav-link" asp-controller="SaleOrder" asp-action="ReturnOrderList">Return Order List</a>
 								}
 							</div>
 						</div>

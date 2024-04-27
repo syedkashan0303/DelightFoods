@@ -1,0 +1,124 @@
+﻿@model DelightFoods_Live.Models.DTO.SaleOrderDTO
+
+@{
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "Details";
+}
+<main id="main" class="main">
+
+	<div class="pagetitle">
+		<div>
+			@if (User.IsInRole("Admin"))
+			{
+				<a asp-action="AdminOrderList" class="btn btn-primary"><i class="bi bi-arrow-left"></i></a>
+			}
+			else
+			{
+				<a asp-action="Index" class="btn btn-primary"><i class="bi bi-arrow-left"></i></a>
+			}
+		</div>
+		<h1>Sale Order</h1>
+		<nav>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+				<li class="breadcrumb-item"><a asp-action="Index">Return order Details</a></li>
+				<li class="breadcrumb-item">Details</li>
+			</ol>
+		</nav>
+	</div><!-- End Page Title -->
+
+	<section class="section">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-control">
+					<div>
+
+						<h4>SaleOrderModel</h4>
+						<hr />
+						<dl class="row">
+							<dt class="col-sm-2">
+								@Html.DisplayNameFor(model => model.TotalPrice)
+							</dt>
+							<dd class="col-sm-10">
+								@Html.DisplayFor(model => model.TotalPrice)
+							</dd>
+							<dt class="col-sm-2">
+								@Html.DisplayNameFor(model => model.Status)
+							</dt>
+							<dd class="col-sm-10">
+								@Html.DisplayFor(model => model.Status)
+							</dd>
+							<dt class="col-sm-2">
+								Customer Name
+							</dt>
+							<dd class="col-sm-10">
+								@Html.DisplayFor(model => model.CustomerName)
+							</dd>
+							
+							<dt class="col-sm-2">
+								Shipping Address:
+							</dt>
+							<dd class="col-sm-10">
+								@Html.DisplayFor(model => model.ShippingAddress)
+							</dd>
+
+							<dt class="col-sm-2">
+								Reason For Return:
+							</dt>
+							<dd class="col-sm-10">
+								@Html.DisplayFor(model => model.Reason)
+							</dd>
+							
+							<dt class="col-sm-2">
+								Return Date:
+							</dt>
+							<dd class="col-sm-10">
+								@Html.DisplayFor(model => model.CreatedStringDate)
+							</dd>
+							
+						</dl>
+
+						<table class="table">
+							<thead>
+								<tr>
+									<th>
+										<p>ProductName</p>
+									</th>
+									<th>
+										<p>Price</p>
+									</th>
+									<th>
+										<p>Quantity</p>
+									</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model.saleOrderProductMappings)
+								{
+									<tr>
+										<td>
+											@Html.DisplayFor(modelItem => item.ProductName)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.Price)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.Quantity)
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+
+					<div>
+						@* <a asp-controller="SaleOrder" asp-action="GeneratePdf" asp-route-id="@Model.Id" class="btn btn-primary">Print Receipt</a> *@
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</section>
+</main>

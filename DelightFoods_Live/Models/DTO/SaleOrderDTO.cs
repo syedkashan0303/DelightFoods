@@ -20,9 +20,11 @@
         public string ReturnDate { get; set; }
         public int ShippingId { get; set; }
         public DateTime CreatedOnUTC { get; set; }
+        public string CreatedStringDate { get; set; }
         public string ProductName { get; set; }
         public string ShippingAddress { get; set; }
         public int PaymentId { get; set; }
+        public bool Cashondelivery { get; set; }
         public List<CartDTO> cartDTOs { get; set; }
         public List<SaleOrderProductMappingDTO> saleOrderProductMappings { get; set; }
 
@@ -31,6 +33,8 @@
 		public string CardNumber { get; set; }
 		public string Expiry { get; set; }
 		public int CVC { get; set; }
+
+        public bool IsReturnDateIsValde { get; set; }
 
 	}
 }

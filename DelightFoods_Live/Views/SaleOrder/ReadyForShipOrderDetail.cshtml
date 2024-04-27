@@ -48,18 +48,28 @@
 							<div class="p-4">
 								<h1 class="display-6 mb-4">Payment</h1>
 								<div class="mb-4">
+									<label for="cardholdername" class="form-label">Payment Method:</label>
+
+									<select name="paymethod" id="paymethod" class="form-control">
+										<option value="0">Cash On Delivery </option>
+										<option value="1">Card Payment</option>
+									</select>
+
+								</div>
+								
+								<div class="mb-4 cardPay">
 									<label for="cardholdername" class="form-label">Card Holder Name:</label>
 									<input type="text" id="cardholdername" class="form-control" />
 								</div>
-								<div class="mb-4">
+								<div class="mb-4 cardPay">
 									<label for="txtCardNumber" class="form-label">Card Number:</label>
 									<input type="number" id="txtCardNumber" class="form-control" />
 								</div>
-								<div class="mb-4">
+								<div class="mb-4 cardPay">
 									<label for="txtExpiry" class="form-label">Expiry:</label>
 									<input type="text" id="txtExpiry" class="form-control" />
 								</div>
-								<div class="mb-4">
+								<div class="mb-4 cardPay">
 									<label for="txtCVC" class="form-label">CVC:</label>
 									<input type="number" id="txtCVC" class="form-control" />
 								</div>
@@ -124,6 +134,22 @@
 
 <script>
 
+	$(document).ready(function () {
+
+		$(".cardPay").hide();
+
+		$("#paymethod").on("change", function () {
+			if ($("#paymethod").val() == "0") {
+				$(".cardPay").hide();
+				console.log("true");
+
+			}
+			else {
+				console.log("abc");
+				$(".cardPay").show();
+			}
+		});
+	});
 
 	$("#paymentbtn").on("click", function () {
 		// Get the value of the textbox
@@ -139,6 +165,14 @@
 		model.expiry = expiry;
 		model.cvc = cvc;
 
+		if ($("#paymethod").val() == "0") {
+			model.cashondelivery = true;
+		}
+		else {
+			console.log("abc");
+			model.cashondelivery = false;
+		}
+
 		console.log("Model", model);
 
 		$.ajax({
@@ -147,7 +181,7 @@
 			data: { model: model },
 			success: function (result) {
 				if (result === "success") {
-					alert("Successfully added to cart");
+					alert("Payment Successfully");
 					location.reload();
 				} else {
 					alert("Error");

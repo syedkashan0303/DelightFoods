@@ -54,7 +54,10 @@
 						@Html.DisplayFor(modelItem => item.ReturnDate)
 					</td>
 					<td>
-						<button button class="returnConfirmbtn btn btn-secondary" data-id="@item.Id">Return Confirm</button>
+						@if (item.Status != "Returned")
+						{
+							<button button class="returnConfirmbtn btn btn-secondary" data-id="@item.Id">Return Confirm</button>
+						}
 					</td>
 				</tr>
 			}

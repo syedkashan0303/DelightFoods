@@ -69,17 +69,15 @@
 						@Html.DisplayFor(modelItem => item.CreatedOnUTC)
 					</td>
 					<td>
-						@* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
 						<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
 						@if (item.Status == "Shipped")
 						{
 							<button button class="delivered btn btn-secondary" data-id="@item.Id">Confirm to delivered</button>
 						}
-						@if (item.Status == "Delivered")
+						@if (item.Status == "Delivered" && item.IsReturnDateIsValde)
 						{
 							<a asp-action="ReturnForm" asp-route-id="@item.Id"> Return Form </a>
 						}
-						@* <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
 					</td>
 				</tr>
 			}

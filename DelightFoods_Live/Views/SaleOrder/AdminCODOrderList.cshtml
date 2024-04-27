@@ -1,0 +1,144 @@
+﻿@model IEnumerable<DelightFoods_Live.Models.DTO.SaleOrderDTO>
+
+@{
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "Index";
+}
+
+<main id="main" class="main">
+
+	<div class="pagetitle">
+		<h1>Sale Order List</h1>
+		<nav>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+				<li class="breadcrumb-item">Sales List</li>
+			</ol>
+		</nav>
+	</div>
+	<section class="section">
+		<div class="row">
+			<p style="float:right">
+				@* <a class="btn btn-success" asp-action="Create">Create New</a> *@
+			</p>
+
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Datatables</h5>
+						<!-- Table with stripped rows -->
+						<div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+							<div class="datatable-top">
+								<div class="datatable-dropdown">
+									<label>
+										<select class="datatable-selector"><option value="5">5</option><option value="10" selected="">10</option><option value="15">15</option><option value="-1">All</option></select> entries per page
+									</label>
+								</div>
+								<div class="datatable-search">
+									<input class="datatable-input" placeholder="Search..." type="search" title="Search within table">
+								</div>
+							</div>
+							<div class="datatable-container">
+								<table class="table datatable datatable-table">
+									<thead>
+										<tr>
+											<th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+												<button class="datatable-sorter">@Html.DisplayNameFor(model => model.CustomerName)</button>
+											</th>
+											<th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+												<button class="datatable-sorter">@Html.DisplayNameFor(model => model.AdvancePayment)</button>
+											</th>
+											<th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+												<button class="datatable-sorter">@Html.DisplayNameFor(model => model.TotalPrice)</button>
+											</th>
+											<th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+												<button class="datatable-sorter">@Html.DisplayNameFor(model => model.Status)</button>
+											</th>
+
+											<th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+												<button class="datatable-sorter">
+													Created Date
+												</button>
+											</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var item in Model)
+										{
+											<tr>
+												<td>
+													@Html.DisplayFor(modelItem => item.CustomerName)
+												</td>
+												<td>
+													@Html.DisplayFor(modelItem => item.AdvancePayment)
+												</td>
+												<td>
+													@Html.DisplayFor(modelItem => item.TotalPrice)
+												</td>
+												<td>
+													@Html.DisplayFor(modelItem => item.Status)
+												</td>
+												<td>
+													@Html.DisplayFor(modelItem => item.CreatedStringDate)
+												</td>
+												<td>
+													@if (item.Status == "WaitingForPaymentConfirmation")
+													{
+														<button button class="paymentconfirmation btn btn-secondary" data-id="@item.Id">
+															Ready to ship <i class="bi bi-truck"></i>
+														</button>
+
+													}
+
+												</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+							<div class="datatable-bottom">
+								<div class="datatable-info">Showing 1 to 10 of 100 entries</div>
+								<nav class="datatable-pagination"><ul class="datatable-pagination-list"><li class="datatable-pagination-list-item datatable-hidden datatable-disabled"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">‹</button></li><li class="datatable-pagination-list-item datatable-active"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">1</button></li><li class="datatable-pagination-list-item"><button data-page="2" class="datatable-pagination-list-item-link" aria-label="Page 2">2</button></li><li class="datatable-pagination-list-item"><button data-page="3" class="datatable-pagination-list-item-link" aria-label="Page 3">3</button></li><li class="datatable-pagination-list-item"><button data-page="4" class="datatable-pagination-list-item-link" aria-label="Page 4">4</button></li><li class="datatable-pagination-list-item"><button data-page="5" class="datatable-pagination-list-item-link" aria-label="Page 5">5</button></li><li class="datatable-pagination-list-item"><button data-page="6" class="datatable-pagination-list-item-link" aria-label="Page 6">6</button></li><li class="datatable-pagination-list-item"><button data-page="7" class="datatable-pagination-list-item-link" aria-label="Page 7">7</button></li><li class="datatable-pagination-list-item datatable-ellipsis datatable-disabled"><button class="datatable-pagination-list-item-link">…</button></li><li class="datatable-pagination-list-item"><button data-page="10" class="datatable-pagination-list-item-link" aria-label="Page 10">10</button></li><li class="datatable-pagination-list-item"><button data-page="2" class="datatable-pagination-list-item-link" aria-label="Page 2">›</button></li></ul></nav>
+							</div>
+						</div>
+						<!-- End Table with stripped rows -->
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+</main>
+
+<script>
+
+	$(document).ready(function () {
+		$(".paymentconfirmation").click(function () {
+			var id = $(this).data("id"); // Get the product ID from data attribute
+			console.log('abc', id);
+
+			$.ajax({
+				type: 'POST',
+				url: "@Url.Action("PaymentConfirm", "SaleOrder")",
+				data: { id: id },
+				success: function (result) {
+					{
+						if (result == "success") {
+							alert("Success")
+							location.reload();
+						}
+						else {
+							alert("Error")
+						}
+					}
+				},
+				error: function (result) {
+				}
+			});
+		});
+	});
+
+
+</script>
+
