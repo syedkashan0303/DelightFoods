@@ -96,6 +96,14 @@ namespace DelightFoods_Live.Controllers
             return NotFound();
 
         }
+        public IActionResult Contact()
+        {
+            return View();
+        }
+        public IActionResult About()
+        {
+            return View();
+        }
 
     }
 }
