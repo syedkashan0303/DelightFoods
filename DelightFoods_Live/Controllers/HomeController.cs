@@ -96,7 +96,7 @@ namespace DelightFoods_Live.Controllers
             return NotFound();
 
         }
-        public IActionResult Contact()
+        public IActionResult ContactUs()
         {
             return View();
         }
