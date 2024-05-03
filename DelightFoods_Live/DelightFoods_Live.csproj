@@ -36,4 +36,8 @@
     <Folder Include="wwwroot\Admin\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\css\Card.css" />
+  </ItemGroup>
+
 </Project>

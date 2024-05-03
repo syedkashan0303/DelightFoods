@@ -1,7 +1,11 @@
-﻿@model DelightFoods_Live.Models.DTO.CartDTO
+﻿@using Microsoft.CodeAnalysis.Scripting
+@model DelightFoods_Live.Models.DTO.CartDTO
 @{
 	Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    
+    
 }
+
 
 @Html.HiddenFor(model => model.IsOrderCreated, new { id = "isOrderCreated" })
 
@@ -27,7 +31,7 @@
 						<th scope="col">Price</th>
 						<th scope="col">Quantity</th>
 						<th scope="col">Total</th>
-						<th scope="col" class="actionbtns">Handle</th>
+						<th scope="col">Handle</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -61,7 +65,7 @@
 								</div>
 							</td>
 							<td>
-								<p class="mb-0 mt-4 ">@item.TotalPrice $</p>
+								<p class="mb-0 mt-4">@item.TotalPrice $</p>
 							</td>
 							<td>
 								<button class="btn btn-md rounded-circle bg-light border mt-4 clearAllItem actionbtns" data-id="@item.Id">
@@ -108,7 +112,7 @@
 							</div>
 							<div class="col-md-8 ">
 								@* @Html.TextBoxFor(model => model.CardNumber,  new { @class = "form-control" }) *@
-								<input type="number" id="txtCardNumber" class="form-control" />
+								 <input type="number" id="txtCardNumber" class="form-control" />
 							</div>
 						</div>
 						<div class="d-flex justify-content-between  mb-4 ">
@@ -129,7 +133,8 @@
 								<input type="number" id="txtCVC" class="form-control" />
 							</div>
 						</div>
-					</div>
+					</div>  
+					
 
 					@{
 						// Calculate total price including tax
@@ -141,11 +146,7 @@
 
 					<div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
 						<h5 class="mb-0 ps-4 me-4">Advance Payment</h5>
-
-						<p class="mb-0 pe-4"> 
-							PKR @Model.TotalPriceWithTax.ToString("N2") <br />
-							(Advance Payment 30% : PKR @advancepayment.ToString("N2"))
-							 </p>
+						<p class="mb-0 pe-4"> PKR @advancepayment.ToString("N2") </p>
 					</div>
 
 					<div class="row">
@@ -362,6 +363,5 @@
 
 
 	</script>
-
+	
 </div>
-
