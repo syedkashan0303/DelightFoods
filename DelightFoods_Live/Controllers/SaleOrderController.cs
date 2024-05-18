@@ -429,26 +429,51 @@ namespace DelightFoods_Live.Controllers
 
 		public async Task<IActionResult> AdminCODOrderList()
 		{
-			var CodPayment = _context.PaymentTransaction.Where(x => x.IsCOD).ToList();
-			var order = CodPayment != null && CodPayment.Any() ? _context.SaleOrder.Where(x => CodPayment.Select(z => z.OrderId).Contains(x.Id)).ToList() : null;
-			var customers = _context.Customers.Where(x => order.Select(z => z.CustomerId).Contains(x.Id)).ToList();
+			// Fetch the COD payments
+			var codPayments = _context.PaymentTransaction.Where(x => x.IsCOD).ToList();
 
-			var orderlist = new List<SaleOrderDTO>();
-			var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
-
-			foreach (var item in order.Where(x => x.Status == "WaitingForPaymentConfirmation"))
+			// Check if codPayments is null or empty before proceeding
+			if (codPayments == null || !codPayments.Any())
 			{
-				var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x => x.Amount);
-				var customer = customers != null ? customers.Where(x => x.Id == item.CustomerId).FirstOrDefault() : null;
-				var model = utilities.Map(item);
-				model.AdvancePayment = payment;
-				model.CustomerName = customer != null ? customer.FirstName + " " + customer.LastName : "";
-				model.CreatedStringDate = item.CreatedOnUTC.ToString("dd-MMMM-yyyy");
-				orderlist.Add(model);
+				return View(new List<SaleOrderDTO>()); // Return an empty list if there are no COD payments
 			}
 
-			return View(orderlist);
+			// Fetch orders corresponding to the COD payments
+			var orderIds = codPayments.Select(z => z.OrderId).ToList();
+			var orders = _context.SaleOrder.Where(x => orderIds.Contains(x.Id)).ToList();
+
+			// Check if orders is null or empty before proceeding
+			if (orders == null || !orders.Any())
+			{
+				return View(new List<SaleOrderDTO>()); // Return an empty list if there are no orders
+			}
+
+			// Fetch customers corresponding to the orders
+			var customerIds = orders.Select(z => z.CustomerId).ToList();
+			var customers = _context.Customers.Where(x => customerIds.Contains(x.Id)).ToList();
+
+			// Initialize the list for the resulting order DTOs
+			var orderList = new List<SaleOrderDTO>();
+			var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
+
+			// Iterate through the orders and map them to the DTOs
+			foreach (var order in orders.Where(x => x.Status == "WaitingForPaymentConfirmation"))
+			{
+				var payment = _context.PaymentTransaction.Where(x => x.OrderId == order.Id).Sum(x => x.Amount);
+				var customer = customers.FirstOrDefault(x => x.Id == order.CustomerId);
+
+				var model = utilities.Map(order);
+				model.AdvancePayment = payment;
+				model.CustomerName = customer != null ? customer.FirstName + " " + customer.LastName : "";
+				model.CreatedStringDate = order.CreatedOnUTC.ToString("dd-MMMM-yyyy");
+
+				orderList.Add(model);
+			}
+
+			// Return the view with the order list
+			return View(orderList);
 		}
+
 
 		public IActionResult GetSaleOrderDetails(int? id)
 		{
@@ -618,25 +643,28 @@ namespace DelightFoods_Live.Controllers
 
 		public async Task<IActionResult> AdminReturnOrderList()
 		{
-			var returnOrderList = _context.ReturnOrder.ToList();
+			var returnOrderList =  _context.ReturnOrder.ToList();
 			var order = _context.SaleOrder.Where(x => returnOrderList.Select(z => z.OrderId).Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
 
-			var customers = _context.Customers.Where(x => order.Select(z => z.CustomerId).Contains(x.Id)).ToList();
+			var customers =  _context.Customers.Where(x => order.Select(z => z.CustomerId).Contains(x.Id)).ToList();
 
 			var orderlist = new List<SaleOrderDTO>();
 			var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
-
-			foreach (var item in order)
+			if (order != null && order.Any())
 			{
-				var returnOrder = returnOrderList.Where(x => x.OrderId == item.Id).FirstOrDefault();
-				var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x => x.Amount);
-				var customer = customers != null ? customers.Where(x => x.Id == item.CustomerId).FirstOrDefault() : null;
-				var model = utilities.Map(item);
-				model.CustomerName = customer != null ? customer.FirstName + " " + customer.LastName : "";
-				model.Reason = returnOrder.Reason;
-				model.ReturnDate = returnOrder.CreatedOnUTC.ToString("dd/MMMM/yyyy");
-				orderlist.Add(model);
-			}
+                foreach (var item in order)
+                {
+                    var returnOrder = returnOrderList.Where(x => x.OrderId == item.Id).FirstOrDefault();
+                    var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x => x.Amount);
+                    var customer = customers != null ? customers.Where(x => x.Id == item.CustomerId).FirstOrDefault() : null;
+                    var model = utilities.Map(item);
+                    model.CustomerName = customer != null ? customer.FirstName + " " + customer.LastName : "";
+                    model.Reason = returnOrder?.Reason;
+                    model.ReturnDate = returnOrder.CreatedOnUTC.ToString("dd/MMMM/yyyy");
+                     orderlist.Add(model);
+                }
+            }
+			
 
 			return View(orderlist);
 		}
@@ -809,21 +837,22 @@ namespace DelightFoods_Live.Controllers
 
 			var orderlist = new List<SaleOrderDTO>();
 			var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
-
-			foreach (var item in order.Where(x => x.Status == "Returned"))
+			if (order != null && order.Any())
 			{
-				var shipping = _context.Shipping.Where(x => x.Id == item.ShippingId).FirstOrDefault();
-				var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x => x.Amount);
-				var returnOrder = returnOrderList.Where(x => x.OrderId == item.Id).FirstOrDefault();
-				var model = utilities.Map(item);
-				model.ShippingAddress = shipping != null ? shipping.Address : "Not Available";
-				model.TotalPrice = item.TotalPrice;
-				model.Status = item.Status;
-				model.Reason = returnOrder.Reason;
-				model.ReturnDate = returnOrder.CreatedOnUTC.ToString("dd/MMMM/yyyy");
-				orderlist.Add(model);
-			}
-
+                foreach (var item in order.Where(x => x.Status == "Returned"))
+                {
+                    var shipping = _context.Shipping.Where(x => x.Id == item.ShippingId).FirstOrDefault();
+                    var payment = _context.PaymentTransaction.Where(x => x.OrderId == item.Id).Sum(x => x.Amount);
+                    var returnOrder = returnOrderList.Where(x => x.OrderId == item.Id).FirstOrDefault();
+                    var model = utilities.Map(item);
+                    model.ShippingAddress = shipping != null ? shipping.Address : "Not Available";
+                    model.TotalPrice = item.TotalPrice;
+                    model.Status = item.Status;
+                    model.Reason = returnOrder.Reason;
+                    model.ReturnDate = returnOrder.CreatedOnUTC.ToString("dd/MMMM/yyyy");
+                    orderlist.Add(model);
+                }
+            }
 			return View(orderlist);
 		}
 

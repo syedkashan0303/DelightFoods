@@ -16,7 +16,9 @@
 	<table class="table">
 		<thead>
 			<tr>
-
+				<th>
+					Code
+				</th>
 				
 				<th>
 					@Html.DisplayNameFor(model => model.TotalPrice)
@@ -46,7 +48,9 @@
 			@foreach (var item in Model)
 			{
 				<tr>
-					
+					<td>
+						<b>@($"S-ORD-00{item.Id}")</b>
+					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.TotalPrice)
 					</td>

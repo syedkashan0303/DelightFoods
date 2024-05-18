@@ -212,7 +212,7 @@
                         <span>Full-Stack Developer</span>
                     </li>
                     <li>
-                        <hr class="dropdown-divider">
+                        <hr class="dropdown-divider" />
                     </li>
 
                     <li>
@@ -222,7 +222,7 @@
                         </a>
                     </li>
                     <li>
-                        <hr class="dropdown-divider">
+                        <hr class="dropdown-divider" />
                     </li>
 
                     <li>
@@ -232,7 +232,7 @@
                         </a>
                     </li>
                     <li>
-                        <hr class="dropdown-divider">
+                        <hr class="dropdown-divider" />
                     </li>
 
                     <li>
@@ -242,19 +242,19 @@
                         </a>
                     </li>
                     <li>
-                        <hr class="dropdown-divider">
+                        <hr class="dropdown-divider" />
                     </li>
 
                     <li class="nav-item">
                         <form id="logoutForm" class="dropdown-item d-flex align-items-center" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Dashboard", "Home", new { area = "" })" method="post">
-                            <button id="logout" type="submit" class="nav-link collapsed btn btn-link text-dark border-0">
+                            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0 d-flex align-items-center">
                                 <i class="bi bi-box-arrow-in-right"></i>
                                 <span>Sign Out</span>
                             </button>
                         </form>
                     </li>
+                </ul>
 
-                </ul><!-- End Profile Dropdown Items -->
             </li><!-- End Profile Nav -->
 
         </ul>
@@ -299,7 +299,7 @@
                     </li> 
                     <li>
                         <a asp-controller="SaleOrder" asp-action="AdminOrderList">
-                            <i class="bi bi-circle"></i><span>Order Requst List</span>
+                            <i class="bi bi-circle"></i><span>Order Request List</span>
                         </a>
                     </li>
                     <li>
@@ -342,14 +342,13 @@
                 </ul>
             </li>
         }
-        <li class="nav-heading">Pages</li>
 
-        <li class="nav-item">
+   @*      <li class="nav-item">
             <a class="nav-link collapsed" href="pages-contact.html">
                 <i class="bi bi-envelope"></i>
                 <span>Support</span>
             </a>
-        </li><!-- End Support Page Nav -->
+        </li><!-- End Support Page Nav --> *@
         @if (!SignInManager.IsSignedIn(User))
         {
 

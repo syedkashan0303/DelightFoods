@@ -15,7 +15,9 @@
 	<table class="table">
 		<thead>
 			<tr>
-
+				<th>
+					Code
+				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.CustomerName)
 				</th>
@@ -38,6 +40,9 @@
 			@foreach (var item in Model)
 			{
 				<tr>
+					<td>
+						<b>@($"R-ORD-REQ-00{item.Id}")</b>
+					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.CustomerName)
 					</td>
