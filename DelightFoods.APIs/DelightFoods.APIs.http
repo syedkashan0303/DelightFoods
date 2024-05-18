@@ -1,0 +1,6 @@
+@DelightFoods.APIs_HostAddress = http://localhost:5018
+
+GET {{DelightFoods.APIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

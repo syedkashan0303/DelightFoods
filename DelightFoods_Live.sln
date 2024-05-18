@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34601.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelightFoods_Live", "DelightFoods_Live\DelightFoods_Live.csproj", "{BAAC5162-0814-4246-BEF9-A1B2BB8E505C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DelightFoods.APIs", "DelightFoods.APIs\DelightFoods.APIs.csproj", "{5ACD514B-E33E-418F-A139-2834D0975D50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BAAC5162-0814-4246-BEF9-A1B2BB8E505C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAAC5162-0814-4246-BEF9-A1B2BB8E505C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAAC5162-0814-4246-BEF9-A1B2BB8E505C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ACD514B-E33E-418F-A139-2834D0975D50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ACD514B-E33E-418F-A139-2834D0975D50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ACD514B-E33E-418F-A139-2834D0975D50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ACD514B-E33E-418F-A139-2834D0975D50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
