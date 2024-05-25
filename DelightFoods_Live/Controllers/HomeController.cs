@@ -104,6 +104,10 @@ namespace DelightFoods_Live.Controllers
         {
             return View();
         }
+        public IActionResult AdminDashboard()
+        {
+            return View();
+        }
 
     }
 }
