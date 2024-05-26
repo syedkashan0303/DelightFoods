@@ -93,16 +93,19 @@
 										</div>
 									</div>
 									<div class="row">
-										<div class="col-sm-1">
+										<div class="col-sm-2">
 											<strong>Documents</strong>
 										</div>
 										<div class="col-sm-3">
 											@if (Model.MediaFileList != null && Model.MediaFileList.Any())
 											{
-												<img src="@Model.MediaFilePath" class="img-fluid rounded-top" style="height:70px; width:auto;" alt="">
+												foreach (var item in Model.MediaFileList)
+												{
+													<img src="@item.FilePath" class="img-fluid rounded-top" style="height:70px; width:auto;" alt="">
+												}
 											}
 										</div>
-										<div class="col-sm-1">
+										<div class="col-sm-2">
 											@if (Model.MediaFileList != null && Model.MediaFileList.Any())
 											{
 												foreach (var item in Model.MediaFileList)
@@ -116,7 +119,7 @@
 											}
 										</div>
 									</div>
-									<div class="form-group ">
+									<div class="form-group col-sm-2">
 										<input id="saveButton" type="submit" value="Save" class="btn btn-primary" />
 									</div>
 								</form>
@@ -129,14 +132,13 @@
 		</div>
 	</section>
 </main>
+<script src="/js/validateImageFile.js"></script>
 
-</main>
-@section Scripts {
-   <script src="/js/validateImageFile.js"></script>
+@* @section Scripts {
     <script>
 		document.addEventListener('DOMContentLoaded', function () {
           validateImageFile('fileInput', 'saveButton');
 
         });
     </script>
-}
+} *@

@@ -1,28 +1,103 @@
 ﻿@model List<DelightFoods_Live.Models.DTO.UserRoleMapping>
 
+
 @{
-    ViewData["Title"] = "Application Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "User Role List";
 }
+<main id="main" class="main">
 
-<h1>Application Users</h1>
+    <div class="pagetitle">
+        <h1>User Role List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="AdminDashboard" asp-controller="Home">Home</a></li>
+                <li class="breadcrumb-item">User Role List</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>User ID</th>
-            <th>User Name</th>
-            <th>Role Name</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@(item.UserId ?? "N/A")</td>
-                <td>@(item.UserName ?? "N/A")</td>
-                <td>@(item.RoleName ?? "N/A")</td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- Table with stripped rows -->
+                        <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+
+                            <div class="datatable-container">
+                                <table class="table datatable datatable-table">
+                                    <thead>
+                                        <tr>
+                                            <th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+                                                <button class="datatable-sorter">Code</button>
+                                            </th>
+                                            <th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+                                                <button class="datatable-sorter">User</button>
+                                            </th>
+                                            <th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+                                                <button class="datatable-sorter">Role</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <b>@($"R-{item.UserId}")</b>
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.UserName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.RoleName)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Table with stripped rows -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+
+    $(document).ready(function () {
+        $(".readyforship").click(function () {
+            var id = $(this).data("id"); // Get the product ID from data attribute
+            console.log('abc', id);
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("ReadyToShip", "SaleOrder")",
+                data: { id: id },
+                success: function (result) {
+                    {
+                        if (result == "success") {
+                            // alert("Success")
+                            console.log("Success");
+                            location.reload();
+                        }
+                        else {
+                            console.log("Error")
+                            // alert("Error")
+                        }
+                    }
+                },
+                error: function (result) {
+                }
+            });
+        });
+    });
+
+
+</script>

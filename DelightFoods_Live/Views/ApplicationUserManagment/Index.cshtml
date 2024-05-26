@@ -1,30 +1,103 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model IEnumerable<IdentityRole>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Roles List";
+}
+<main id="main" class="main">
 
-    @{
-        ViewData["Title"] = "Application Roles";
-    }
+    <div class="pagetitle">
+        <h1>Roles List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="AdminDashboard" asp-controller="Home">Home</a></li>
+                <li class="breadcrumb-item">Roles List</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <p style="float:right">
+                @* <a class="btn btn-success" asp-action="Create">Create New</a> *@
+            </p>
 
-    <h1>Roles</h1>
-    <p>
-        <a asp-action="Create">Create Role</a>
-    </p>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.Id)</th>
-                <th>@Html.DisplayNameFor(model => model.Name)</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                        <!-- Table with stripped rows -->
+                        <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+
+                            <div class="datatable-container">
+                                <table class="table datatable datatable-table">
+                                    <thead>
+                                        <tr>
+                                            <th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+                                                <button class="datatable-sorter">Code</button>
+                                            </th>
+                                            <th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
+                                                <button class="datatable-sorter">@Html.DisplayNameFor(model => model.Name)</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <b>@($"R-{item.Id}")</b>
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Name)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            @* <div class="datatable-bottom">
+                            <div class="datatable-info">Showing 1 to 10 of 100 entries</div>
+                            <nav class="datatable-pagination"><ul class="datatable-pagination-list"><li class="datatable-pagination-list-item datatable-hidden datatable-disabled"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">‹</button></li><li class="datatable-pagination-list-item datatable-active"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">1</button></li><li class="datatable-pagination-list-item"><button data-page="2" class="datatable-pagination-list-item-link" aria-label="Page 2">2</button></li><li class="datatable-pagination-list-item"><button data-page="3" class="datatable-pagination-list-item-link" aria-label="Page 3">3</button></li><li class="datatable-pagination-list-item"><button data-page="4" class="datatable-pagination-list-item-link" aria-label="Page 4">4</button></li><li class="datatable-pagination-list-item"><button data-page="5" class="datatable-pagination-list-item-link" aria-label="Page 5">5</button></li><li class="datatable-pagination-list-item"><button data-page="6" class="datatable-pagination-list-item-link" aria-label="Page 6">6</button></li><li class="datatable-pagination-list-item"><button data-page="7" class="datatable-pagination-list-item-link" aria-label="Page 7">7</button></li><li class="datatable-pagination-list-item datatable-ellipsis datatable-disabled"><button class="datatable-pagination-list-item-link">…</button></li><li class="datatable-pagination-list-item"><button data-page="10" class="datatable-pagination-list-item-link" aria-label="Page 10">10</button></li><li class="datatable-pagination-list-item"><button data-page="2" class="datatable-pagination-list-item-link" aria-label="Page 2">›</button></li></ul></nav>
+                            </div> *@
+                        </div>
+                        <!-- End Table with stripped rows -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+
+    $(document).ready(function () {
+        $(".readyforship").click(function () {
+            var id = $(this).data("id"); // Get the product ID from data attribute
+            console.log('abc', id);
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("ReadyToShip", "SaleOrder")",
+                data: { id: id },
+                success: function (result) {
+                    {
+                        if (result == "success") {
+                            // alert("Success")
+                            console.log("Success")
+                            location.reload();
+                        }
+                        else {
+                            console.log("Error")
+                            // alert("Error")
+                        }
+                    }
+                },
+                error: function (result) {
+                }
+            });
+        });
+    });
+
+
+</script>

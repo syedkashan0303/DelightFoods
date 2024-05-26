@@ -65,7 +65,7 @@
 								</div>
 							</td>
 							<td>
-								<p class="mb-0 mt-4">@item.TotalPrice $</p>
+								<p class="mb-0 mt-4">@item.TotalPrice PKR</p>
 							</td>
 							<td>
 								<button class="btn btn-md rounded-circle bg-light border mt-4 clearAllItem actionbtns" data-id="@item.Id">
@@ -215,11 +215,13 @@
 				success: function (result) {
 					{
 						if (result == "succes") {
-							alert("Succesfully Clear all items")
+							// alert("Succesfully Clear all items")
+							console.log("Succesfully Clear all items")
 							location.reload();
 						}
 						else {
-							alert("Error")
+							console.log("Error")
+							// alert("Error")
 						}
 					}
 				},
@@ -240,11 +242,13 @@
 				success: function (result) {
 					{
 						if (result == "succes") {
-							alert("Success")
+							console.log("Success")
+							// alert("Success")
 							location.reload();
 						}
 						else {
-							alert("Error")
+							console.log("Error")
+							// alert("Error")
 						}
 					}
 				},
@@ -265,11 +269,13 @@
 				success: function (result) {
 					{
 						if (result == "succes") {
-							alert("Success")
+							console.log("Success")
+							// alert("Success")
 							location.reload();
 						}
 						else {
-							alert("Error")
+							console.log("Error")
+							// alert("Error")
 						}
 					}
 				},
@@ -289,10 +295,12 @@
 				data: { model: Records }, // No need to stringify
 				success: function (result) {
 					if (result === "success") {
-						alert("Success");
+						// alert("Success");
+						console.log("Success");
 						location.reload();
 					} else {
-						alert("Error");
+						console.log("Error");
+						// alert("Error");
 					}
 				},
 				error: function (result) {
@@ -326,10 +334,12 @@
 				data: { model: model },
 				success: function (result) {
 					if (result === "success") {
-						alert("Success");
+						// alert("Success");
+						console.log("Success");
 						location.reload();
 					} else {
-						alert("Error");
+						console.log("Error");
+						// alert("Error");
 					}
 				},
 				error: function (result) {
@@ -349,10 +359,12 @@
 				data: { model: Records }, // No need to stringify
 				success: function (result) {
 					if (result === "success") {
-						alert("Success");
+						// alert("Success");
+						console.log("Success");
 						location.reload();
 					} else {
-						alert("Error");
+						//alert("Error");
+						console.log("Error");
 					}
 				},
 				error: function (result) {

@@ -4,70 +4,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Index";
 }
-@*
- <main id="main" class="main">
 
-	<p>
-		 <a asp-action="Create">Create New</a>
-	</p>
-	<table class="table">
-		<thead>
-			<tr>
-
-				<th>
-					@Html.DisplayNameFor(model => model.AdvancePayment)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.TotalPrice)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Status)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.CreatedOnUTC)
-				</th>
-				<th>Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model)
-			{
-				<tr>
-					<td>
-						@Html.DisplayFor(modelItem => item.AdvancePayment)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.TotalPrice)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Status)
-					</td>
-
-					<td>
-						@Html.DisplayFor(modelItem => item.CreatedOnUTC)
-					</td>
-					<td>
-						<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">
-							Details <i class="bi bi-info-square"></i>
-						</a>
-						|
-						@if (item.Status == "Processing")
-						{
-							<button button class="readyforship btn btn-secondary" data-id="@item.Id">
-								Ready to ship <i class="bi bi-truck"></i>
-							</button>
-
-						}
-
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-
-</main>
-
- *@
 <main id="main" class="main">
 
     <div class="pagetitle">
@@ -91,16 +28,7 @@
                          
                         <!-- Table with stripped rows -->
                         <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
-                            <div class="datatable-top">
-                              @*   <div class="datatable-dropdown">
-                                    <label>
-                                        <select class="datatable-selector"><option value="5">5</option><option value="10" selected="">10</option><option value="15">15</option><option value="-1">All</option></select> entries per page
-                                    </label>
-                                </div> *@
-                              @*   <div class="datatable-search">
-                                    <input class="datatable-input" placeholder="Search..." type="search" title="Search within table">
-                                </div> *@
-                            </div>
+                           
                             <div class="datatable-container">
                                 <table class="table datatable datatable-table">
                                     <thead>
@@ -131,11 +59,12 @@
                                         {
                                             <tr>
                                                 <td>
-                                                    @Html.DisplayFor(modelItem => item.AdvancePayment)
-                                                </td>
-                                                <td>
                                                     <b>@($"ORD-00{item.Id}")</b>
                                                 </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.AdvancePayment)
+                                                </td>
+                                                
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.TotalPrice)
                                                 </td>
@@ -193,11 +122,13 @@
                 success: function (result) {
                     {
                         if (result == "success") {
-                            alert("Success")
+                            // alert("Success")
+                            console.log("Success")
                             location.reload();
                         }
                         else {
-                            alert("Error")
+                            // alert("Error")
+                            console.log("Error")
                         }
                     }
                 },

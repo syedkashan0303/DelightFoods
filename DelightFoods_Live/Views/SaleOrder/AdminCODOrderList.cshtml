@@ -92,7 +92,7 @@
 													@if (item.Status == "WaitingForPaymentConfirmation")
 													{
 														<button button class="paymentconfirmation btn btn-secondary" data-id="@item.Id">
-															Ready to ship <i class="bi bi-truck"></i>
+															Confirm delivery <i class="bi bi-truck"></i>
 														</button>
 
 													}
@@ -131,11 +131,13 @@
 				success: function (result) {
 					{
 						if (result == "success") {
-							alert("Success")
+							console.log("Success")
+							//alert("Success")
 							location.reload();
 						}
 						else {
-							alert("Error")
+							console.log("Error")
+							//alert("Error")
 						}
 					}
 				},

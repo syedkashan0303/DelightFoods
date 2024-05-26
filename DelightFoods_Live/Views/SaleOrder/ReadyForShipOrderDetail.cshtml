@@ -181,10 +181,10 @@
 			data: { model: model },
 			success: function (result) {
 				if (result === "success") {
-					alert("Payment Successfully");
+					console.log("Payment Successfully");
 					location.reload();
 				} else {
-					alert("Error");
+					console.log("Error");
 				}
 			},
 			error: function (result) {

@@ -19,7 +19,6 @@
                 <li class="breadcrumb-item">Create</li>
             </ol>
         </nav>
-     
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -28,7 +27,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Enter Product Information</h5>
-                        
                         <hr />
                         <div class="row">
                             <div class="col-md-12">
@@ -48,9 +46,7 @@
                                                 <input asp-for="Description" class="form-control" />
                                                 <span asp-validation-for="Description" class="text-danger"></span>
                                             </div>
-
                                         </div>
-
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -66,9 +62,7 @@
                                                 <input asp-for="Stock" class="form-control" />
                                                 <span asp-validation-for="Stock" class="text-danger"></span>
                                             </div>
-
                                         </div>
-
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -83,39 +77,30 @@
                                                 <label class="form-check-label control-label" asp-for="UploadedFiles">Attachments</label>
                                                 <input asp-for="UploadedFiles" class="form-control" id="fileInput" />
                                                 <span asp-validation-for="UploadedFiles" class="text-danger"></span>
-                                                <div class="invalid-feedback ">
+                                                <div class="invalid-feedback">
                                                     Please upload your attachments.
                                                 </div>
                                                 <div class="invalid-upload"></div>
                                             </div>
                                         </div>
-
                                     </div>
                                     <br />
                                     <div class="form-group">
-                                        <input id="saveButton" type="submit" value="Create" class="btn btn-primary " />
+                                        <input id="saveButton" type="submit" value="Create" class="btn btn-primary" />
                                     </div>
-
                                 </form>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 </main>
-@section Scripts {
+<script src="/js/validateImageFile.js"></script>
+@* <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        validateImageFile('fileInput', 'saveButton');
+    });
+</script> *@
 
-   <script src="/js/validateImageFile.js"></script>
-    <script>
-		document.addEventListener('DOMContentLoaded', function () {
-          validateImageFile('fileInput', 'saveButton');
-
-        });
-    </script>
-}
