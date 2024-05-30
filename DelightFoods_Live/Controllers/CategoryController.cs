@@ -112,6 +112,12 @@ namespace DelightFoods_Live.Controllers
                 var Model = new CategoryModelDTO();
                 return View(Model);
             }
+            var cat = _context.Category.Where(x => x.Name == categoryModel.Name);
+            if (cat != null && cat.Any())
+            {
+                ModelState.AddModelError(string.Empty, "Name cannot be duplicate.");
+                return View(categoryModel);
+            }
             var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
             var category = utilities.Map(categoryModel);
 
@@ -200,6 +206,13 @@ namespace DelightFoods_Live.Controllers
             {
                 var Model = new CategoryModelDTO();
                 return View(Model);
+            }
+
+            var cat = _context.Category.Where(x => x.Name == categoryModel.Name && x.Id != id);
+            if (cat != null && cat.Any())
+            {
+                ModelState.AddModelError(string.Empty, "Name cannot be duplicate.");
+                return View(categoryModel);
             }
 
             var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
@@ -375,7 +388,16 @@ namespace DelightFoods_Live.Controllers
 
 				return View(model);
 			}
-			var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
+
+            var cat = _context.Category.Where(x => x.Name == categoryModel.Name && x.Id != id);
+            if (cat != null && cat.Any())
+            {
+                ModelState.AddModelError(string.Empty, "Name cannot be duplicate.");
+                return View(categoryModel);
+            }
+
+
+            var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
             var category = utilities.Map(categoryModel);
             if (category != null)
             {
@@ -404,6 +426,13 @@ namespace DelightFoods_Live.Controllers
             if (string.IsNullOrWhiteSpace(categoryModel.Name) || string.IsNullOrWhiteSpace(categoryModel.Description))
             {
                 var model = new CategoryModelDTO();
+
+                var cat = _context.Category.Where(x => x.Name == categoryModel.Name);
+                if (cat != null && cat.Any())
+                {
+                    ModelState.AddModelError(string.Empty, "Name cannot be duplicate.");
+                    return View(categoryModel);
+                }
 
                 var parentCategory = _context.Category.Where(x => x.ParentCategoryId == 0);
 

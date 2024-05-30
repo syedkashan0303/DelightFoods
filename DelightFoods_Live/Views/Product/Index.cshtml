@@ -65,7 +65,8 @@
                                                     @Html.DisplayFor(modelItem => item.Name)
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(modelItem => item.Description)
+                                                    @* @Html.DisplayFor(modelItem => item.Description) *@
+                                                    <p class="truncate" sytle=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@item.Description</p>
                                                 </td>
                                                 <td>
                                                     @if (item.Stock > 100)
@@ -108,6 +109,22 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                              <script>
+
+                                    document.addEventListener("DOMContentLoaded", function () {
+                                        var truncateElements = document.querySelectorAll('.truncate');
+                                        truncateElements.forEach(function (element) {
+                                            var maxLength = 20; // Set your maximum length
+                                            if (element.textContent.length > maxLength) {
+                                                element.textContent = element.textContent.substring(0, maxLength) + '...';
+                                            }
+                                        });
+                                    });
+
+
+                                </script>
+
                             @* <div class="datatable-bottom">
                                 <div class="datatable-info">Showing 1 to 10 of 100 entries</div>
                                 <nav class="datatable-pagination"><ul class="datatable-pagination-list"><li class="datatable-pagination-list-item datatable-hidden datatable-disabled"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">‹</button></li><li class="datatable-pagination-list-item datatable-active"><button data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">1</button></li><li class="datatable-pagination-list-item"><button data-page="2" class="datatable-pagination-list-item-link" aria-label="Page 2">2</button></li><li class="datatable-pagination-list-item"><button data-page="3" class="datatable-pagination-list-item-link" aria-label="Page 3">3</button></li><li class="datatable-pagination-list-item"><button data-page="4" class="datatable-pagination-list-item-link" aria-label="Page 4">4</button></li><li class="datatable-pagination-list-item"><button data-page="5" class="datatable-pagination-list-item-link" aria-label="Page 5">5</button></li><li class="datatable-pagination-list-item"><button data-page="6" class="datatable-pagination-list-item-link" aria-label="Page 6">6</button></li><li class="datatable-pagination-list-item"><button data-page="7" class="datatable-pagination-list-item-link" aria-label="Page 7">7</button></li><li class="datatable-pagination-list-item datatable-ellipsis datatable-disabled"><button class="datatable-pagination-list-item-link">…</button></li><li class="datatable-pagination-list-item"><button data-page="10" class="datatable-pagination-list-item-link" aria-label="Page 10">10</button></li><li class="datatable-pagination-list-item"><button data-page="2" class="datatable-pagination-list-item-link" aria-label="Page 2">›</button></li></ul></nav>

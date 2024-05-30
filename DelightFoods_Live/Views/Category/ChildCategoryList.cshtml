@@ -60,11 +60,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @{
+                                            int counter = 1; // Initialize counter
+                                        }
                                         @foreach (var item in Model)
                                         {
                                             <tr>
                                                 <td>
-                                                    <b>@($"S-CATG-00{item.Id}")</b>
+                                                    <b>@($"S-CATG-00{counter}")</b>
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.Name)
@@ -83,6 +86,7 @@
                                                     <a asp-action="ChildCategoryDetails" asp-route-id="@item.Id" class="btn btn-secondary">Details <i class="bi bi-info-square "></i></a>
                                                 </td>
                                             </tr>
+                                            counter++;
                                         }
 
                                     </tbody>

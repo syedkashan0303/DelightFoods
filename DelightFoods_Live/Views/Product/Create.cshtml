@@ -59,7 +59,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label asp-for="Stock" class="control-label"></label>
-                                                <input asp-for="Stock" class="form-control" />
+                                                <input asp-for="Stock" min="1" max="50000" class="form-control" />
                                                 <span asp-validation-for="Stock" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -68,7 +68,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label asp-for="Price" class="control-label"></label>
-                                                <input asp-for="Price" class="form-control" pattern="[0-9]+(\.[0-9]+)?" title="Please enter a decimal number" />
+                                                <input asp-for="Price" type="number" min="1" max="50000" class="form-control" />
+                                                @* <input asp-for="Price" type="number" min="1" max="50000" class="form-control" pattern="[0-9]+(\.[0-9]+)?" title="Please enter a decimal number" /> *@
                                                 <span asp-validation-for="Price" class="text-danger"></span>
                                             </div>
                                         </div>

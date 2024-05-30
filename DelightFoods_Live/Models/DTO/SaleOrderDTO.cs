@@ -28,8 +28,10 @@
         public List<CartDTO> cartDTOs { get; set; }
         public List<SaleOrderProductMappingDTO> saleOrderProductMappings { get; set; }
 
+        public string TexRate { get; set; }
+        public string WithHoldingTex { get; set; }
 
-		public string CardholderName { get; set; }
+        public string CardholderName { get; set; }
 		public string CardNumber { get; set; }
 		public string Expiry { get; set; }
 		public int CVC { get; set; }

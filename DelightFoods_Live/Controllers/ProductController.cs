@@ -118,7 +118,14 @@ namespace DelightFoods_Live.Controllers
 				return View(Model);
 			}
 
-			var utilities = new MapperClass<ProductDTO, ProductModel>();
+            var cat = _context.Product.Where(x => x.Name == productModel.Name);
+            if (cat != null && cat.Any())
+            {
+                ModelState.AddModelError(string.Empty, "Name cannot be duplicate.");
+                return View(productModel);
+            }
+
+            var utilities = new MapperClass<ProductDTO, ProductModel>();
             var model = utilities.Map(productModel);
             model.CreatedOnUTC = DateTime.UtcNow;
             _context.Add(model);
@@ -248,7 +255,15 @@ namespace DelightFoods_Live.Controllers
 					return View(Model);
 				}
 
-				var utilities = new MapperClass<ProductDTO, ProductModel>();
+
+                var cat = _context.Product.Where(x => x.Name == productModel.Name && x.Id != id);
+                if (cat != null && cat.Any())
+                {
+                    ModelState.AddModelError(string.Empty, "Name cannot be duplicate.");
+                    return View(productModel);
+                }
+
+                var utilities = new MapperClass<ProductDTO, ProductModel>();
                 var model = utilities.Map(productModel);
                 model.CreatedOnUTC = DateTime.Now;
                 _context.Update(model);
@@ -359,8 +374,10 @@ namespace DelightFoods_Live.Controllers
             var utilities = new MapperClass<ProductModel, ProductDTO>();
 
             var mediaFiles = _context.MediaGallery.Where(x => productModel.Select(z => z.Id).ToList().Contains(x.ProductId));
-            var categories = _context.Category.Where(x => productModel.Select(z => z.CategoryId).Contains(x.Id)).ToList();
-            foreach (var item in productModel)
+            var categories = _context.Category.ToList();
+
+
+			foreach (var item in productModel)
             {
                 var model = utilities.Map(item);
                 var category = categories != null && categories.Any() ? categories.FirstOrDefault(x => x.Id == item.CategoryId) : null;
@@ -369,7 +386,13 @@ namespace DelightFoods_Live.Controllers
                 model.CategoryName = category != null ? category.Name : "";
                 model.MediaFilePath = media?.FilePath.Split(new string[] { "wwwroot" }, StringSplitOptions.None)[1].Replace("\\", "/") ?? "/img/default.png";
 
-                ModelList.Add(model);
+                model.categoryList = categories.Where(x => x.ParentCategoryId > 0).Select(x => new SelectListItem()
+				{
+					Value = x.Id.ToString(),
+					Text = x.Name
+				}).ToList();
+
+				ModelList.Add(model);
             }
             return View(ModelList);
         }
