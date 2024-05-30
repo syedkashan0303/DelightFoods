@@ -48,8 +48,8 @@ namespace DelightFoods_Live.Utilites
 			plainTextContent.AppendLine($"Customer Name: {model.CustomerName}");
 			plainTextContent.AppendLine($"Status: {model.Status}");
 			plainTextContent.AppendLine($"Total Price: {model.TotalPrice}");
-			plainTextContent.AppendLine($"Tex Rate ( 18% ) : {model.TexRate  }");
-			plainTextContent.AppendLine($"WithHoldingTex: {model.WithHoldingTex}");
+			plainTextContent.AppendLine($"Tax Rate ( 18% ) : {model.TaxRate  }");
+			plainTextContent.AppendLine($"WithHoldingTax: {model.WithHoldingTax}");
 			plainTextContent.AppendLine($"Created On UTC: {model.CreatedOnUTC.Date}");
 
 			// Append the product details

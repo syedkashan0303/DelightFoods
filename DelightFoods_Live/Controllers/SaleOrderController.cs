@@ -153,8 +153,8 @@ namespace DelightFoods_Live.Controllers
 			var saleOrderProductMapping = _context.SaleOrderProductMapping.Where(z => z.SaleOrderId == saleOrderModel.Id).ToList();
 			var products = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? _context.Product.Where(x => saleOrderProductMapping.Select(z => z.ProductID).Contains(x.Id)).ToList() : null;
 			model.TotalPrice = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? saleOrderProductMapping.Sum(x=>x.Price) : 0;
-			model.TexRate = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? Convert.ToString(saleOrderProductMapping.Sum(x => x.Price) * 0.18M) : "0";
-			model.WithHoldingTex = saleOrderProductMapping != null && saleOrderProductMapping.Any() ?Convert.ToString( Convert.ToDecimal(model.TexRate) + saleOrderProductMapping.Sum(x=>x.Price)) : "0";
+			model.TaxRate = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? Convert.ToString(saleOrderProductMapping.Sum(x => x.Price) * 0.18M) : "0";
+			model.WithHoldingTax = saleOrderProductMapping != null && saleOrderProductMapping.Any() ?Convert.ToString( Convert.ToDecimal(model.TaxRate) + saleOrderProductMapping.Sum(x=>x.Price)) : "0";
 			foreach (var item in saleOrderProductMapping)
 			{
 				var product = products != null && products.Any() ? products.Where(x => x.Id == item.ProductID).FirstOrDefault() : null;
@@ -532,8 +532,8 @@ namespace DelightFoods_Live.Controllers
 
 			var customer = _context.Customers.Where(x => x.Id == model.CustomerId).FirstOrDefault();
 			model.TotalPrice = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? saleOrderProductMapping.Sum(x => x.Price) : 0;
-			model.TexRate = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? Convert.ToString(saleOrderProductMapping.Sum(x => x.Price) * 0.18M) : "0";
-			model.WithHoldingTex = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? Convert.ToString(Convert.ToDecimal(model.TexRate) + saleOrderProductMapping.Sum(x => x.Price)) : "0";
+			model.TaxRate = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? Convert.ToString(saleOrderProductMapping.Sum(x => x.Price) * 0.18M) : "0";
+			model.WithHoldingTax = saleOrderProductMapping != null && saleOrderProductMapping.Any() ? Convert.ToString(Convert.ToDecimal(model.TaxRate) + saleOrderProductMapping.Sum(x => x.Price)) : "0";
 
 			foreach (var item in saleOrderProductMapping)
 			{
