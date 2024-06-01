@@ -45,11 +45,13 @@ namespace DelightFoods_Live.Utilites
 			// Append the sale order details
 			plainTextContent.AppendLine("SaleOrderModel");
 			plainTextContent.AppendLine("---------------------");
+			plainTextContent.AppendLine($"Order Number: {"S-ORD-00"}{model.Id}");
 			plainTextContent.AppendLine($"Customer Name: {model.CustomerName}");
 			plainTextContent.AppendLine($"Status: {model.Status}");
 			plainTextContent.AppendLine($"Total Price: {model.TotalPrice}");
 			plainTextContent.AppendLine($"Tax Rate ( 18% ) : {model.TaxRate  }");
 			plainTextContent.AppendLine($"WithHoldingTax: {model.WithHoldingTax}");
+			plainTextContent.AppendLine($"Payment Type: {model.PaymentType}");
 			plainTextContent.AppendLine($"Created On UTC: {model.CreatedOnUTC.Date}");
 
 			// Append the product details

@@ -121,7 +121,7 @@ namespace DelightFoods_Live.Controllers
             var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
             var category = utilities.Map(categoryModel);
 
-            category.CreatedByUTC = DateTime.UtcNow;
+            category.CreatedByUTC = DateTime.Now;
             _context.Category.Add(category);
             _context.SaveChanges();
 
@@ -460,7 +460,7 @@ namespace DelightFoods_Live.Controllers
             var utilities = new MapperClass<CategoryModelDTO, CategoryModel>();
             var category = utilities.Map(categoryModel);
 
-            category.CreatedByUTC = DateTime.UtcNow;
+            category.CreatedByUTC = DateTime.Now;
             _context.Category.Add(category);
             _context.SaveChanges();
 

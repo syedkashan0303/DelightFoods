@@ -20,7 +20,7 @@ namespace DelightFoods.APIs.Model.DTO
         public string ParentCategoryName { get; set; }
         public int ParentCategoryId { get; set; }
         public string MediaFilePath { get; set; }
-        public DateTime CreatedByUTC { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedByUTC { get; set; } = DateTime.Now;
 
         public List<SelectListItem> ParentCategoryList { get; set; }
         public List<SelectListItem> ChildCategoryList { get; set; }

@@ -22,6 +22,7 @@
         public DateTime CreatedOnUTC { get; set; }
         public string CreatedStringDate { get; set; }
         public string ProductName { get; set; }
+        public string PaymentType { get; set; }
         public string ShippingAddress { get; set; }
         public int PaymentId { get; set; }
         public bool Cashondelivery { get; set; }

@@ -201,7 +201,7 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
                     addressmodel.DeliveryAddress = "";
                     addressmodel.BillingAddress = "";
                     addressmodel.CityId = Input.CityId;
-                    addressmodel.CreatedByUTC = DateTime.UtcNow;
+                    addressmodel.CreatedByUTC = DateTime.Now;
 
                     _dbContext.Add(addressmodel);
                     _dbContext.SaveChanges();   
@@ -214,7 +214,7 @@ namespace DelightFoods_Live.Areas.Identity.Pages.Account
                     customer.Email = Input.Email;
                     customer.Mobile = Input.Mobile;
                     customer.AddressId = addressmodel.Id;
-                    customer.CreatedByUTC = DateTime.UtcNow;
+                    customer.CreatedByUTC = DateTime.Now;
 
                     _dbContext.Add(customer);
                     _dbContext.SaveChanges();

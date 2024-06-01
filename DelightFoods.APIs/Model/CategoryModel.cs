@@ -11,6 +11,6 @@ namespace DelightFoods.APIs.Model
         [Required]
         public string Description { get; set; }
         public int ParentCategoryId { get; set; }
-        public DateTime CreatedByUTC { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedByUTC { get; set; } = DateTime.Now;
     }
 }
