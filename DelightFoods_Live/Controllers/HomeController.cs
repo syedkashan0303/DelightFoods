@@ -26,7 +26,7 @@ namespace DelightFoods_Live.Controllers
 
 		public async Task<IActionResult> Dashboard()
 		{
-            var productModel = await _context.Product.ToListAsync();
+            var productModel = await _context.Product.Where(x => x.IsActive).ToListAsync();
 
             if (productModel == null)
             {

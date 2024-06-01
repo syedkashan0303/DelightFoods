@@ -23,7 +23,7 @@ namespace DelightFoods_Live.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            var productModel = await _context.Product.ToListAsync();
+            var productModel = await _context.Product.Where(x=>x.IsActive).ToListAsync();
 
             if (productModel == null)
             {
@@ -129,7 +129,7 @@ namespace DelightFoods_Live.Controllers
             var model = utilities.Map(productModel);
             model.CreatedOnUTC = DateTime.UtcNow;
             _context.Add(model);
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
 
             if (productModel.UploadedFiles.Count > 0)
             {
@@ -159,6 +159,8 @@ namespace DelightFoods_Live.Controllers
                     _context.SaveChanges();
                 }
             }
+            TempData["Message"] = "Product created successfully.";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -306,8 +308,8 @@ namespace DelightFoods_Live.Controllers
 						_context.SaveChanges();
 					}
 				}
-
-				return RedirectToAction(nameof(Index));
+                TempData["Message"] = "Product update successfully.";
+                return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -349,12 +351,28 @@ namespace DelightFoods_Live.Controllers
             var productModel = await _context.Product.FindAsync(id);
             if (productModel != null)
             {
-                _context.Product.Remove(productModel);
+                var ordermap = _context.SaleOrderProductMapping.Where(x => x.ProductID == id).ToList();
+                var order = ordermap != null && ordermap.Any() ? _context.SaleOrder.Where(x => x.Status != "Delivered" && ordermap.Select(z => z.SaleOrderId).Contains(x.Id)).ToList() : null;
+
+                if (order != null && order.Any())
+                {
+                    TempData["Message"] = "Cannot delete product because it is associated with undelivered orders.";
+                    return RedirectToAction("Index");
+                }
+                productModel.IsActive = false;
+                _context.Product.Update(productModel);
+                 _context.SaveChanges();
+
+                TempData["Message"] = "Product deleted successfully.";
+            }
+            else
+            {
+                TempData["Message"] = "Product not found.";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool ProductModelExists(int id)
         {
@@ -363,7 +381,7 @@ namespace DelightFoods_Live.Controllers
 
         public async Task<IActionResult> Shop()
         {
-            var productModel = await _context.Product.Where(x=>x.Stock > 0).ToListAsync();
+            var productModel = await _context.Product.Where(x=>x.Stock > 0 && x.IsActive).ToListAsync();
 
             if (productModel == null)
             {

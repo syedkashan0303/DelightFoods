@@ -152,6 +152,8 @@ namespace DelightFoods_Live.Controllers
                     _context.SaveChanges();
                 }
             }
+
+            TempData["Message"] = "Category created successfully.";
             return View(categoryModel);
         }
 
@@ -220,8 +222,9 @@ namespace DelightFoods_Live.Controllers
             if (category != null)
             {
                 _context.Update(category);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
+            TempData["Message"] = "Category update successfully.";
             return RedirectToAction("Index");
         }
 
@@ -252,10 +255,21 @@ namespace DelightFoods_Live.Controllers
             var categoryModel = await _context.Category.FindAsync(id);
             if (categoryModel != null)
             {
-                _context.Category.Remove(categoryModel);
-            }
+                var subcate = _context.Category.Where(x => x.ParentCategoryId == id).ToList();
 
-            await _context.SaveChangesAsync();
+                if (subcate != null && subcate.Any())
+                {
+                    TempData["Message"] = "Cannot delete category because it is associated with Sub-category.";
+                    return RedirectToAction("Index");
+                }
+                TempData["Message"] = "Category deleted successfully.";
+                _context.Category.Remove(categoryModel);
+                _context.SaveChanges();
+            }
+            else
+            {
+                TempData["Message"] = "Category not found.";
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -402,9 +416,12 @@ namespace DelightFoods_Live.Controllers
             if (category != null)
             {
                 _context.Update(category);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
-            return RedirectToAction("ChildCategoryList");
+
+			TempData["Message"] = "Category update successfully.";
+
+			return RedirectToAction("ChildCategoryList");
         }
 
         public IActionResult CreateSubCategory()
@@ -475,10 +492,38 @@ namespace DelightFoods_Live.Controllers
                     _context.SaveChanges();
                 }
             }
+			TempData["Message"] = "Category Created successfully.";
 
-            return RedirectToAction("ChildCategoryList");
+			return RedirectToAction("ChildCategoryList");
         }
 
-        #endregion
-    }
+
+		//[Authorize(Roles = "Admin")]
+		[HttpPost, ActionName("subDelete")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> SubDeleteConfirmed(int id)
+		{
+			var categoryModel = await _context.Category.FindAsync(id);
+			if (categoryModel != null)
+			{
+				var subcate = _context.Product.Where(x => x.CategoryId == id).ToList();
+
+				if (subcate != null && subcate.Any())
+				{
+					TempData["Message"] = "Cannot delete category because it is associated with Product.";
+					return RedirectToAction("Index");
+				}
+				TempData["Message"] = "Category deleted successfully.";
+				_context.Category.Remove(categoryModel);
+				_context.SaveChanges();
+			}
+			else
+			{
+				TempData["Message"] = "Category not found.";
+			}
+			return RedirectToAction(nameof(Index));
+		}
+
+		#endregion
+	}
 }
