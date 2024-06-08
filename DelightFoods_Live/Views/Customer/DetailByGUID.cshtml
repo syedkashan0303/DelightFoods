@@ -1,0 +1,61 @@
+﻿@model DelightFoods_Live.Models.CustomerModel
+
+@{
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<main id="main" class="main">
+
+	<div>
+		<div class="col-lg-12 row ">
+
+			<div class="col-lg-6 ">
+				<h5 class="card-title"> Product Information</h5>
+			</div>
+			<div class="col-lg-6 text-end ">
+				<div style=" padding:25px;">
+					<form asp-action="Delete">
+						<input type="hidden" asp-for="Id" />
+						<input type="hidden" asp-for="UserId" />
+						<input type="submit" value="Delete" class="btn btn-danger" />
+					</form>
+				</div>
+			</div>
+
+
+		</div>
+
+		<dl class="row">
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.FirstName)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.FirstName)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.LastName)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.LastName)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Mobile)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Mobile)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Email)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Email)
+			</dd>
+		</dl>
+	</div>
+	<div>
+		<a asp-controller="ApplicationUserManagment" asp-action="CustomerList">Back to List</a>
+	</div>
+</main>

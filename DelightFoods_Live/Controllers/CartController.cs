@@ -57,7 +57,6 @@ namespace DelightFoods_Live.Controllers
             var CustomerId = customer != null ? customer.Id : 0;
             if (CustomerId > 0)
             {
-                var customerAddress = _context.CustomerAddress.Where(x => x.Id == customer.AddressId).FirstOrDefault();
                 var cart = _context.Cart.Where(m => m.CustomerId == CustomerId).ToList();
                 var product = cart != null ? _context.Product.Where(x => cart.Select(z => z.ProductId).Contains(x.Id)).ToList() : null;
                 var mediaFiles = product != null ? _context.MediaGallery.Where(x => product.Select(z => z.Id).ToList().Contains(x.ProductId)).ToList() : null;

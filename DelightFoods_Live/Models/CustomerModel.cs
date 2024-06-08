@@ -27,9 +27,9 @@ namespace DelightFoods_Live.Models
         [GmailEmail(ErrorMessage = "Email must be a Gmail address.")]
         public string Email { get; set; }
 
-        public int AddressId { get; set; }
         public int PaymentDetailId { get; set; }
         public string UserId { get; set; }
+        public int CityId { get; set; }
         public DateTime CreatedByUTC { get; set; }
 
     }

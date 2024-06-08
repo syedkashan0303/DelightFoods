@@ -42,11 +42,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+
+                                        @{
+                                            int counter = 1; // Initialize counter
+                                        }
                                         @foreach (var item in Model)
                                         {
                                             <tr>
                                                 <td>
-                                                    <b>@($"R-{item.UserId}")</b>
+                                                    <b>@($"R-{counter}")</b>
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.UserName)
@@ -55,6 +59,7 @@
                                                     @Html.DisplayFor(modelItem => item.RoleName)
                                                 </td>
                                             </tr>
+                                            counter++;
                                         }
                                     </tbody>
                                 </table>

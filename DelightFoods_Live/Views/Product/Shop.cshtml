@@ -104,12 +104,12 @@
                 url: "@Url.Action("AddItemCart", "Cart")",
                 data: { ProductId: productId, CustomerId: 0, Quantity: 1 },
                 success: function (result) {
-                    if (result === "success") {
+                    if (result === "succes") {
                         console.log("Successfully added to cart");
-                        location.reload();
                     } else {
                         console.log("Error");
                     }
+                        location.reload();
                 },
                 error: function () {
                     console.log("Error");

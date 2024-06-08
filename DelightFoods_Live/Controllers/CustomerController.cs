@@ -14,166 +14,193 @@ using DelightFoods_Live.Models.DTO;
 
 namespace DelightFoods_Live.Controllers
 {
-        [Authorize(Roles ="Admin")]
+	[Authorize(Roles = "Admin")]
 
-    public class CustomerController : Controller
-    {
-        private readonly ApplicationDbContext _context;
+	public class CustomerController : Controller
+	{
+		private readonly ApplicationDbContext _context;
 
-        public CustomerController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-        
-        public async Task<IActionResult> Index()
-        {
+		public CustomerController(ApplicationDbContext context)
+		{
+			_context = context;
+		}
 
-            var getUsers = await _context.Customers.ToListAsync();
+		public async Task<IActionResult> Index()
+		{
 
-            var usersDTOList = new List<CustomerDTO>();
+			var getUsers = await _context.Customers.ToListAsync();
 
-            if (getUsers != null)
-            {
-                var getCity = Enum.GetValues(typeof(CityClass)).Cast<CityClass>().ToList();
+			var usersDTOList = new List<CustomerDTO>();
 
-                var getaddress = _context.CustomerAddress.Where(x => getUsers.Select(z => z.AddressId).Contains(x.Id)).ToList();
+			if (getUsers != null)
+			{
+				var getCity = Enum.GetValues(typeof(CityClass)).Cast<CityClass>().ToList();
 
-                var utilities = new MapperClass<CustomerModel, CustomerDTO>();
-                foreach (var item in getUsers)
-                {
-                    var usersDTO = utilities.Map(item);
 
-                    var address = getaddress.FirstOrDefault(x => x.Id == item.AddressId);
-                    usersDTO.CityId = address?.CityId ?? 0;
-                    usersDTO.Mobile = item.Mobile;
-                    usersDTO.CityName = usersDTO.CityId > 0 ? getCity.FirstOrDefault(x => ((int)x) == usersDTO.CityId).ToString() : "";
-                    usersDTO.Email = item.Email;
-                    usersDTOList.Add(usersDTO);
-                }
-                return View(usersDTOList);
-            }
+				var utilities = new MapperClass<CustomerModel, CustomerDTO>();
+				foreach (var item in getUsers)
+				{
+					var usersDTO = utilities.Map(item);
 
-            return View(new List<CustomerDTO>());
+					usersDTO.CityId = item.CityId;
+					usersDTO.Mobile = item.Mobile;
+					usersDTO.CityName = usersDTO.CityId > 0 ? getCity.FirstOrDefault(x => ((int)x) == usersDTO.CityId).ToString() : "";
+					usersDTO.Email = item.Email;
+					usersDTOList.Add(usersDTO);
+				}
+				return View(usersDTOList);
+			}
 
-            //return View(await _context.Customers.ToListAsync());
-        }
+			return View(new List<CustomerDTO>());
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+			//return View(await _context.Customers.ToListAsync());
+		}
 
-            var customerModel = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (customerModel == null)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> Details(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            return View(customerModel);
-        }
+			var customerModel = await _context.Customers
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (customerModel == null)
+			{
+				return NotFound();
+			}
 
-        public IActionResult Create()
-        {
-            return View();
-        }
+			return View(customerModel);
+		}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Mobile,Email")] CustomerModel customerModel)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(customerModel);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(customerModel);
-        }
+		public async Task<IActionResult> DetailByGUID(string? id)
+		{
+			if (string.IsNullOrEmpty(id))
+			{
+				return NotFound();
+			}
 
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+			var user = _context.Users.FirstOrDefault(x => x.Id == id);
+			if (user != null)
+			{
 
-            var customerModel = await _context.Customers.FindAsync(id);
-            if (customerModel == null)
-            {
-                return NotFound();
-            }
-            return View(customerModel);
-        }
+				var customerModel = _context.Customers.FirstOrDefault(m => m.UserId == user.Id);
+				if (customerModel == null)
+				{
+					return NotFound();
+				}
+				return View(customerModel);
+			}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Mobile,Email")] CustomerModel customerModel)
-        {
-            if (id != customerModel.Id)
-            {
-                return NotFound();
-            }
+			return NotFound();
+		}
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(customerModel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomerModelExists(customerModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(customerModel);
-        }
+		public IActionResult Create()
+		{
+			return View();
+		}
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Mobile,Email")] CustomerModel customerModel)
+		{
+			if (ModelState.IsValid)
+			{
+				_context.Add(customerModel);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Index));
+			}
+			return View(customerModel);
+		}
 
-            var customerModel = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (customerModel == null)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> Edit(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            return View(customerModel);
-        }
+			var customerModel = await _context.Customers.FindAsync(id);
+			if (customerModel == null)
+			{
+				return NotFound();
+			}
+			return View(customerModel);
+		}
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var customerModel = await _context.Customers.FindAsync(id);
-            if (customerModel != null)
-            {
-                _context.Customers.Remove(customerModel);
-            }
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Mobile,Email")] CustomerModel customerModel)
+		{
+			if (id != customerModel.Id)
+			{
+				return NotFound();
+			}
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					_context.Update(customerModel);
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!CustomerModelExists(customerModel.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return RedirectToAction(nameof(Index));
+			}
+			return View(customerModel);
+		}
 
-        private bool CustomerModelExists(int id)
-        {
-            return _context.Customers.Any(e => e.Id == id);
-        }
-    }
+		public async Task<IActionResult> Delete(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var customerModel = await _context.Customers
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (customerModel == null)
+			{
+				return NotFound();
+			}
+
+			return View(customerModel);
+		}
+
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmed(string id)
+		{
+			var user = _context.Users.Find(id);
+			if (user != null)
+			{
+				var customerModel = _context.Customers.FirstOrDefault(x => x.UserId == user.Id);
+				if (customerModel != null)
+				{
+					_context.Customers.Remove(customerModel);
+					_context.SaveChanges();
+
+				}
+				_context.Users.Remove(user);
+			}
+
+			_context.SaveChanges();
+			return RedirectToAction("CustomerList", "ApplicationUserManagment");
+		}
+
+		private bool CustomerModelExists(int id)
+		{
+			return _context.Customers.Any(e => e.Id == id);
+		}
+	}
 }

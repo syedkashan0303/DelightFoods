@@ -12,6 +12,7 @@
 	using System.Linq;
 	using System.Security.Claims;
 	using System.Threading.Tasks;
+	using static TheArtOfDev.HtmlRenderer.Adapters.RGraphicsPath;
 
 	/// <summary>
 	/// Defines the <see cref="SaleOrderController" />
@@ -380,7 +381,7 @@
 				saleOrder.ShippingId = 0;
 				saleOrder.address = "";
 				saleOrder.CustomerId = model.FirstOrDefault().CustomerId;
-				saleOrder.CreatedOnUTC = DateTime.UtcNow;
+				saleOrder.CreatedOnUTC = DateTime.Now;
 				_context.Add(saleOrder);
 				_context.SaveChanges();
 
@@ -427,10 +428,25 @@
 					{
 						return Json("error");
 					}
+					var shipping = new ShippingModel();
+					var getshoping = _context.Shipping.FirstOrDefault(x => x.Address.ToLower() == model.CustomerAddress.ToLower());
+					if (getshoping != null )
+					{
+						saleOrder.ShippingId =  getshoping.Id ;
+					}
+					else
+					{
+						shipping.CreatedOnUTC = DateTime.UtcNow;
+						shipping.Address = model.CustomerAddress;
+						_context.Add(shipping);
+						_context.SaveChanges();
+						saleOrder.ShippingId =shipping.Id;
+					}
 
 					saleOrder.Status = saleOrder != null ? OrderStatusEnum.Processing.ToString() : OrderStatusEnum.Pending.ToString();
 					saleOrder.address = model.CustomerAddress;
 					_context.SaleOrder.Update(saleOrder);
+
 
 					var payment = new PaymentTransaction();
 					payment.IsCOD = model.IsCOD;
@@ -858,16 +874,16 @@
 			{
 				var customer = _context.Customers.Where(z => z.Id == order.CustomerId).FirstOrDefault();
 
-				var address = customer != null ? _context.CustomerAddress.Where(z => z.Id == customer.AddressId).FirstOrDefault() : null;
+				//var address = customer != null ? _context.CustomerAddress.Where(z => z.Id == customer.AddressId).FirstOrDefault() : null;
 
-				var shipping = new ShippingModel();
-				shipping.CreatedOnUTC = DateTime.UtcNow;
-				shipping.Address = order.address;
-				_context.Add(shipping);
-				_context.SaveChanges();
+				//var shipping = new ShippingModel();
+				//shipping.CreatedOnUTC = DateTime.UtcNow;
+				//shipping.Address = order.address;
+				//_context.Add(shipping);
+				//_context.SaveChanges();
 
+				//order.ShippingId = shipping.Id;
 				order.Status = OrderStatusEnum.ReadytoShip.ToString();
-				order.ShippingId = shipping.Id;
 				_context.Update(order);
 				_context.SaveChanges();
 
