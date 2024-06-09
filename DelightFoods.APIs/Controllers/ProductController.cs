@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DelightFoods.APIs.Controllers
 {
-   [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -24,7 +24,7 @@ namespace DelightFoods.APIs.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
         {
-            var productModel = await _context.Products.ToListAsync();
+            var productModel = await _context.Product.ToListAsync();
 
             if (productModel == null)
             {
@@ -53,7 +53,7 @@ namespace DelightFoods.APIs.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
-            var productModel = await _context.Products.FindAsync(id);
+            var productModel = await _context.Product.FindAsync(id);
             if (productModel == null)
             {
                 return NotFound();
@@ -204,13 +204,13 @@ namespace DelightFoods.APIs.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var productModel = await _context.Products.FindAsync(id);
+            var productModel = await _context.Product.FindAsync(id);
             if (productModel == null)
             {
                 return NotFound();
             }
 
-            _context.Products.Remove(productModel);
+            _context.Product.Remove(productModel);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -218,14 +218,14 @@ namespace DelightFoods.APIs.Controllers
 
         private bool ProductModelExists(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            return _context.Product.Any(e => e.Id == id);
         }
 
         [AllowAnonymous]
         [HttpGet("shop")]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> Shop()
         {
-            var productModel = await _context.Products.Where(x => x.Stock > 0).ToListAsync();
+            var productModel = await _context.Product.Where(x => x.Stock > 0).ToListAsync();
 
             if (productModel == null)
             {
