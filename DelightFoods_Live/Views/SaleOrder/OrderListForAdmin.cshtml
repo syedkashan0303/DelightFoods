@@ -19,7 +19,9 @@
 				<th>
 					Code
 				</th>
-
+				<th>
+					Product Id
+				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.TotalPrice)
 				</th>
@@ -53,6 +55,9 @@
 				<tr>
 					<td>
 						<b>@($"S-ORD-00{item.Id}")</b>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ProductId)
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.TotalPrice)

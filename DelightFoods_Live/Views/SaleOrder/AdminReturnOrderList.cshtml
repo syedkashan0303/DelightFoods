@@ -9,14 +9,14 @@
 
 
 <main id="main" class="main">
-
-	<p>
-	</p>
 	<table class="table">
 		<thead>
 			<tr>
 				<th>
 					Code
+				</th>
+				<th>
+					Product Name
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.CustomerName)
@@ -33,7 +33,6 @@
 				<th>
 					@Html.DisplayNameFor(model => model.ReturnDate)
 				</th>
-				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -42,6 +41,9 @@
 				<tr>
 					<td>
 						<b>@($"R-ORD-REQ-00{item.Id}")</b>
+					</td>
+					<td>
+						Discada (Plow Disc BBQ)
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.CustomerName)

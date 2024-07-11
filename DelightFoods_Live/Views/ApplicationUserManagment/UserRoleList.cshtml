@@ -3,16 +3,16 @@
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "User Role List";
+    ViewData["Title"] = "Customer List";
 }
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>User Role List</h1>
+        <h1>Customer List</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a asp-action="AdminDashboard" asp-controller="Home">Home</a></li>
-                <li class="breadcrumb-item">User Role List</li>
+                <li class="breadcrumb-item">Customer List</li>
             </ol>
         </nav>
     </div>
@@ -36,9 +36,6 @@
                                             <th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
                                                 <button class="datatable-sorter">User</button>
                                             </th>
-                                            <th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
-                                                <button class="datatable-sorter">Role</button>
-                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -54,9 +51,6 @@
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.UserName)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.RoleName)
                                                 </td>
                                             </tr>
                                             counter++;

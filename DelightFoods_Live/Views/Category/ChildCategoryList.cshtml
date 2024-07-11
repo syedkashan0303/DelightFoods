@@ -102,6 +102,8 @@
                                                 <td>
                                                     <a asp-action="ChildCategoryEdit" asp-route-id="@item.Id" class="btn btn-warning">Edit <i class="bi bi-pencil "></i></a> |
                                                     <a asp-action="ChildCategoryDetails" asp-route-id="@item.Id" class="btn btn-secondary">Details <i class="bi bi-info-square "></i></a>
+                                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete <i class="bi bi-info-trash "></i></a>
+
                                                 </td>
                                             </tr>
                                             counter++;
