@@ -55,7 +55,7 @@
                     <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Home", new { area = "" })">
                 </form>
             </li>
-            
+
         </ul>
     </nav>
 </header>
@@ -63,15 +63,18 @@
 <!-- Sidebar -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link collapsed" asp-controller="Home" asp-action="AdminDashboard">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
+
 
         @if (User.IsInRole("Admin"))
         {
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" asp-controller="Home" asp-action="AdminDashboard">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
             <li class="nav-item">
                 <a class="nav-link" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-journal-text"></i>
@@ -144,12 +147,12 @@
                             <span>Roles</span>
                         </a>
                     </li>
-                   @*  <li>
-                        <a asp-controller="ApplicationUserManagment" asp-action="UserRoleList">
-                            <i class="bi bi-circle"></i>
-                            <span>User Roles</span>
-                        </a>
-                    </li> *@
+                    @*  <li>
+                <a asp-controller="ApplicationUserManagment" asp-action="UserRoleList">
+                <i class="bi bi-circle"></i>
+                <span>User Roles</span>
+                </a>
+                </li> *@
                 </ul>
             </li>
         }
