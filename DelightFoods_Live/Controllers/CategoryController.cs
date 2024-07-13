@@ -169,7 +169,7 @@ namespace DelightFoods_Live.Controllers
             }
 
             TempData["Message"] = "Category created successfully.";
-            return View(categoryModel);
+            return RedirectToAction("Index");
         }
 
         //[Authorize(Roles = "Admin")]

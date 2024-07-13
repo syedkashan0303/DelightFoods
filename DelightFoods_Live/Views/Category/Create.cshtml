@@ -5,6 +5,24 @@
     ViewData["Title"] = "Create Category";
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
+
+@if (TempData["Message"] != null)
+{
+    <div id="tempMessage" data-message="@TempData["Message"]"></div>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var tempMessageDiv = document.getElementById("tempMessage");
+        if (tempMessageDiv) {
+            var message = tempMessageDiv.getAttribute("data-message");
+            if (message) {
+                alert(message); // This will show a popup message
+            }
+        }
+    });
+</script>
+
 <main id="main" class="main">
 
     <div class="pagetitle">
