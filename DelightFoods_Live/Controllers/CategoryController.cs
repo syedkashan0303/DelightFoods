@@ -10,6 +10,7 @@ using DelightFoods_Live.Models;
 using Microsoft.AspNetCore.Authorization;
 using DelightFoods_Live.Models.DTO;
 using DelightFoods_Live.Utilites;
+using System.Text.RegularExpressions;
 
 namespace DelightFoods_Live.Controllers
 {
@@ -112,6 +113,20 @@ namespace DelightFoods_Live.Controllers
                 var Model = new CategoryModelDTO();
                 return View(Model);
             }
+
+            var regex = new Regex(@"[!@#$%^&*(),.?""{}|<>]");
+
+
+            // Check if input contains any special characters
+            if (regex.IsMatch(categoryModel.Name))
+            {
+                // Return an error view or message
+                ModelState.AddModelError("Name", "Special characters are not allowed.");
+              
+                return View(categoryModel);
+            }
+
+
             var cat = _context.Category.Where(x => x.Name == categoryModel.Name);
             if (cat != null && cat.Any())
             {
@@ -208,6 +223,17 @@ namespace DelightFoods_Live.Controllers
             {
                 var Model = new CategoryModelDTO();
                 return View(Model);
+            }
+            var regex = new Regex(@"[!@#$%^&*(),.?""{}|<>]");
+
+
+            // Check if input contains any special characters
+            if (regex.IsMatch(categoryModel.Name))
+            {
+                // Return an error view or message
+                ModelState.AddModelError("Name", "Special characters are not allowed.");
+
+                return View(categoryModel);
             }
 
             var cat = _context.Category.Where(x => x.Name == categoryModel.Name && x.Id != id);
@@ -403,6 +429,19 @@ namespace DelightFoods_Live.Controllers
 				return View(model);
 			}
 
+            var regex = new Regex(@"[!@#$%^&*(),.?""{}|<>]");
+
+
+            // Check if input contains any special characters
+            if (regex.IsMatch(categoryModel.Name))
+            {
+                // Return an error view or message
+                ModelState.AddModelError("Name", "Special characters are not allowed.");
+
+                return View(categoryModel);
+            }
+
+
             var cat = _context.Category.Where(x => x.Name == categoryModel.Name && x.Id != id);
             if (cat != null && cat.Any())
             {
@@ -443,6 +482,19 @@ namespace DelightFoods_Live.Controllers
             if (string.IsNullOrWhiteSpace(categoryModel.Name) || string.IsNullOrWhiteSpace(categoryModel.Description))
             {
                 var model = new CategoryModelDTO();
+
+                var regex = new Regex(@"[!@#$%^&*(),.?""{}|<>]");
+
+
+                // Check if input contains any special characters
+                if (regex.IsMatch(categoryModel.Name))
+                {
+                    // Return an error view or message
+                    ModelState.AddModelError("Name", "Special characters are not allowed.");
+
+                    return View(categoryModel);
+                }
+
 
                 var cat = _context.Category.Where(x => x.Name == categoryModel.Name);
                 if (cat != null && cat.Any())

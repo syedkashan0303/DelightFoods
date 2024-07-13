@@ -36,7 +36,15 @@
     </ol>
 </div>
 <!-- Single Page Header End -->
-
+<head>
+    <title>Button with Alert and Reload</title>
+    <script type="text/javascript">
+        function showAlertAndReload() {
+            alert('We have received your response, we will contact you shortly');
+            location.reload(); // This reloads the page
+        }
+    </script>
+</head>
 <div class="form">
     <div class="row">
         <div class="">
@@ -59,7 +67,7 @@
                     <textarea id="Message" name="Message" class="form-control" rows="4" required></textarea>
                 </div>
                 <br />
-                <button type="submit" onclick="alert('We have received your response, we will contact you shortly')" class="btn" style="background-color:#82c408;color:white">Submit</button>
+                <button type="submit" onclick="showAlertAndReload(); return false;" class="btn" style="background-color:#82c408;color:white">Submit</button>
             </form>
         </div>
     </div>

@@ -41,7 +41,7 @@ namespace DelightFoods.APIs.Controllers
         {
             try
             {
-                var orders = _context.SaleOrder.OrderBy(x => x.Status).ToList();
+                var orders = _context.SaleOrder.OrderBy(x => x.Id).ToList();
                 var orderList = new List<SaleOrderDTO>();
                 var utilities = new MapperClass<SaleOrderModel, SaleOrderDTO>();
 

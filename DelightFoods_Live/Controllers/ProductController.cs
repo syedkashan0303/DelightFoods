@@ -118,6 +118,19 @@ namespace DelightFoods_Live.Controllers
 				return View(Model);
 			}
 
+            var regex = new Regex(@"[!@#$%^&*(),.?""{}|<>]");
+
+
+            // Check if input contains any special characters
+            if (regex.IsMatch(productModel.Name))
+            {
+                // Return an error view or message
+                ModelState.AddModelError("Name", "Special characters are not allowed.");
+
+                return View(productModel);
+            }
+
+
             var cat = _context.Product.Where(x => x.Name == productModel.Name);
             if (cat != null && cat.Any())
             {
@@ -256,6 +269,19 @@ namespace DelightFoods_Live.Controllers
 
 					return View(Model);
 				}
+
+                var regex = new Regex(@"[!@#$%^&*(),.?""{}|<>]");
+
+
+                // Check if input contains any special characters
+                if (regex.IsMatch(productModel.Name))
+                {
+                    // Return an error view or message
+                    ModelState.AddModelError("Name", "Special characters are not allowed.");
+
+                    return View(productModel);
+                }
+
 
 
                 var cat = _context.Product.Where(x => x.Name == productModel.Name && x.Id != id);
