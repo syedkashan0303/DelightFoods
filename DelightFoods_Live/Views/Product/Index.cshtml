@@ -63,7 +63,7 @@
                                             </th>
                                             <th data-sortable="true" style="width: 10.954063604240282%;"><button class="datatable-sorter">Description</button></th>
                                             <th data-sortable="true" style="width: 10.954063604240282%;"><button class="datatable-sorter">Stock</button></th>
-                                            <th data-sortable="true" class="red" style="width: 8.954063604240282%;"><button class="datatable-sorter">Status</button></th>
+                                            @* <th data-sortable="true" class="red" style="width: 8.954063604240282%;"><button class="datatable-sorter">Status</button></th> *@
                                             <th data-sortable="true" class="red" style="width: 10.954063604240282%"><button class="datatable-sorter">Price</button></th>
                                             <th data-sortable="true" class="red" style="width: 10.954063604240282%"><button class="datatable-sorter">Category</button></th>
                                             <th data-sortable="true" style="width: 10.954063604240282%;"><button class="datatable-sorter">Images</button></th>
@@ -95,7 +95,7 @@
                                                         <span style="display: inline-block; width: 100px; text-align: center; background-color: #FAA0A0;font-weight:700; color: #36454F; padding: 4px; border-radius: 4px;">Low: @item.Stock</span>
                                                     }
                                                 </td>
-                                                <td>
+                                                @* <td>
                                                     @if (item.IsActive)
                                                     {
                                                         <span style="display: inline-block; width: 80px; text-align: center; background-color: #4CAF50; color: white; padding: 4px; border-radius: 4px;">Active</span>
@@ -104,7 +104,7 @@
                                                     {
                                                         <span style="display: inline-block; width: 80px; text-align: center; background-color: #F44336; color: white; padding: 4px; border-radius: 4px;">In-Active</span>
                                                     }
-                                                </td>
+                                                </td> *@
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.Price)
                                                 </td>

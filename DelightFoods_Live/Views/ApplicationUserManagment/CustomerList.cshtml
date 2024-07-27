@@ -38,9 +38,7 @@
 											<th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
 												<button class="datatable-sorter">Email</button>
 											</th>
-											<th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
-												<button class="datatable-sorter">Status</button>
-											</th>
+											
 											<th data-sortable="true" aria-sort="ascending" class="datatable-ascending">
 												<button class="datatable-sorter">Action</button>
 											</th>
@@ -62,9 +60,7 @@
 												<td>
 													@Html.DisplayFor(modelItem => item.Email)
 												</td>
-												<td>
-													<span class="badge bg-lightgreen">Active</span>
-												</td>
+											
 												<td>
 													<a asp-controller="Customer" asp-action="DetailByGUID" asp-route-id="@item.Id" class="btn btn-secondary">Details <i class="bi bi-info-square "></i></a>
 
