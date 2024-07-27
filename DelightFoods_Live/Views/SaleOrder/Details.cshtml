@@ -46,13 +46,13 @@
                                 @Html.DisplayFor(model => model.Status)
                             </dd>
 
-                            <dt class="col-sm-2">
+                         @*    <dt class="col-sm-2">
                                 Per Unit
                             </dt>
                             <dd class="col-sm-10">
                                 @((Model.TotalPrice / Model.saleOrderProductMappings.Sum(item => item.Quantity)).ToString("0"))
                             </dd>
-
+ *@
                             <dt class="col-sm-2">
                                 @Html.DisplayNameFor(model => model.TotalPrice)
                             </dt>
@@ -96,7 +96,7 @@
                                         <p>ProductName</p>
                                     </th>
                                     <th>
-                                        <p>Price</p>
+                                        <p>Per Unit Price</p>
                                     </th>
                                     <th>
                                         <p>Quantity</p>

@@ -429,7 +429,7 @@
 						return Json("error");
 					}
 					var shipping = new ShippingModel();
-					var getshoping = _context.Shipping.FirstOrDefault(x => x.Address.ToLower() == model.CustomerAddress.ToLower());
+					var getshoping = !string.IsNullOrEmpty(model.CustomerAddress) ? _context.Shipping.FirstOrDefault(x => x.Address.ToLower() == model.CustomerAddress.ToLower()) : null;
 					if (getshoping != null )
 					{
 						saleOrder.ShippingId =  getshoping.Id ;
@@ -437,14 +437,14 @@
 					else
 					{
 						shipping.CreatedOnUTC = DateTime.UtcNow;
-						shipping.Address = model.CustomerAddress;
+						shipping.Address = !string.IsNullOrEmpty(model.CustomerAddress) ? model.CustomerAddress: "";
 						_context.Add(shipping);
 						_context.SaveChanges();
 						saleOrder.ShippingId =shipping.Id;
 					}
 
 					saleOrder.Status = saleOrder != null ? OrderStatusEnum.Processing.ToString() : OrderStatusEnum.Pending.ToString();
-					saleOrder.address = model.CustomerAddress;
+					saleOrder.address = !string.IsNullOrEmpty(model.CustomerAddress) ? model.CustomerAddress: "";
 					_context.SaleOrder.Update(saleOrder);
 
 

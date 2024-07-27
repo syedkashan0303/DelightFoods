@@ -1,9 +1,9 @@
 ﻿@using Microsoft.CodeAnalysis.Scripting
 @model DelightFoods_Live.Models.DTO.CartDTO
 @{
-	Layout = "~/Views/Shared/_CustomerLayout.cshtml";
-    
-    
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+
+
 }
 
 
@@ -11,370 +11,409 @@
 
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5">
-	<h1 class="text-center text-white display-6">Cart</h1>
-	<ol class="breadcrumb justify-content-center mb-0">
-		<li class="breadcrumb-item"><a href="/Home/Dashboard">Home</a></li>
-		<li class="breadcrumb-item"><a href="#">Pages</a></li>
-		<li class="breadcrumb-item active text-white">Cart</li>
-	</ol>
+    <h1 class="text-center text-white display-6">Cart</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="/Home/Dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Cart</li>
+    </ol>
 </div>
 <!-- Single Page Header End -->
 <!-- Cart Page Start -->
 <div class="container-fluid py-5">
-	<div class="container py-5">
-		<div class="table-responsive">
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">Products</th>
-						<th scope="col">Name</th>
-						<th scope="col">Price</th>
-						<th scope="col">Quantity</th>
-						<th scope="col">Total</th>
-						<th scope="col">Handle</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var item in Model.CartDTOlist)
-					{
-						<tr>
-							<th scope="row">
-								<div class="d-flex align-items-center">
-									<img src="@item.MediaFilePath" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
-								</div>
-							</th>
-							<td>
-								<p class="mb-0 mt-4">@item.ProductName</p>
-							</td>
-							<td>
-								<p class="mb-0 mt-4">@item.ProductPrice $</p>
-							</td>
-							<td>
-								<div class="input-group quantity mt-4" style="width: 100px;">
-									<div class="input-group-btn">
-										<button class="btn btn-sm btn-minus rounded-circle bg-light border actionbtns" data-id="@item.Id">
-											<i class="fa fa-minus"></i>
-										</button>
-									</div>
-									<input type="text" class="form-control form-control-sm text-center border-0" value="@item.Quantity">
-									<div class="input-group-btn">
-										<button class="btn btn-sm btn-plus rounded-circle bg-light border actionbtns" data-id="@item.Id">
-											<i class="fa fa-plus"></i>
-										</button>
-									</div>
-								</div>
-							</td>
-							<td>
-								<p class="mb-0 mt-4">@item.TotalPrice PKR</p>
-							</td>
-							<td>
-								<button class="btn btn-md rounded-circle bg-light border mt-4 clearAllItem actionbtns" data-id="@item.Id">
-									<i class="fa fa-times text-danger"></i>
-								</button>
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</div>
-		<div class="row g-4 justify-content-end">
-			<div class="col-sm-10 col-md-8 col-lg-6 col-xl-5  paymentdiv">
-				<div class="bg-light rounded">
-					<div class="p-4">
+    <div class="container py-5">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Products</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Handle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CartDTOlist)
+                    {
+                        <tr>
+                            <th scope="row">
+                                <div class="d-flex align-items-center">
+                                    <img src="@item.MediaFilePath" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
+                                </div>
+                            </th>
+                            <td>
+                                <p class="mb-0 mt-4">@item.ProductName</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.ProductPrice $</p>
+                            </td>
+                            <td>
+                                <div class="input-group quantity mt-4" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border actionbtns" data-id="@item.Id">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm text-center border-0" value="@item.Quantity">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border actionbtns" data-id="@item.Id">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.TotalPrice PKR</p>
+                            </td>
+                            <td>
+                                <button class="btn btn-md rounded-circle bg-light border mt-4 clearAllItem actionbtns" data-id="@item.Id">
+                                    <i class="fa fa-times text-danger"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="row g-4 justify-content-end">
+            <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5  paymentdiv">
+                <div class="bg-light rounded">
+                    <div class="p-4">
 
-						<h1 class="col-md-12  display-12 mb-4"> Shipping Address </h1>
+                        <h1 class="col-md-12  display-12 mb-4"> Shipping Address </h1>
 
-						<div class="d-flex justify-content-between mb-4 ">
-							<div class="col-md-4 ">
-								<h5 class="mb-0 me-4">Address:</h5>
-							</div>
-							<div class="col-md-8 ">
-								<input type="text" id="txtaddress" class="form-control" />
-							</div>
-						</div>
-						<div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-						</div>
-						<h1 class="display-6 mb-4"> Payment </h1>
+                        <div class="d-flex justify-content-between mb-4 ">
+                            <div class="col-md-4 ">
+                                <h5 class="mb-0 me-4">Address:</h5>
+                            </div>
+                            <div class="col-md-8 ">
+                                <input type="text" id="txtaddress" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                        </div>
+                        <h1 class="display-6 mb-4"> Payment </h1>
 
-						<div class="d-flex justify-content-between mb-4 ">
-							<div class="col-md-4 ">
-								<h5 class="mb-0 me-4">Card Holder Name:</h5>
-							</div>
-							<div class="col-md-8 ">
-								<input type="text" id="cardholdername" class="form-control" />
-							</div>
-						</div>
+                        <div class="d-flex justify-content-between mb-4 ">
+                            <div class="col-md-4 ">
+                                <h5 class="mb-0 me-4">Card Holder Name:</h5>
+                            </div>
+                            <div class="col-md-8 ">
+                                <input type="text" id="cardholdername" class="form-control" />
+                            </div>
+                        </div>
 
-						<div class="d-flex justify-content-between mb-4 ">
-							<div class="col-md-4 ">
-								<h5 class="mb-0 me-4">Card Number:</h5>
-							</div>
-							<div class="col-md-8 ">
-								@* @Html.TextBoxFor(model => model.CardNumber,  new { @class = "form-control" }) *@
-								 <input type="number" id="txtCardNumber" class="form-control" />
-							</div>
-						</div>
-						<div class="d-flex justify-content-between  mb-4 ">
+                        <div class="d-flex justify-content-between mb-4 ">
+                            <div class="col-md-4 ">
+                                <h5 class="mb-0 me-4">Card Number:</h5>
+                            </div>
+                            <div class="col-md-8 ">
+                                @* @Html.TextBoxFor(model => model.CardNumber,  new { @class = "form-control" }) *@
+                                <input type="number" id="txtCardNumber" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between  mb-4 ">
 
-							<div class="col-md-4 ">
-								<h5 class="mb-0 me-4">Expiry</h5>
-							</div>
-							<div class="col-md-8 ">
-								<input type="text" id="txtExpiry" class="form-control" />
-							</div>
+                            <div class="col-md-4 ">
+                                <h5 class="mb-0 me-4">Expiry</h5>
+                            </div>
+                            <div class="col-md-8 ">
+                                <input type="text" id="txtExpiry" class="form-control" />
+                            </div>
 
-						</div>
-						<div class="d-flex justify-content-between  mb-4 ">
-							<div class="col-md-4 ">
-								<h5 class="mb-0 me-4">CVC</h5>
-							</div>
-							<div class="col-md-8 ">
-								<input type="number" id="txtCVC" class="form-control" />
-							</div>
-						</div>
-					</div>  
-					
-
-					@{
-						// Calculate total price including tax
-						decimal totalWithoutTax = Model.CartDTOlist.Sum(x => x.TotalPrice);
-						decimal taxAmount = totalWithoutTax * 0.18m;
-						decimal totalAmount = Model.TotalPriceWithTax;
-						decimal advancepayment = totalAmount * 0.30m; // 18% tax rate
-					}
-
-					<div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-						<h5 class="mb-0 ps-4 me-4">Advance Payment</h5>
-						<p class="mb-0 pe-4"> PKR @advancepayment.ToString("N2") </p>
-					</div>
-
-					<div class="row">
-						<div class="col-md-6">
-							<button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="paymentbtn" type="button">Payment Proceed</button>
-						</div>
-						<div class="col-md-6">
-							<button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="cencelbtn" type="button">Order Cencel</button>
-						</div>
-					</div>
-
-				</div>
-			</div>
+                        </div>
+                        <div class="d-flex justify-content-between  mb-4 ">
+                            <div class="col-md-4 ">
+                                <h5 class="mb-0 me-4">CVC</h5>
+                            </div>
+                            <div class="col-md-8 ">
+                                <input type="number" id="txtCVC" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
 
 
-			<div class="col-2"></div>
+                    @{
+                        // Calculate total price including tax
+                        decimal totalWithoutTax = Model.CartDTOlist.Sum(x => x.TotalPrice);
+                        decimal taxAmount = totalWithoutTax * 0.18m;
+                        decimal totalAmount = Model.TotalPriceWithTax;
+                        decimal advancepayment = totalAmount * 0.30m; // 18% tax rate
+                    }
+
+                    <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                        <h5 class="mb-0 ps-4 me-4">Advance Payment</h5>
+                        <p class="mb-0 pe-4"> PKR @advancepayment.ToString("N2") </p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="paymentbtn" type="button">Payment Proceed</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="cencelbtn" type="button">Order Cencel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-2"></div>
 
 
 
-			@if (Model.CartDTOlist.Any())
-			{
-				<div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-					<div class="bg-light rounded">
-						<div class="p-4">
-							<h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
-							<div class="d-flex justify-content-between mb-4">
-								<h5 class="mb-0 me-4">Subtotal:</h5>
-								<p class="mb-0">PKR @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
-							</div>
-						</div>
-						<div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-							<h5 class="mb-0 ps-4 me-4">Total</h5>
-							<p class="mb-0 pe-4">
-								PKR @Model.TotalPriceWithTax.ToString("N2") <br />
-								(including 18% of tax : @taxAmount.ToString("N2"))
-							</p>
-						</div>
-						<button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="checkoutbtn" type="button">Proceed Checkout</button>
-					</div>
-				</div>
-			}
+            @if (Model.CartDTOlist.Any())
+            {
+                <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+                    <div class="bg-light rounded">
+                        <div class="p-4">
+                            <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
+                            <div class="d-flex justify-content-between mb-4">
+                                <h5 class="mb-0 me-4">Subtotal:</h5>
+                                <p class="mb-0">PKR @Model.CartDTOlist.Sum(x => x.TotalPrice)</p>
+                            </div>
+                        </div>
+                        <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                            <h5 class="mb-0 ps-4 me-4">Total</h5>
+                            <p class="mb-0 pe-4">
+                                PKR @Model.TotalPriceWithTax.ToString("N2") <br />
+                                (including 18% of tax : @taxAmount.ToString("N2"))
+                            </p>
+                        </div>
+                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" id="checkoutbtn" type="button">Proceed Checkout</button>
+                    </div>
+                </div>
+            }
 
-		</div>
-	</div>
+        </div>
+    </div>
 
-	<script>
+    <script>
 
-		$(document).ready(function () {
-			var isOrderCreated = $("#isOrderCreated").val();
+        $(document).ready(function () {
+            var isOrderCreated = $("#isOrderCreated").val();
 
-			if (isOrderCreated === "True") {
-				$(".paymentdiv").show();
-				$("#checkoutbtn").hide();
-				$(".actionbtns").hide();
-			} else {
-				$(".paymentdiv").hide();
-			}
-		});
+            if (isOrderCreated === "True") {
+                $(".paymentdiv").show();
+                $("#checkoutbtn").hide();
+                $(".actionbtns").hide();
+            } else {
+                $(".paymentdiv").hide();
+            }
+        });
 
-		$(".clearAllItem").on("click", function () {
-			var Id = $(this).data("id");
-			console.log('productId =', Id)
+        $(".clearAllItem").on("click", function () {
+            var Id = $(this).data("id");
+            console.log('productId =', Id)
 
-			$.ajax({
-				type: 'POST',
-				url: "@Url.Action("RemoveAllItemFromCart", "Cart")",
-				data: { id: Id },
-				success: function (result) {
-					{
-						if (result == "succes") {
-							// alert("Succesfully Clear all items")
-							console.log("Succesfully Clear all items")
-							location.reload();
-						}
-						else {
-							console.log("Error")
-							// alert("Error")
-						}
-					}
-				},
-				error: function (result) {
-					//Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
-				}
-			});
-		});
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("RemoveAllItemFromCart", "Cart")",
+                data: { id: Id },
+                success: function (result) {
+                    {
+                        if (result == "succes") {
+                            // alert("Succesfully Clear all items")
+                            console.log("Succesfully Clear all items")
+                            location.reload();
+                        }
+                        else {
+                            console.log("Error")
+                            // alert("Error")
+                        }
+                    }
+                },
+                error: function (result) {
+                    //Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+                }
+            });
+        });
 
-		$(".btn-minus").on("click", function () {
-			var Id = $(this).data("id");
-			console.log('productId =', Id)
+        $(".btn-minus").on("click", function () {
+            var Id = $(this).data("id");
+            console.log('productId =', Id)
 
-			$.ajax({
-				type: 'POST',
-				url: "@Url.Action("RemoveItemFromCart", "Cart")",
-				data: { id: Id },
-				success: function (result) {
-					{
-						if (result == "succes") {
-							console.log("Success")
-							// alert("Success")
-							location.reload();
-						}
-						else {
-							console.log("Error")
-							// alert("Error")
-						}
-					}
-				},
-				error: function (result) {
-					//Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
-				}
-			});
-		});
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("RemoveItemFromCart", "Cart")",
+                data: { id: Id },
+                success: function (result) {
+                    {
+                        if (result == "succes") {
+                            console.log("Success")
+                            // alert("Success")
+                            location.reload();
+                        }
+                        else {
+                            console.log("Error")
+                            // alert("Error")
+                        }
+                    }
+                },
+                error: function (result) {
+                    //Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+                }
+            });
+        });
 
-		$(".btn-plus").on("click", function () {
-			var Id = $(this).data("id");
-			console.log('productId =', Id)
+        $(".btn-plus").on("click", function () {
+            var Id = $(this).data("id");
+            console.log('productId =', Id)
 
-			$.ajax({
-				type: 'POST',
-				url: "@Url.Action("AddItemFromCart", "Cart")",
-				data: { id: Id },
-				success: function (result) {
-					{
-						if (result == "succes") {
-							console.log("Success")
-							// alert("Success")
-							location.reload();
-						}
-						else {
-							console.log("Error")
-							// alert("Error")
-						}
-					}
-				},
-				error: function (result) {
-					//Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
-				}
-			});
-		});
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("AddItemFromCart", "Cart")",
+                data: { id: Id },
+                success: function (result) {
+                    {
+                        if (result == "succes") {
+                            console.log("Success")
+                            // alert("Success")
+                            location.reload();
+                        }
+                        else {
+                            console.log("Error")
+                            // alert("Error")
+                        }
+                    }
+                },
+                error: function (result) {
+                    //Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+                }
+            });
+        });
 
-		$("#checkoutbtn").on("click", function () {
-			var Records = @Html.Raw(Json.Serialize(@Model.CartDTOlist));
-			console.log("Records", Records)
+        $("#checkoutbtn").on("click", function () {
+            var Records = @Html.Raw(Json.Serialize(@Model.CartDTOlist));
+            console.log("Records", Records)
 
-			$.ajax({
-				type: 'POST',
-				url: '@Url.Action("CreateOrderByCart", "SaleOrder")',
-				data: { model: Records }, // No need to stringify
-				success: function (result) {
-					if (result === "success") {
-						// alert("Success");
-						console.log("Success");
-						location.reload();
-					} else {
-						console.log("Error");
-						// alert("Error");
-					}
-				},
-				error: function (result) {
-					// Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
-				}
-			});
-		});
-
-
-		$("#paymentbtn").on("click", function () {
-			// Get the value of the textbox
-			var cardholder = $("#cardholdername").val();
-			var cardNumber = $("#txtCardNumber").val();
-			var expiry = $("#txtExpiry").val();
-			var address = $("#txtaddress").val();
-			var cvc = $("#txtCVC").val();
-
-			// Update the model with the textbox value
-			var model = @Html.Raw(Json.Serialize(Model));
-			model.cardholderName = cardholder;
-			model.cardNumber = cardNumber;
-			model.expiry = expiry;
-			model.cvc = cvc;
-			model.customerAddress = address;
-
-			console.log("Model", model);
-
-			$.ajax({
-				type: 'POST',
-				url: '@Url.Action("CartProductPayment", "SaleOrder")',
-				data: { model: model },
-				success: function (result) {
-					if (result === "success") {
-						// alert("Success");
-						console.log("Success");
-						location.reload();
-					} else {
-						console.log("Error");
-						// alert("Error");
-					}
-				},
-				error: function (result) {
-					// Handle error
-				}
-			});
-		});
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CreateOrderByCart", "SaleOrder")',
+                data: { model: Records }, // No need to stringify
+                success: function (result) {
+                    if (result === "success") {
+                        // alert("Success");
+                        console.log("Success");
+                        location.reload();
+                    } else {
+                        console.log("Error");
+                        // alert("Error");
+                    }
+                },
+                error: function (result) {
+                    // Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+                }
+            });
+        });
 
 
-		$("#cencelbtn").on("click", function () {
-			var Records = @Html.Raw(Json.Serialize(@Model.CartDTOlist));
-			console.log("Records", Records)
-
-			$.ajax({
-				type: 'POST',
-				url: '@Url.Action("DeleteOrderFromCart", "SaleOrder")',
-				data: { model: Records }, // No need to stringify
-				success: function (result) {
-					if (result === "success") {
-						// alert("Success");
-						console.log("Success");
-						location.reload();
-					} else {
-						//alert("Error");
-						console.log("Error");
-					}
-				},
-				error: function (result) {
-					// Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
-				}
-			});
-		});
+        $("#paymentbtn").on("click", function () {
+            // Get the value of the textbox
+            var isValid = true;
+            var cardholder = $("#cardholdername").val().trim();
+            var cardNumber = $("#txtCardNumber").val().trim();
+            var expiry = $("#txtExpiry").val().trim();
+            var address = $("#txtaddress").val().trim();
+            var cvc = $("#txtCVC").val().trim();
 
 
-	</script>
-	
+
+            // Validate address
+            if (address === "") {
+                $("#txtaddress").after('<span class="error text-danger">This field is required</span>');
+                isValid = false;
+            }
+
+            // Validate card holder name
+            if (cardholder === "") {
+                $("#cardholdername").after('<span class="error text-danger">This field is required</span>');
+                isValid = false;
+            }
+
+            // Validate card number (simple length check for this example)
+            if (cardNumber.length < 0 || cardNumber.length > 19) {
+                $("#txtCardNumber").after('<span class="error text-danger">Enter a valid card number</span>');
+                isValid = false;
+            }
+
+            // Validate expiry (MM/YY format)
+            var expiryPattern = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
+            if (!expiryPattern.test(expiry)) {
+                $("#txtExpiry").after('<span class="error text-danger">Enter a valid expiry date (MM/YY)</span>');
+                isValid = false;
+            }
+
+            // Validate CVC (usually 3 or 4 digits)
+            if (cvc.length < 3 || cvc.length > 4) {
+                $("#txtCVC").after('<span class="error text-danger">Enter a valid CVC</span>');
+                isValid = false;
+            }
+
+            // If all fields are valid, proceed with form submission (for example)
+            if (isValid) {
+                // Update the model with the textbox value
+                var model = @Html.Raw(Json.Serialize(Model));
+                model.cardholderName = cardholder;
+                model.cardNumber = cardNumber;
+                model.expiry = expiry;
+                model.cvc = cvc;
+                model.customerAddress = address;
+
+                console.log("Model", model);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CartProductPayment", "SaleOrder")',
+                    data: { model: model },
+                    success: function (result) {
+                        if (result === "success") {
+                            // alert("Success");
+                            console.log("Success");
+                            location.reload();
+                        } else {
+                            console.log("Error");
+                            // alert("Error");
+                        }
+                    },
+                    error: function (result) {
+                        // Handle error
+                    }
+                });
+                // Here you can submit the form or perform further actions
+            }
+
+        });
+
+
+        $("#cencelbtn").on("click", function () {
+            var Records = @Html.Raw(Json.Serialize(@Model.CartDTOlist));
+            console.log("Records", Records)
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DeleteOrderFromCart", "SaleOrder")',
+                data: { model: Records }, // No need to stringify
+                success: function (result) {
+                    if (result === "success") {
+                        // alert("Success");
+                        console.log("Success");
+                        location.reload();
+                    } else {
+                        //alert("Error");
+                        console.log("Error");
+                    }
+                },
+                error: function (result) {
+                    // Toast.create({ title: "Error", message: "Error", status: TOAST_STATUS.DANGER, timeout: 3000 });
+                }
+            });
+        });
+
+
+    </script>
+
 </div>
